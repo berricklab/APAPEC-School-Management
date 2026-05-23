@@ -168,11 +168,6 @@
             margin-right: 10px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         /* --- MAIN SYSTEM APP LAYOUT --- */
         #app-container {
             display: none; 
@@ -415,7 +410,7 @@
 </head>
 <body>
 
-    <!-- ================= 1. SECURE GATEWAY & PROFILE CREATION SCREEN ================= -->
+    <!-- ================= 1. SECURE GATEWAY SCREEN ================= -->
     <div id="login-screen">
         <div class="login-card">
             <h2 id="login-brand-title">APAPEC-IREBERO</h2>
@@ -426,7 +421,7 @@
                 <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
                     <div class="form-group">
                         <label for="loginUser">Username / Identity String</label>
-                        <input type="text" id="loginUser" required placeholder="e.g., admin, teacher, student, parent">
+                        <input type="text" id="loginUser" required placeholder="e.g., admin, teacher5, parent">
                     </div>
                     <div class="form-group">
                         <label for="loginPass">Password</label>
@@ -455,9 +450,9 @@
                     <div class="form-group">
                         <label for="regRole">Select System Clearance Role</label>
                         <select id="regRole" onchange="adaptProfileRequirementNotice(this.value)">
+                            <option value="parent">Parent Portal Account</option>
                             <option value="student">Student Profile</option>
                             <option value="teacher">Teacher / Faculty Profile</option>
-                            <option value="parent">Parent Portal Account</option>
                             <option value="admin">System Administrator</option>
                         </select>
                     </div>
@@ -491,7 +486,6 @@
                         <input type="text" id="profFullName" placeholder="Firstname Lastname" oninput="liveUpdateAvatarFallback(this.value)">
                     </div>
                     
-                    <!-- Dynamic view fields updated based on chosen role -->
                     <div class="form-group" id="class-group-box">
                         <label id="class-box-label">Academic Grade Assignment</label>
                         <select id="profClass">
@@ -501,8 +495,9 @@
                         </select>
                     </div>
 
-                    <div class="form-group" id="parent-student-link-box" style="display:none;">
-                        <label for="parentStudentSelect">Link to Child (Student Record)</label>
+                    <!-- Explicit Parent Child Linking Logic Dropdown -->
+                    <div class="form-group" id="parent-student-link-box">
+                        <label for="parentStudentSelect">Select Your Child to Supervise</label>
                         <select id="parentStudentSelect"></select>
                     </div>
 
@@ -600,9 +595,9 @@
                         </table>
                     </div>
                     <div class="dashboard-box" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color);">
-                        <h4 style="color: var(--accent-color); margin-bottom: 10px;">LocalStorage Engine Active</h4>
+                        <h4 style="color: var(--accent-color); margin-bottom: 10px;">Data Sovereignty Active</h4>
                         <p style="font-size: 0.9rem; line-height: 1.4;">
-                            All user registrations, isolated class lists, and parental links are saved directly to browser memory permanently.
+                            Data structures enforce isolation rules. Teachers only manage their classes, and parents can only supervise their linked children.
                         </p>
                     </div>
                 </div>
@@ -672,7 +667,6 @@
 
             <section id="teacher-attendance" class="page-section">
                 <h3>Daily Attendance Roster Manager (<span class="target-class-display">-</span>)</h3>
-                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:15px;">Mark present or absent statuses for your class only.</p>
                 <table>
                     <thead><tr><th>Student ID</th><th>Avatar</th><th>Name</th><th>Class</th><th>Status Attendance</th><th>Action Button</th></tr></thead>
                     <tbody id="teacher-attendance-body"></tbody>
@@ -681,7 +675,6 @@
 
             <section id="teacher-grades" class="page-section">
                 <h3>Continuous Assessment Entry Matrix (<span class="target-class-display">-</span>)</h3>
-                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:15px;">Input scores out of 100% for students within your jurisdiction.</p>
                 <table>
                     <thead><tr><th>Student Name</th><th>Assigned Class</th><th>Current Recorded Grade Score</th><th>Action</th></tr></thead>
                     <tbody id="teacher-grades-body"></tbody>
@@ -707,10 +700,8 @@
                 </div>
                 
                 <div class="dashboard-box">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3>My Borrowed Books Locker</h3>
-                    </div>
-                    <table style="box-shadow: none; margin-top: 0;">
+                    <h3>My Borrowed Books Locker</h3>
+                    <table>
                         <thead><tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
                         <tbody id="portal-books-body"></tbody>
                     </table>
@@ -727,6 +718,11 @@
                             <p id="parent-welcome-subtitle" style="margin-top: 5px; opacity: 0.9;">Monitoring Student Files</p>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Explicit isolation message display banner for clarity -->
+                <div class="dashboard-box" style="margin-top: 20px; background-color: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; font-size: 0.9rem;">
+                    <strong>🔒 Dynamic Child Security Sandbox Enabled:</strong> This session token can exclusively parse records assigned to your designated dependent child. All other institutional profiles are restricted.
                 </div>
 
                 <h3 style="margin-top: 25px; margin-bottom: 15px;">Monitored Student Profile Record: <span id="parent-linked-child-name" style="color:var(--secondary-color);">-</span></h3>
@@ -776,12 +772,10 @@
     <div class="modal" id="borrowModal">
         <form id="borrow-form" onsubmit="submitBorrowForm(event)">
             <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
-            
             <div class="form-group" id="borrower-selection-group">
                 <label>Select Student Target</label>
                 <select id="borrowerSelect"></select>
             </div>
-
             <div class="form-group">
                 <label>Textbook Title</label>
                 <select id="bookSelect" required>
@@ -799,14 +793,14 @@
         </form>
     </div>
 
-    <!-- JavaScript Persistent Control Matrix Engine -->
+    <!-- JavaScript Control Matrix Engine -->
     <script>
-        // --- MASTER DATA SYNC LAUNCHER ---
+        // --- DATA PERSISTENCE INITIALIZATION LAYER ---
         let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts')) || {
             "admin": { password: "admin", role: "admin", profileRef: "ADM-MAIN" },
             "teacher5": { password: "p5", role: "teacher", profileRef: "FAC-001" },
             "student": { password: "student", role: "student", profileRef: "REG-001" },
-            "parent": { password: "parent", role: "parent", profileRef: "REG-001" }
+            "parent": { password: "parent", role: "parent", profileRef: "REG-001" } // Links to Kelia Mugisha by default
         };
 
         let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers')) || {
@@ -828,9 +822,8 @@
         let schoolMetrics = { classesCount: 12 };
         let activePortalRole = ""; 
         let currentViewStudentId = "REG-001"; 
-        let parentLinkedChildId = "REG-001";
+        let parentLinkedChildId = "REG-001"; // Strict target placeholder pointer string
 
-        // Volatile staging buffers
         let temporaryAccountData = null; 
         let temporaryUploadedPhotoBase64 = null;
 
@@ -871,7 +864,7 @@
             }
         }
 
-        // --- AUTH INTERFACE VIEW ENGINE ---
+        // --- AUTH INTERFACE VIEW ROUTING ENGINE ---
         function toggleAuthForm(viewMode) {
             const oldGuide = document.getElementById('creation-guide-box');
             if (oldGuide) oldGuide.remove();
@@ -919,7 +912,8 @@
                 textEl.innerText = "Teacher registration dynamically binds you to data manipulation for your specified class only.";
                 classLabel.innerText = "Authorized Target Class Tracking";
             } else if (selectedRole === 'parent') {
-                textEl.innerText = "Link this profile container with an existing student file directory to enable monitoring metrics.";
+                // Configures layout specifically for isolated parent tracking profiles
+                textEl.innerText = "Parent registration enforces a permanent target link to your child's specific record file.";
                 classBox.style.display = 'none';
                 photoContainer.style.display = 'none';
                 fullNameBox.style.display = 'none';
@@ -934,6 +928,7 @@
                 textEl.innerText = "Global systems administrator account infrastructure setup clearance initialization.";
                 classBox.style.display = 'none';
                 contactBox.style.display = 'none';
+                parentLinkBox.style.display = 'none';
             }
         }
 
@@ -976,13 +971,14 @@
                     name: fullName, classAssignment: selectionClass, contact: contactNum, photo: temporaryUploadedPhotoBase64
                 };
             } else if (uRole === 'parent') {
+                // Pairs parent account exclusively to selected child ID string
                 referenceTokenId = document.getElementById('parentStudentSelect').value;
             }
 
             accountsDatabase[uName] = { password: temporaryAccountData.password, role: uRole, profileRef: referenceTokenId };
             commitSystemStateToDisk();
 
-            alert(`Account persistent registry written down to disk browser structures for "${uName}".`);
+            alert(`Profile linked and written to local database registry for user "${uName}".`);
             
             document.getElementById('register-user-form').reset();
             document.getElementById('profile-details-form').reset();
@@ -1008,7 +1004,7 @@
                 
                 if (verifiedRole === 'student') currentViewStudentId = ref;
                 else if (verifiedRole === 'teacher') window.currentTeacherRef = ref;
-                else if (verifiedRole === 'parent') parentLinkedChildId = ref;
+                else if (verifiedRole === 'parent') parentLinkedChildId = ref; // Locks session token
                 
                 launchPortal(verifiedRole);
                 return;
@@ -1051,7 +1047,7 @@
             document.getElementById('login-screen').style.display = 'flex';
         }
 
-        // --- ROUTING ENGINE VIEWPORTS ---
+        // --- NAVIGATION ENGINE TAB ROUTER ---
         function switchTab(tabId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
@@ -1107,7 +1103,6 @@
             const tbody = document.getElementById('teacher-attendance-body');
             tbody.innerHTML = '';
             
-            // ISOLATION CRITERIA FILTER PIPELINE
             const isolatedStudents = studentsList.filter(s => s.class === targetClass);
             
             isolatedStudents.forEach(student => {
@@ -1142,7 +1137,6 @@
             const tbody = document.getElementById('teacher-grades-body');
             tbody.innerHTML = '';
             
-            // ISOLATION CRITERIA FILTER PIPELINE
             const isolatedStudents = studentsList.filter(s => s.class === targetClass);
             
             isolatedStudents.forEach(student => {
@@ -1176,11 +1170,17 @@
             if(metricEl) metricEl.innerText = `${percent}%`;
         }
 
-        // --- PARENT HUB DATA DISPLAY ENGINE ---
+        // --- PARENT PORTAL SECURE DATA SANDBOX ---
         function renderParentPortalDashboard() {
-            const childFile = studentsList.find(s => s.id === parentLinkedChildId) || studentsList[0];
+            // Locates the linked student record matching the parent's session token lookup reference
+            const childFile = studentsList.find(s => s.id === parentLinkedChildId);
             
-            document.getElementById('parent-welcome-subtitle').innerText = `Authorized Link Token Security Scope: ${childFile.id}`;
+            if(!childFile) {
+                document.getElementById('parent-linked-child-name').innerText = "Unlinked Session Error";
+                return;
+            }
+
+            document.getElementById('parent-welcome-subtitle').innerText = `Security Boundary Enforcement Token ID: ${childFile.id}`;
             document.getElementById('parent-linked-child-name').innerText = childFile.name;
             
             document.getElementById('parent-class-assignment').innerText = `Grade ${childFile.class}`;
@@ -1189,16 +1189,18 @@
             document.getElementById('parent-fee-status').innerText = childFile.status;
             document.getElementById('parent-fee-card').className = childFile.status === 'Paid' ? 'card success' : 'card danger';
 
-            document.getElementById('parent-attendance-status').innerText = childFile.status;
+            document.getElementById('parent-attendance-status').innerText = childFile.attendance;
             document.getElementById('parent-attendance-card').className = childFile.attendance === 'Present' ? 'card success' : 'card danger';
 
+            // Isolates library data rows for this specific child profile only
             const booksBody = document.getElementById('parent-books-body');
             booksBody.innerHTML = '';
-            const logRecords = libraryLedger.filter(item => item.studentId === childFile.id);
-            if (logRecords.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No actively borrowed books recorded on file.</td></tr>`;
+            
+            const isolatedRecords = libraryLedger.filter(item => item.studentId === childFile.id);
+            if (isolatedRecords.length === 0) {
+                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No actively borrowed books recorded on file for this child.</td></tr>`;
             } else {
-                logRecords.forEach(item => {
+                isolatedRecords.forEach(item => {
                     booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
                 });
             }
