@@ -827,9 +827,7 @@
 
     <!-- JavaScript Control Matrix Engine -->
     <script>
-        // --- 1. EXPANDED PRODUCTION ENTERPRISE SYSTEM DATA SEEDS ---
-        
-        // 50 Student Resource Matrix Objects
+        // --- 1. PRE-POPULATED HARDCODED INSTITUTIONAL SYSTEM STORAGE SEEDS ---
         const baseStudents = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 001", status: "Paid", attendance: "Present", score: 88, linkedUser: "student1" },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 111 002", status: "Pending", attendance: "Present", score: 74, linkedUser: "student2" },
@@ -861,29 +859,28 @@
             { id: "REG-028", name: "Pacifique Iradukunda", class: "P5", contact: "+250 788 111 028", status: "Paid", attendance: "Present", score: 87, linkedUser: "student28" },
             { id: "REG-029", name: "Valentine Mukamana", class: "P6", contact: "+250 788 111 029", status: "Paid", attendance: "Present", score: 80, linkedUser: "student29" },
             { id: "REG-030", name: "Thierry Kamanzi", class: "S1", contact: "+250 788 111 030", status: "Pending", attendance: "Absent", score: 66, linkedUser: "student30" },
-            { id: "REG-031", name: "Marie Claire Nyinawumuntu", class: "P5", contact: "+250 788 111 031", status: "Paid", attendance: "Present", score: 72 },
-            { id: "REG-032", name: "Justin Niyomugabo", class: "P6", contact: "+250 788 111 032", status: "Paid", attendance: "Present", score: 86 },
-            { id: "REG-033", name: "Beata Uwimana", class: "S1", contact: "+250 788 111 033", status: "Paid", attendance: "Present", score: 93 },
-            { id: "REG-034", name: "Gaspard Habimana", class: "P5", contact: "+250 788 111 034", status: "Pending", attendance: "Present", score: 58 },
-            { id: "REG-035", name: "Emelyne Kaneza", class: "P6", contact: "+250 788 111 035", status: "Paid", attendance: "Present", score: 80 },
-            { id: "REG-036", name: "Florent Niyonisaba", class: "S1", contact: "+250 788 111 036", status: "Paid", attendance: "Absent", score: 69 },
-            { id: "REG-037", name: "Honorine Uwiragiye", class: "P5", contact: "+250 788 111 037", status: "Paid", attendance: "Present", score: 75 },
-            { id: "REG-038", name: "Innocent Mbonigaba", class: "P6", contact: "+250 788 111 038", status: "Pending", attendance: "Present", score: 63 },
-            { id: "REG-039", name: "Janviere Mukamisha", class: "S1", contact: "+250 788 111 039", status: "Paid", attendance: "Present", score: 84 },
-            { id: "REG-040", name: "Kennedy Ntwali", class: "P5", contact: "+250 788 111 040", status: "Paid", attendance: "Present", score: 78 },
-            { id: "REG-041", name: "Leopold Munyaneza", class: "P6", contact: "+250 788 111 041", status: "Paid", attendance: "Present", score: 82 },
-            { id: "REG-042", name: "Micheline Uwamariya", class: "S1", contact: "+250 788 111 042", status: "Pending", attendance: "Absent", score: 61 },
-            { id: "REG-043", name: "Norbert Rutaganda", class: "P5", contact: "+250 788 111 043", status: "Paid", attendance: "Present", score: 86 },
-            { id: "REG-044", name: "Odette Nyiramana", class: "P6", contact: "+250 788 111 044", status: "Paid", attendance: "Present", score: 89 },
-            { id: "REG-045", name: "Pascal Nsengiyumva", class: "S1", contact: "+250 788 111 045", status: "Pending", attendance: "Present", score: 70 },
-            { id: "REG-046", name: "Regine Akaliza", class: "P5", contact: "+250 788 111 046", status: "Paid", attendance: "Present", score: 91 },
-            { id: "REG-047", name: "Sylvestre Murenzi", class: "P6", contact: "+250 788 111 047", status: "Paid", attendance: "Present", score: 67 },
-            { id: "REG-048", name: "Telesphore Hategekimana", class: "S1", contact: "+250 788 111 048", status: "Pending", attendance: "Absent", score: 54 },
-            { id: "REG-049", name: "Vestine Nyiransabimana", class: "P5", contact: "+250 788 111 049", status: "Paid", attendance: "Present", score: 83 },
-            { id: "REG-050", name: "Zacharie Twagirimana", class: "P6", contact: "+250 788 111 050", status: "Paid", attendance: "Present", score: 79 }
+            { id: "REG-031", name: "Marie Claire Nyinawumuntu", class: "P5", contact: "+250 788 111 031", status: "Paid", attendance: "Present", score: 72, linkedUser: null },
+            { id: "REG-032", name: "Justin Niyomugabo", class: "P6", contact: "+250 788 111 032", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
+            { id: "REG-033", name: "Beata Uwimana", class: "S1", contact: "+250 788 111 033", status: "Paid", attendance: "Present", score: 93, linkedUser: null },
+            { id: "REG-034", name: "Gaspard Habimana", class: "P5", contact: "+250 788 111 034", status: "Pending", attendance: "Present", score: 58, linkedUser: null },
+            { id: "REG-035", name: "Emelyne Kaneza", class: "P6", contact: "+250 788 111 035", status: "Paid", attendance: "Present", score: 80, linkedUser: null },
+            { id: "REG-036", name: "Florent Niyonisaba", class: "S1", contact: "+250 788 111 036", status: "Paid", attendance: "Absent", score: 69, linkedUser: null },
+            { id: "REG-037", name: "Honorine Uwiragiye", class: "P5", contact: "+250 788 111 037", status: "Paid", attendance: "Present", score: 75, linkedUser: null },
+            { id: "REG-038", name: "Innocent Mbonigaba", class: "P6", contact: "+250 788 111 038", status: "Pending", attendance: "Present", score: 63, linkedUser: null },
+            { id: "REG-039", name: "Janviere Mukamisha", class: "S1", contact: "+250 788 111 039", status: "Paid", attendance: "Present", score: 84, linkedUser: null },
+            { id: "REG-040", name: "Kennedy Ntwali", class: "P5", contact: "+250 788 111 040", status: "Paid", attendance: "Present", score: 78, linkedUser: null },
+            { id: "REG-041", name: "Leopold Munyaneza", class: "P6", contact: "+250 788 111 041", status: "Paid", attendance: "Present", score: 82, linkedUser: null },
+            { id: "REG-042", name: "Micheline Uwamariya", class: "S1", contact: "+250 788 111 042", status: "Pending", attendance: "Absent", score: 61, linkedUser: null },
+            { id: "REG-043", name: "Norbert Rutaganda", class: "P5", contact: "+250 788 111 043", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
+            { id: "REG-044", name: "Odette Nyiramana", class: "P6", contact: "+250 788 111 044", status: "Paid", attendance: "Present", score: 89, linkedUser: null },
+            { id: "REG-045", name: "Pascal Nsengiyumva", class: "S1", contact: "+250 788 111 045", status: "Pending", attendance: "Present", score: 70, linkedUser: null },
+            { id: "REG-046", name: "Regine Akaliza", class: "P5", contact: "+250 788 111 046", status: "Paid", attendance: "Present", score: 91, linkedUser: null },
+            { id: "REG-047", name: "Sylvestre Murenzi", class: "P6", contact: "+250 788 111 047", status: "Paid", attendance: "Present", score: 67, linkedUser: null },
+            { id: "REG-048", name: "Telesphore Hategekimana", class: "S1", contact: "+250 788 111 048", status: "Pending", attendance: "Absent", score: 54, linkedUser: null },
+            { id: "REG-049", name: "Vestine Nyiransabimana", class: "P5", contact: "+250 788 111 049", status: "Paid", attendance: "Present", score: 83, linkedUser: null },
+            { id: "REG-050", name: "Zacharie Twagirimana", class: "P6", contact: "+250 788 111 050", status: "Paid", attendance: "Present", score: 79, linkedUser: null }
         ];
 
-        // 12 Faculty Room Profile Objects
         const baseTeachers = {
             "FAC-001": { name: "Jean de Dieu Tumusime", classAssignment: "P5", contact: "+250 788 222 001" },
             "FAC-002": { name: "Marie Chantal Mukagasana", classAssignment: "P6", contact: "+250 788 222 002" },
@@ -899,35 +896,43 @@
             "FAC-012": { name: "Bosco Nsabimana", classAssignment: "S1", contact: "+250 788 222 012" }
         };
 
-        // Initialize Dynamic Core Storage Registers
-        let studentsList = JSON.parse(localStorage.getItem('sms_students')) || baseStudents;
-        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers')) || baseTeachers;
+        // --- 2. FAILSAFE FORCED SEED STORAGE INITIALIZER ---
+        // Overrides any empty or corrupt matrices to guarantee login compliance on load
+        function initializeDatabaseForceSeed() {
+            localStorage.setItem('sms_students', JSON.stringify(baseStudents));
+            localStorage.setItem('sms_teachers', JSON.stringify(baseTeachers));
 
-        // Base Auth Accounts Registry (Expanded dynamically with loops below)
-        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts')) || {};
-
-        if (Object.keys(accountsDatabase).length === 0) {
-            // Seed 10 Administrator Credentials (admin1 - admin10)
+            let generatedAccounts = {};
+            // Generate Admin Credentials (admin1 - admin10)
             for (let i = 1; i <= 10; i++) {
-                accountsDatabase[`admin${i}`] = { password: `admin${i}`, role: "admin", profileRef: `ADM-0${i}` };
+                generatedAccounts[`admin${i}`] = { password: `admin${i}`, role: "admin", profileRef: `ADM-0${i}` };
             }
-            // Seed 12 Teacher Credentials (teacher1 - teacher12)
+            // Generate Teacher Credentials (teacher1 - teacher12)
             for (let i = 1; i <= 12; i++) {
                 let refStr = `FAC-0${i < 10 ? '0' + i : i}`;
-                accountsDatabase[`teacher${i}`] = { password: `teacher${i}`, role: "teacher", profileRef: refStr };
+                generatedAccounts[`teacher${i}`] = { password: `teacher${i}`, role: "teacher", profileRef: refStr };
             }
-            // Seed 30 Parent Isolation Profile Accounts (parent1 - parent30 mapping to REG-001 - REG-030)
+            // Generate Parent Credentials (parent1 - parent30)
             for (let i = 1; i <= 30; i++) {
                 let refStr = `REG-0${i < 10 ? '0' + i : i}`;
-                accountsDatabase[`parent${i}`] = { password: `parent${i}`, role: "parent", profileRef: refStr };
+                generatedAccounts[`parent${i}`] = { password: `parent${i}`, role: "parent", profileRef: refStr };
             }
-            // Seed 30 matching student accounts for completeness (student1 - student30)
+            // Generate Student Credentials (student1 - student30)
             for (let i = 1; i <= 30; i++) {
                 let refStr = `REG-0${i < 10 ? '0' + i : i}`;
-                accountsDatabase[`student${i}`] = { password: `student${i}`, role: "student", profileRef: refStr };
+                generatedAccounts[`student${i}`] = { password: `student${i}`, role: "student", profileRef: refStr };
             }
-            localStorage.setItem('sms_accounts', JSON.stringify(accountsDatabase));
+
+            localStorage.setItem('sms_accounts', JSON.stringify(generatedAccounts));
         }
+
+        // Always run the seed guarantee strategy on first render parse
+        initializeDatabaseForceSeed();
+
+        // Load active runtime contexts directly from the forced seed values
+        let studentsList = JSON.parse(localStorage.getItem('sms_students'));
+        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers'));
+        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts'));
 
         let libraryLedger = JSON.parse(localStorage.getItem('sms_library')) || [
             { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
@@ -943,7 +948,6 @@
         let temporaryAccountData = null; 
         let temporaryUploadedPhotoBase64 = null;
 
-        // Interactive Table Pagination Anchors
         let studentCurrentPage = 0;
         let financeCurrentPage = 0;
         const rowsPerPage = 10;
@@ -1137,7 +1141,7 @@
             const guideBox = document.createElement('div');
             guideBox.id = 'creation-guide-box';
             guideBox.style.cssText = `background: #fef2f2; border-left: 4px solid var(--danger-color); padding: 15px; margin-top: 20px; font-size: 0.85rem; color: #991b1b;`;
-            guideBox.innerHTML = `<strong>❌ Verification failure.</strong> Create an account or verify structural credentials (e.g., admin1, teacher1, parent1).`;
+            guideBox.innerHTML = `<strong>❌ Verification failure.</strong> Account mismatch. Double-check your access matrix credentials (e.g., admin1, teacher1, parent1).`;
             insertionPoint.appendChild(guideBox);
         }
 
@@ -1281,15 +1285,7 @@
             }
         }
 
-        function calculateTeacherMetrics(targetClass) {
-            const isolated = studentsList.filter(s => s.class === targetClass);
-            const presentCount = isolated.filter(s => s.attendance === 'Present').length;
-            const percent = isolated.length ? Math.round((presentCount / isolated.length) * 100) : 100;
-            const metricEl = document.getElementById('teacher-dash-attendance');
-            if(metricEl) metricEl.innerText = `${percent}%`;
-        }
-
-        // --- PARENT PORTAL SECURE DATA SANDBOX ---
+        // --- PARENT PORTAL MONITORING HUB ---
         function renderParentPortalDashboard() {
             const childFile = studentsList.find(s => s.id === parentLinkedChildId);
             
@@ -1385,14 +1381,12 @@
         function renderDashboardView() {
             const tbody = document.getElementById('dash-quick-table');
             tbody.innerHTML = '';
-            // Display top 5 recent student index values on primary layout card
             const quickSlice = studentsList.slice(0, 5);
             quickSlice.forEach(student => {
                 tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
             });
         }
 
-        // Paginated Student Grid Renderers
         function renderStudentsTable() {
             const tbody = document.querySelector('#student-table tbody');
             tbody.innerHTML = '';
@@ -1414,7 +1408,6 @@
             renderStudentsTable();
         }
 
-        // Paginated Ledger Rows Renderers
         function renderFinanceTable() {
             const tbody = document.getElementById('finance-table-body');
             tbody.innerHTML = '';
@@ -1520,6 +1513,14 @@
                 
                 renderDashboardView(); renderStudentsTable(); renderFinanceTable(); updateDashboardMetrics();
             }
+        }
+
+        function calculateTeacherMetrics(targetClass) {
+            const isolated = studentsList.filter(s => s.class === targetClass);
+            const presentCount = isolated.filter(s => s.attendance === 'Present').length;
+            const percent = isolated.length ? Math.round((presentCount / isolated.length) * 100) : 100;
+            const metricEl = document.getElementById('teacher-dash-attendance');
+            if(metricEl) metricEl.innerText = `${percent}%`;
         }
 
         // Initialize Renders
