@@ -63,6 +63,8 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .login-card {
@@ -70,7 +72,7 @@
             padding: 40px;
             border-radius: 12px;
             width: 100%;
-            max-width: 440px;
+            max-width: 450px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             color: #1f2937;
         }
@@ -85,16 +87,24 @@
             text-align: center;
             font-size: 0.85rem;
             color: #6b7280;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .login-help-box {
-            background: #f3f4f6;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-            border-left: 4px solid #3b82f6;
+        .toggle-auth-mode {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .toggle-auth-mode a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .toggle-auth-mode a:hover {
+            text-decoration: underline;
         }
 
         @keyframes fadeIn {
@@ -104,10 +114,9 @@
 
         /* --- MAIN SYSTEM APP LAYOUT --- */
         #app-container {
-            display: none; /* Controlled by auth engine */
+            display: none; 
         }
 
-        /* Sidebar Navigation */
         aside {
             width: var(--sidebar-width);
             background-color: var(--primary-color);
@@ -151,7 +160,6 @@
             color: white;
         }
 
-        /* Main Content Area */
         main {
             margin-left: var(--sidebar-width);
             flex-grow: 1;
@@ -194,7 +202,6 @@
             display: block;
         }
 
-        /* Dashboard Cards & Layout */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -242,7 +249,6 @@
             margin-bottom: 20px;
         }
 
-        /* Forms */
         form {
             background: var(--surface-color);
             padding: 25px;
@@ -287,7 +293,6 @@
             color: var(--text-color);
         }
 
-        /* Buttons */
         .btn {
             color: white;
             border: none;
@@ -304,7 +309,6 @@
         .btn-danger { background-color: var(--danger-color); }
         .btn-sm { padding: 4px 8px; font-size: 0.8rem; }
 
-        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -336,7 +340,6 @@
         .badge.paid, .badge.returned, .badge.present { background-color: #d1fae5; color: #065f46; }
         .badge.pending, .badge.borrowed, .badge.absent { background-color: #fef3c7; color: #92400e; }
 
-        /* Modal Overlays */
         .modal {
             display: none;
             position: fixed;
@@ -355,35 +358,64 @@
     <div id="login-screen">
         <div class="login-card">
             <h2 id="login-brand-title">APAPEC-IREBERO</h2>
-            <p class="subtitle">Unified Portal Authentication Gateway</p>
+            <p class="subtitle" id="auth-subtitle">Unified Portal Authentication Gateway</p>
             
-            <div class="login-help-box">
-                <strong>Simulated Accounts for Testing:</strong><br>
-                • Admin: username <code>admin</code> / pass <code>admin</code><br>
-                • Teacher: username <code>teacher</code> / pass <code>teacher</code><br>
-                • Student: username <code>student</code> / pass <code>student</code>
+            <!-- View 1: Sign In Form -->
+            <div id="signin-view">
+                <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
+                    <div class="form-group">
+                        <label for="loginUser">Username / Identity String</label>
+                        <input type="text" id="loginUser" required placeholder="e.g., admin, teacher, or your custom name">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPass">Password</label>
+                        <input type="password" id="loginPass" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
+                        Sign In to Portal
+                    </button>
+                </form>
+                <div class="toggle-auth-mode">
+                    Don't have an account? <a onclick="toggleAuthForm(true)">Create one now &rarr;</a>
+                </div>
             </div>
 
-            <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
-                <div class="form-group">
-                    <label for="loginUser">Username / Registration Identity</label>
-                    <input type="text" id="loginUser" required placeholder="Enter username...">
+            <!-- View 2: Account Creation Form (Hidden by default) -->
+            <div id="signup-view" style="display: none;">
+                <form id="register-user-form" onsubmit="executeUserRegistration(event)" style="box-shadow:none; padding:0; max-width:100%;">
+                    <div class="form-group">
+                        <label for="regUser">Choose Custom Username</label>
+                        <input type="text" id="regUser" required placeholder="Create unique username...">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPass">Choose Password</label>
+                        <input type="password" id="regPass" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label for="regRole">Select Portal Role Assignment</label>
+                        <select id="regRole">
+                            <option value="admin">Administrator (Full Access)</option>
+                            <option value="teacher">Classroom Instructor / Teacher</option>
+                            <option value="student">Enrolled Student</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
+                        Register & Save Credentials
+                    </button>
+                </form>
+                <div class="toggle-auth-mode">
+                    Already registered? <a onclick="toggleAuthForm(false)">&larr; Back to Sign In</a>
                 </div>
-                <div class="form-group">
-                    <label for="loginPass">Password</label>
-                    <input type="password" id="loginPass" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
-                    Sign In to Portal
-                </button>
-            </form>
+            </div>
+
+            <!-- Placeholder Container for Errors / Step-by-Step guides -->
+            <div id="guide-injection-point"></div>
         </div>
     </div>
 
 
     <!-- ================= 2. MAIN APPLICATION PLATFORM CONTAINER ================= -->
     <div id="app-container">
-        <!-- Sidebar Navigation -->
         <aside>
             <div class="brand" id="sidebar-brand">APAPEC-IREBERO</div>
             
@@ -408,13 +440,11 @@
                 <button class="menu-btn active" onclick="switchTab('student-home')">My Student Profile</button>
             </div>
 
-            <!-- Global Sign Out Action Footer Link -->
             <button class="btn btn-danger btn-sm" onclick="executeLogout()" style="margin-top: auto; width: 100%; padding: 10px;">
                 Secure Exit Sign-Out
             </button>
         </aside>
 
-        <!-- Main Workspace Viewport -->
         <main>
             <header>
                 <h2 id="page-title">Workspace Dashboard</h2>
@@ -612,6 +642,13 @@
         let activePortalRole = ""; 
         let currentViewStudentId = "REG-001"; 
 
+        // Registered accounts registry dictionary
+        let accountsDatabase = {
+            "admin": { password: "admin", role: "admin" },
+            "teacher": { password: "teacher", role: "teacher" },
+            "student": { password: "student", role: "student" }
+        };
+
         let studentsList = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88 },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74 },
@@ -623,53 +660,86 @@
             { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
         ];
 
-        // --- AUTHENTICATION LOGIN ENGINE CONTROLLER ---
+        // --- AUTHENTICATION INTERFACE NAVIGATION CONTROLS ---
+        function toggleAuthForm(showRegister) {
+            // Clean out old guide blocks
+            const oldGuide = document.getElementById('creation-guide-box');
+            if (oldGuide) oldGuide.remove();
+
+            if (showRegister) {
+                document.getElementById('signin-view').style.display = 'none';
+                document.getElementById('signup-view').style.display = 'block';
+                document.getElementById('auth-subtitle').innerText = 'Create a New Personalized Portal Identity';
+            } else {
+                document.getElementById('signup-view').style.display = 'none';
+                document.getElementById('signin-view').style.display = 'block';
+                document.getElementById('auth-subtitle').innerText = 'Unified Portal Authentication Gateway';
+            }
+        }
+
+        // --- CUSTOM USERNAME REGISTRATION CONTROLLER ---
+        function executeUserRegistration(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('regUser').value.trim().toLowerCase();
+            const passwordInput = document.getElementById('regPass').value.trim();
+            const assignedRole = document.getElementById('regRole').value;
+
+            if (accountsDatabase[usernameInput]) {
+                alert("This username already exists inside the gateway ledger. Try another unique name.");
+                return;
+            }
+
+            // Save new identity mapping dynamically
+            accountsDatabase[usernameInput] = {
+                password: passwordInput,
+                role: assignedRole
+            };
+
+            alert(`Registration successful! Account "${usernameInput}" initialized as ${assignedRole.toUpperCase()}.`);
+            document.getElementById('register-user-form').reset();
+            
+            // Prefill and route user directly back to sign in view
+            document.getElementById('loginUser').value = usernameInput;
+            toggleAuthForm(false);
+        }
+
+        // --- SECURE VERIFICATION LOGIN ENGINE CONTROLLER ---
         function executeSystemLogin(event) {
             event.preventDefault();
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value.trim();
 
-            // Clear any previous step-by-step guides if they exist
             const existingGuide = document.getElementById('creation-guide-box');
-            if (existingGuide) {
-                existingGuide.remove();
-            }
+            if (existingGuide) existingGuide.remove();
 
-            // 1. Validate Admin Accounts
-            if (user === 'admin' && pass === 'admin') {
-                launchPortal('admin');
-                return;
-            } 
-            
-            // 2. Validate Teacher Accounts
-            if (user === 'teacher' && pass === 'teacher') {
-                launchPortal('teacher');
-                return;
-            } 
-            
-            // 3. Validate Student Accounts
-            if (user === 'student' && pass === 'student') {
-                let optionsPrompt = "Select Student Profile to simulate portal authentication:\n";
-                studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
-                let choice = prompt(optionsPrompt, "1");
-                let selectedIndex = parseInt(choice) - 1;
+            // Match against accounts memory register block
+            if (accountsDatabase[user] && accountsDatabase[user].password === pass) {
+                const verifiedRole = accountsDatabase[user].role;
                 
-                if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
-                    selectedIndex = 0;
+                if (verifiedRole === 'student') {
+                    // Choose student context profile view mapping
+                    let optionsPrompt = "Select Student Profile tracking matrix to populate data perspective:\n";
+                    studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
+                    let choice = prompt(optionsPrompt, "1");
+                    let selectedIndex = parseInt(choice) - 1;
+                    
+                    if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
+                        selectedIndex = 0;
+                    }
+                    currentViewStudentId = studentsList[selectedIndex].id;
                 }
-                currentViewStudentId = studentsList[selectedIndex].id;
-                launchPortal('student');
+                
+                launchPortal(verifiedRole);
                 return;
-            }
+            } 
 
-            // 4. IF USERNAME IS INCORRECT: Render Step-by-Step Creation Guide
+            // IF ACCOUNT IS WRONG OR UNRECOGNIZED: Fire step-by-step assistant framework
             showAccountCreationGuide(user);
         }
 
         function showAccountCreationGuide(attemptedUsername) {
-            const form = document.getElementById('login-form');
+            const insertionPoint = document.getElementById('guide-injection-point');
             
-            // Create the step-by-step guide element
             const guideBox = document.createElement('div');
             guideBox.id = 'creation-guide-box';
             guideBox.style.cssText = `
@@ -688,16 +758,17 @@
                 <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
                     ❌ Identity "${attemptedUsername}" not recognized.
                 </strong>
-                <p style="margin-bottom: 10px; color: #7f1d1d;">Accounts must be provisioned by the system. Follow these steps to register:</p>
+                <p style="margin-bottom: 10px; color: #7f1d1d;">Create your custom account using the following steps:</p>
                 <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
-                    <li style="margin-bottom: 5px;"><strong>Verify Credentials:</strong> Double-check your spelling. For testing, use exactly <code>admin</code>, <code>teacher</code>, or <code>student</code>.</li>
-                    <li style="margin-bottom: 5px;"><strong>For Students:</strong> Request registration from the Admin panel via the <em>"Admission Form"</em> tab. An official ID (e.g., <code>REG-004</code>) will be auto-generated.</li>
-                    <li style="margin-bottom: 5px;"><strong>For Staff/Teachers:</strong> Contact the IT Systems Administrator to map your profile to the academic board matrix.</li>
-                    <li><strong>Finalize Passwords:</strong> Once mapped, access the portal using your designated role identifier string.</li>
+                    <li style="margin-bottom: 5px;">Click on the <strong>"Create one now"</strong> link at the bottom of this login card view.</li>
+                    <li style="margin-bottom: 5px;">Enter your own desired username string and a secure password profile token.</li>
+                    <li style="margin-bottom: 5px;">Assign your designated clearance role authorization tier (Admin, Teacher, or Student).</li>
+                    <li style="margin-bottom: 5px;">Submit the form to commit the profile instance allocation to memory storage.</li>
+                    <li>Return to the main gateway and sign in using your newly generated credentials.</li>
                 </ol>
             `;
 
-            form.appendChild(guideBox);
+            insertionPoint.appendChild(guideBox);
         }
 
         function launchPortal(role) {
@@ -720,6 +791,7 @@
             document.getElementById('login-form').reset();
             const existingGuide = document.getElementById('creation-guide-box');
             if (existingGuide) existingGuide.remove();
+            toggleAuthForm(false);
             document.getElementById('app-container').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
         }
@@ -977,7 +1049,6 @@
             }
         }
 
-        // Initialize Baseline Renders
         renderDashboardView();
         updateDashboardMetrics();
     </script>
