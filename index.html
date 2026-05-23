@@ -691,8 +691,12 @@
                     <div class="card warning"><h3>My Classroom Grade Score</h3><p id="portal-grade-display">Not Marked</p></div>
                     <div class="card" id="portal-attendance-card"><h3>My Attendance Record</h3><p id="portal-attendance-status">Present</p></div>
                 </div>
+                
                 <div class="dashboard-box">
-                    <h3 style="margin-bottom: 15px;">My Borrowed Books Locker</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>My Borrowed Books Locker</h3>
+                        <button class="btn btn-success" onclick="openBorrowModal()">Request/Borrow New Book</button>
+                    </div>
                     <table style="box-shadow: none; margin-top: 0;">
                         <thead><tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
                         <tbody id="portal-books-body"></tbody>
@@ -729,13 +733,24 @@
     <div class="modal" id="borrowModal">
         <form id="borrow-form" onsubmit="submitBorrowForm(event)">
             <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
-            <div class="form-group"><label>Select Student</label><select id="borrowerSelect" required></select></div>
+            
+            <div class="form-group" id="borrower-selection-group">
+                <label>Select Student Target</label>
+                <select id="borrowerSelect"></select>
+            </div>
+            
+            <div class="form-group" id="borrower-static-display-group" style="display:none;">
+                <label>Issuing Book For Profile</label>
+                <input type="text" id="borrowerStaticLabel" readonly style="background: rgba(0,0,0,0.05); font-weight: bold;">
+            </div>
+
             <div class="form-group">
                 <label>Textbook Title</label>
                 <select id="bookSelect" required>
                     <option value="Mathematics REB Pupil's Book P5">Mathematics REB Pupil's Book P5</option>
                     <option value="English Skills Secondary S1">English Skills Secondary S1</option>
                     <option value="Science and Technology Primary P6">Science and Technology Primary P6</option>
+                    <option value="Social Studies Kinyarwanda Companion">Social Studies Kinyarwanda Companion</option>
                 </select>
             </div>
             <div class="form-group"><label>Issue Date</label><input type="date" id="borrowDate" required></div>
@@ -954,7 +969,6 @@
             const existingGuide = document.getElementById('creation-guide-box');
             if (existingGuide) existingGuide.remove();
 
-            // Matches against both default entries and dynamically appended user entries
             if (accountsDatabase[user] && accountsDatabase[user].password === pass) {
                 const verifiedRole = accountsDatabase[user].role;
                 const associatedProfileRef = accountsDatabase[user].profileRef;
@@ -1201,9 +1215,13 @@
 
         function updateDashboardMetrics() {
             const activeBorrowedCount = libraryLedger.filter(item => item.status === 'Borrowed').length;
-            document.getElementById('dash-student-count').innerText = studentsList.length;
-            document.getElementById('dash-class-count').innerText = schoolMetrics.classesCount;
-            document.getElementById('dash-books-count').innerText = activeBorrowedCount;
+            const docStudentEl = document.getElementById('dash-student-count');
+            const docClassEl = document.getElementById('dash-class-count');
+            const docBooksEl = document.getElementById('dash-books-count');
+            
+            if(docStudentEl) docStudentEl.innerText = studentsList.length;
+            if(docClassEl) docClassEl.innerText = schoolMetrics.classesCount;
+            if(docBooksEl) docBooksEl.innerText = activeBorrowedCount;
         }
 
         function renderDashboardView() {
@@ -1251,25 +1269,67 @@
             }
         }
 
+        // --- ADAPTIVE ADMISSIONS AND LIBRARY ISSUING SYSTEM ---
         function openBorrowModal() {
-            const selectEl = document.getElementById('borrowerSelect');
-            selectEl.innerHTML = '';
-            studentsList.forEach(student => { selectEl.innerHTML += `<option value="${student.id}">${student.name}</option>`; });
+            const selectGroup = document.getElementById('borrower-selection-group');
+            const staticDisplayGroup = document.getElementById('borrower-static-display-group');
+            
             document.getElementById('borrowDate').value = new Date().toISOString().split('T')[0];
+
+            if (activePortalRole === 'student') {
+                // Self-borrow workflow
+                let activeStudent = studentsList.find(s => s.id === currentViewStudentId);
+                selectGroup.style.display = "none";
+                staticDisplayGroup.style.display = "block";
+                document.getElementById('borrowerStaticLabel').value = activeStudent ? activeStudent.name : "Active Student Profile";
+            } else {
+                // Admin or Teacher master issuing workflow
+                selectGroup.style.display = "block";
+                staticDisplayGroup.style.display = "none";
+                const selectEl = document.getElementById('borrowerSelect');
+                selectEl.innerHTML = '';
+                studentsList.forEach(student => { 
+                    selectEl.innerHTML += `<option value="${student.id}">${student.name} [${student.class}]</option>`; 
+                });
+            }
+
             document.getElementById('borrowModal').classList.add('active');
         }
 
         function submitBorrowForm(event) {
             event.preventDefault();
-            const studentId = document.getElementById('borrowerSelect').value;
-            const targetStudent = studentsList.find(s => s.id === studentId);
+            let studentId;
+            let targetStudent;
+
+            if (activePortalRole === 'student') {
+                studentId = currentViewStudentId;
+                targetStudent = studentsList.find(s => s.id === studentId);
+            } else {
+                studentId = document.getElementById('borrowerSelect').value;
+                targetStudent = studentsList.find(s => s.id === studentId);
+            }
+
             const bookTitle = document.getElementById('bookSelect').value;
             const borrowDate = document.getElementById('borrowDate').value;
 
             if (targetStudent) {
-                libraryLedger.push({ id: libraryLedger.length + 1, studentId: targetStudent.id, studentName: targetStudent.name, bookTitle: bookTitle, date: borrowDate, status: 'Borrowed' });
+                libraryLedger.push({ 
+                    id: libraryLedger.length + 1, 
+                    studentId: targetStudent.id, 
+                    studentName: targetStudent.name, 
+                    bookTitle: bookTitle, 
+                    date: borrowDate, 
+                    status: 'Borrowed' 
+                });
+                
                 closeModal('borrowModal');
-                renderLibraryTable();
+                alert(`Success! "${bookTitle}" has been checked out to ${targetStudent.name}.`);
+                
+                if (activePortalRole === 'student') {
+                    renderStudentPortalDashboard();
+                } else if (activePortalRole === 'admin') {
+                    renderLibraryTable();
+                }
                 updateDashboardMetrics();
             }
         }
