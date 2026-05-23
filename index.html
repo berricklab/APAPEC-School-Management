@@ -117,6 +117,57 @@
             margin-bottom: 15px;
         }
 
+        /* Profile Photo Styles */
+        .photo-preview-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+
+        .profile-avatar-display {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            background-color: var(--secondary-color);
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .table-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color);
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -424,9 +475,19 @@
                     Please provide your institutional data details to bind your user account.
                 </div>
                 <form id="profile-details-form" onsubmit="executeFullRegistration(event)" style="box-shadow:none; padding:0; max-width:100%;">
+                    
+                    <!-- Profile Photo Sub-section -->
+                    <div class="photo-preview-wrapper">
+                        <div id="photo-preview-element" class="profile-avatar-display">?</div>
+                        <div class="form-group" style="margin-bottom:0; width:100%;">
+                            <label for="profPhoto" style="text-align:center; font-size:0.8rem; color:#4b5563;">Upload Profile Picture</label>
+                            <input type="file" id="profPhoto" accept="image/*" onchange="processProfilePhotoUpload(this)" style="font-size:0.8rem; padding:5px;">
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="profFullName">Full Legal Name</label>
-                        <input type="text" id="profFullName" required placeholder="Firstname Lastname">
+                        <input type="text" id="profFullName" required placeholder="Firstname Lastname" oninput="liveUpdateAvatarFallback(this.value)">
                     </div>
                     
                     <!-- Dynamic view fields updated based on chosen role -->
@@ -530,7 +591,7 @@
                     <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
                         <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
                         <p style="font-size: 0.9rem; line-height: 1.4;">
-                            Login framework active. Administration updates filter context immediately to corresponding teacher rosters and student portal displays.
+                            Login framework active. Profile photo binary strings persist inside local system memory vectors for integrated deployment across standard rosters.
                         </p>
                     </div>
                 </div>
@@ -539,7 +600,7 @@
             <section id="students" class="page-section">
                 <h3>Registered Students Database</h3>
                 <table id="student-table">
-                    <thead><tr><th>ID</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Avatar</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </section>
@@ -581,8 +642,13 @@
             <!-- ================= TEACHER WORKSPACE PAGES SECTION ================= -->
             <section id="teacher-home" class="page-section">
                 <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #10b981); color: white; padding: 25px;">
-                    <h2 id="teacher-welcome-title">Welcome to the Faculty Room Dashboard</h2>
-                    <p id="teacher-meta-subtitle" style="margin-top: 5px; opacity: 0.9;">Logged in as Senior Class Instructor | APAPEC-IREBERO Academic Board</p>
+                    <div class="profile-header-card">
+                        <div id="teacher-dash-avatar" class="profile-avatar-display" style="width:75px; height:75px; font-size:1.5rem;">FI</div>
+                        <div>
+                            <h2 id="teacher-welcome-title">Welcome to the Faculty Room Dashboard</h2>
+                            <p id="teacher-meta-subtitle" style="margin-top: 5px; opacity: 0.9;">Logged in as Senior Class Instructor | APAPEC-IREBERO Academic Board</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-grid" style="margin-top:25px;">
                     <div class="card success"><h3>Assigned Classes</h3><p id="teacher-class-metric">3 Grades</p><span style="font-size:0.8rem; color:#6b7280;">Core Academic Path</span></div>
@@ -594,7 +660,7 @@
                 <h3>Daily Attendance Roster Manager</h3>
                 <p style="font-size:0.85rem; color:#6b7280; margin-bottom:15px;">Mark present or absent statuses. Changes dynamically update within student tracking records.</p>
                 <table>
-                    <thead><tr><th>Student ID</th><th>Name</th><th>Class</th><th>Status Attendance</th><th>Action Button</th></tr></thead>
+                    <thead><tr><th>Student ID</th><th>Avatar</th><th>Name</th><th>Class</th><th>Status Attendance</th><th>Action Button</th></tr></thead>
                     <tbody id="teacher-attendance-body"></tbody>
                 </table>
             </section>
@@ -611,8 +677,13 @@
             <!-- ================= STUDENT WORKSPACE PAGE SECTION ================= -->
             <section id="student-home" class="page-section">
                 <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 25px;">
-                    <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
-                    <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration Profile Loaded</p>
+                    <div class="profile-header-card">
+                        <div id="student-dash-avatar" class="profile-avatar-display" style="width:75px; height:75px; font-size:1.5rem;">S</div>
+                        <div>
+                            <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
+                            <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration Profile Loaded</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-grid" style="margin-top: 25px;">
                     <div class="card" id="student-fee-card"><h3>My Finance Status</h3><p id="portal-fee-status">-</p></div>
@@ -685,6 +756,7 @@
 
         // Account & Profile Staging Memory
         let temporaryAccountData = null; 
+        let temporaryUploadedPhotoBase64 = null;
 
         let accountsDatabase = {
             "admin": { password: "admin", role: "admin", profileRef: "ADM-MAIN" },
@@ -693,19 +765,59 @@
         };
 
         let teachersDatabase = {
-            "FAC-001": { name: "Senior Instructor", classAssignment: "P5, P6, S1 Core", contact: "Internal System" }
+            "FAC-001": { name: "Senior Instructor", classAssignment: "P5, P6, S1 Core", contact: "Internal System", photo: null }
         };
 
         let studentsList = [
-            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88, linkedUser: "student" },
-            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74, linkedUser: null },
-            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid", attendance: "Absent", score: 91, linkedUser: null }
+            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88, linkedUser: "student", photo: null },
+            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74, linkedUser: null, photo: null },
+            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid", attendance: "Absent", score: 91, linkedUser: null, photo: null }
         ];
 
         let libraryLedger = [
             { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
             { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
         ];
+
+        // --- HELPER: INITIALS/AVATAR COMPILER ---
+        function getAvatarMarkup(name, photoBase64, customStyleClass = "table-avatar") {
+            if (photoBase64) {
+                return `<img src="${photoBase64}" class="${customStyleClass}" alt="${name}">`;
+            }
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "?";
+            return `<div class="${customStyleClass}">${initials}</div>`;
+        }
+
+        function liveUpdateAvatarFallback(nameString) {
+            const previewEl = document.getElementById('photo-preview-element');
+            if (temporaryUploadedPhotoBase64) return; 
+            
+            if (!nameString.trim()) {
+                previewEl.innerText = "?";
+                previewEl.style.backgroundImage = "none";
+                return;
+            }
+            const initials = nameString.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            previewEl.innerText = initials || "?";
+            previewEl.style.backgroundImage = "none";
+        }
+
+        // --- FILE PROCESSING SYSTEM ---
+        function processProfilePhotoUpload(inputElement) {
+            const file = inputElement.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    temporaryUploadedPhotoBase64 = e.target.result;
+                    const previewEl = document.getElementById('photo-preview-element');
+                    previewEl.innerText = "";
+                    previewEl.style.backgroundImage = `url('${temporaryUploadedPhotoBase64}')`;
+                    previewEl.style.backgroundSize = "cover";
+                    previewEl.style.backgroundPosition = "center";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
         // --- AUTH INTERFACE VIEW ENGINE ---
         function toggleAuthForm(viewMode) {
@@ -726,6 +838,11 @@
             } else if (viewMode === 'profile') {
                 document.getElementById('profile-view').style.display = 'block';
                 document.getElementById('auth-subtitle').innerText = 'Step 2: Initialize Profile Configuration';
+                
+                // Clear out residual staging imagery references
+                temporaryUploadedPhotoBase64 = null;
+                document.getElementById('photo-preview-element').innerText = "?";
+                document.getElementById('photo-preview-element').style.backgroundImage = "none";
             }
         }
 
@@ -741,18 +858,15 @@
                 return;
             }
 
-            // Stage details temporarily before creating profile binding
             temporaryAccountData = {
                 username: usernameInput,
                 password: passwordInput,
                 role: assignedRole
             };
 
-            // Transition to Step 2: Extended Profile Details
             toggleAuthForm('profile');
         }
 
-        // Dynamically adjust fields during setup view
         function adaptProfileRequirementNotice(selectedRole) {
             const textEl = document.getElementById('profile-notice-text');
             const classBox = document.getElementById('class-group-box');
@@ -790,7 +904,6 @@
 
             if (uRole === 'student') {
                 referenceTokenId = `REG-00${studentsList.length + 1}`;
-                // Commit to master students registry list
                 studentsList.push({
                     id: referenceTokenId,
                     name: fullName,
@@ -799,19 +912,19 @@
                     status: "Pending",
                     attendance: "Present",
                     score: 0,
-                    linkedUser: uName
+                    linkedUser: uName,
+                    photo: temporaryUploadedPhotoBase64
                 });
             } else if (uRole === 'teacher') {
                 referenceTokenId = `FAC-00${Object.keys(teachersDatabase).length + 1}`;
-                // Commit to teachers roster memory
                 teachersDatabase[referenceTokenId] = {
                     name: fullName,
                     classAssignment: selectionClass,
-                    contact: contactNum
+                    contact: contactNum,
+                    photo: temporaryUploadedPhotoBase64
                 };
             }
 
-            // Permanently commit security credentials mapped to new profile token
             accountsDatabase[uName] = {
                 password: temporaryAccountData.password,
                 role: uRole,
@@ -820,13 +933,15 @@
 
             alert(`Success! Profile built for ${fullName}. Initializing auto-login to active role portal view.`);
             
-            // Clean forms & automatically log user in
             document.getElementById('register-user-form').reset();
             document.getElementById('profile-details-form').reset();
             
-            currentViewStudentId = referenceTokenId; // map view parameter
+            currentViewStudentId = referenceTokenId; 
+            if (uRole === 'teacher') window.currentTeacherRef = referenceTokenId;
+            
             launchPortal(uRole);
             temporaryAccountData = null; 
+            temporaryUploadedPhotoBase64 = null;
         }
 
         // --- SECURE VERIFICATION LOGIN SYSTEM ---
@@ -845,7 +960,6 @@
                 if (verifiedRole === 'student') {
                     currentViewStudentId = associatedProfileRef;
                 } else if (verifiedRole === 'teacher') {
-                    // Cache reference for teacher rendering lookup if custom profiles logged in
                     window.currentTeacherRef = associatedProfileRef;
                 }
                 
@@ -876,11 +990,11 @@
                 <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
                     ❌ Identity "${attemptedUsername}" not recognized.
                 </strong>
-                <p style="margin-bottom: 10px; color: #7f1d1d;">Create your custom account and profile instantly:</p>
+                <p style="margin-bottom: 10px; color: #7f1d1d;">Create your custom account with a profile picture instantly:</p>
                 <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
                     <li style="margin-bottom: 5px;">Click on the <strong>"Create one now"</strong> navigation link below.</li>
                     <li style="margin-bottom: 5px;">Specify your username, choice password, and clearance role structure tier.</li>
-                    <li style="margin-bottom: 5px;">Fill out the <strong>Profile Setup Form</strong> to instantiate your full academic/staff data file.</li>
+                    <li style="margin-bottom: 5px;">Upload a custom image file alongside your institutional details on the next form.</li>
                     <li>Submit to automatically log directly into your clean interface hub.</li>
                 </ol>
             `;
@@ -918,8 +1032,8 @@
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(tabId).classList.add('active');
-            if(event && event.target.classList.contains('menu-btn')) {
-                event.target.classList.add('active');
+            if(window.event && window.event.target.classList.contains('menu-btn')) {
+                window.event.target.classList.add('active');
             }
 
             if(tabId === 'dashboard') renderDashboardView();
@@ -937,11 +1051,24 @@
         // --- TEACHER WORKSPACE ACTIONS ENGINE ---
         function renderTeacherHomeDashboard() {
             const ref = window.currentTeacherRef || "FAC-001";
-            const profile = teachersDatabase[ref] || { name: "Senior Instructor", classAssignment: "General Courses" };
+            const profile = teachersDatabase[ref] || { name: "Senior Instructor", classAssignment: "General Courses", photo: null };
             
             document.getElementById('teacher-welcome-title').innerText = `Welcome to the Faculty Room, ${profile.name}!`;
             document.getElementById('teacher-meta-subtitle').innerText = `Profile Mapping: ${ref} | Class Tracking Control Module`;
             document.getElementById('teacher-class-metric').innerText = profile.classAssignment;
+
+            // Render Photo onto Dashboard Card
+            const avatarBox = document.getElementById('teacher-dash-avatar');
+            if (profile.photo) {
+                avatarBox.innerText = "";
+                avatarBox.style.backgroundImage = `url('${profile.photo}')`;
+                avatarBox.style.backgroundSize = "cover";
+                avatarBox.style.backgroundPosition = "center";
+            } else {
+                const initials = profile.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                avatarBox.innerText = initials;
+                avatarBox.style.backgroundImage = "none";
+            }
             calculateTeacherMetrics();
         }
 
@@ -950,9 +1077,11 @@
             tbody.innerHTML = '';
             studentsList.forEach(student => {
                 const badgeClass = student.attendance === 'Present' ? 'present' : 'absent';
+                const avatarCellMarkup = getAvatarMarkup(student.name, student.photo, "table-avatar");
                 tbody.innerHTML += `
                     <tr>
                         <td>${student.id}</td>
+                        <td>${avatarCellMarkup}</td>
                         <td><strong>${student.name}</strong></td>
                         <td>${student.class}</td>
                         <td><span class="badge ${badgeClass}">${student.attendance}</span></td>
@@ -1011,9 +1140,8 @@
         function renderStudentPortalDashboard() {
             let currentStudent = studentsList.find(s => s.id === currentViewStudentId);
             
-            // Fallback safety to prevent errors if no matched student is found
             if (!currentStudent) {
-                currentStudent = { id: "REG-UNK", name: "Guest Profile Student", class: "P5", status: "Pending", attendance: "Present", score: 0 };
+                currentStudent = { id: "REG-UNK", name: "Guest Profile Student", class: "P5", status: "Pending", attendance: "Present", score: 0, photo: null };
             }
 
             document.getElementById('portal-welcome-name').innerText = `Welcome Back, ${currentStudent.name}!`;
@@ -1021,6 +1149,19 @@
             document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
             document.getElementById('portal-grade-display').innerText = `${currentStudent.score}%`;
             
+            // Render Photo onto Student Main Header Banner
+            const avatarBox = document.getElementById('student-dash-avatar');
+            if (currentStudent.photo) {
+                avatarBox.innerText = "";
+                avatarBox.style.backgroundImage = `url('${currentStudent.photo}')`;
+                avatarBox.style.backgroundSize = "cover";
+                avatarBox.style.backgroundPosition = "center";
+            } else {
+                const initials = currentStudent.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                avatarBox.innerText = initials;
+                avatarBox.style.backgroundImage = "none";
+            }
+
             const statusEl = document.getElementById('portal-fee-status');
             statusEl.innerText = currentStudent.status;
             document.getElementById('student-fee-card').className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
@@ -1077,7 +1218,8 @@
             const tbody = document.querySelector('#student-table tbody');
             tbody.innerHTML = '';
             studentsList.forEach(student => {
-                tbody.innerHTML += `<tr><td>${student.id}</td><td>${student.name}</td><td>${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
+                const avatarCell = getAvatarMarkup(student.name, student.photo, "table-avatar");
+                tbody.innerHTML += `<tr><td>${student.id}</td><td>${avatarCell}</td><td>${student.name}</td><td>${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
             });
         }
 
@@ -1139,7 +1281,7 @@
             const contact = document.getElementById('guardianContact').value;
             const newId = `REG-00${studentsList.length + 1}`;
 
-            studentsList.push({ id: newId, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null });
+            studentsList.push({ id: newId, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
             document.getElementById('admission-form').reset();
             alert(`Registered ${name} successfully.`);
             switchTab('dashboard');
