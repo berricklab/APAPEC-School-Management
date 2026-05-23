@@ -511,9 +511,16 @@
                     <div class="form-group" id="class-group-box">
                         <label id="class-box-label">Academic Grade Assignment</label>
                         <select id="profClass">
+                            <option value="Nursery">Nursery</option>
+                            <option value="Baby Class">Baby Class</option>
+                            <option value="Middle Class">Middle Class</option>
+                            <option value="Pre-Primary">Pre-Primary</option>
+                            <option value="P1">Primary 1 (P1)</option>
+                            <option value="P2">Primary 2 (P2)</option>
+                            <option value="P3">Primary 3 (P3)</option>
+                            <option value="P4">Primary 4 (P4)</option>
                             <option value="P5">Primary 5 (P5)</option>
                             <option value="P6">Primary 6 (P6)</option>
-                            <option value="S1">Senior 1 (S1)</option>
                         </select>
                     </div>
 
@@ -602,7 +609,7 @@
 
                 <div class="card-grid">
                     <div class="card"><h3>Total Students</h3><p id="dash-student-count">0</p></div>
-                    <div class="card success"><h3>Active Classes</h3><p id="dash-class-count">3</p></div>
+                    <div class="card success"><h3>Active Levels</h3><p id="dash-class-count">10</p></div>
                     <div class="card"><h3>Books Checked Out</h3><p id="dash-books-count">0</p></div>
                 </div>
 
@@ -617,7 +624,7 @@
                     <div class="dashboard-box" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color);">
                         <h4 style="color: var(--accent-color); margin-bottom: 10px;">Data Sovereignty Active</h4>
                         <p style="font-size: 0.9rem; line-height: 1.4;">
-                            Data structures enforce isolation rules. Teachers only manage their classes, and parents can only supervise their linked children.
+                            Data structures enforce isolation rules. Early childhood and primary teachers only manage their respective tiers.
                         </p>
                     </div>
                 </div>
@@ -643,9 +650,18 @@
                 <form id="admission-form" onsubmit="registerStudent(event)">
                     <div class="form-group"><label>Full Name</label><input type="text" id="studentName" required></div>
                     <div class="form-group">
-                        <label>Assign Class</label>
+                        <label>Assign Class/Level</label>
                         <select id="studentClass">
-                            <option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
+                            <option value="Nursery">Nursery</option>
+                            <option value="Baby Class">Baby Class</option>
+                            <option value="Middle Class">Middle Class</option>
+                            <option value="Pre-Primary">Pre-Primary</option>
+                            <option value="P1">Primary 1</option>
+                            <option value="P2">Primary 2</option>
+                            <option value="P3">Primary 3</option>
+                            <option value="P4">Primary 4</option>
+                            <option value="P5">Primary 5</option>
+                            <option value="P6">Primary 6</option>
                         </select>
                     </div>
                     <div class="form-group"><label>Guardian Phone Number</label><input type="tel" id="guardianContact" required></div>
@@ -786,48 +802,62 @@
         let gradesDB = {};      
 
         let studentCurrentPage = 1;
-        const studentRecordsPerPage = 7;
+        const studentRecordsPerPage = 10;
         let financeCurrentPage = 1;
-        const financeRecordsPerPage = 7;
+        const financeRecordsPerPage = 10;
 
         let temporaryProfilePhotoBase64 = null;
 
-        // Seed System Data Records
+        // Seed System Data Records - Populates exactly 30 students per level across Nursery -> P6
         function seedSystemData() {
-            const structuralFirstNames = ["Aline", "Eric", "Divine", "Jean", "Gael", "Liliane", "Pacifique", "Fiona", "Cedric", "Sandrine", "Blaise", "Ange", "Bruce", "Chantal", "Didier"];
-            const structuralLastNames = ["Keza", "Mugisha", "Gakwaya", "Nshuti", "Uwase", "Kamanzi", "Mutoni", "Murenzi", "Tuyishime", "Rwandarushya", "Uwineza", "Niyonkuru"];
-            const structuralClasses = ["P5", "P6", "S1"];
+            const structuralFirstNames = ["Aline", "Eric", "Divine", "Jean", "Gael", "Liliane", "Pacifique", "Fiona", "Cedric", "Sandrine", "Blaise", "Ange", "Bruce", "Chantal", "Didier", "Claude", "Innocent", "Solange", "Robert", "Grace"];
+            const structuralLastNames = ["Keza", "Mugisha", "Gakwaya", "Nshuti", "Uwase", "Kamanzi", "Mutoni", "Murenzi", "Tuyishime", "Rwandarushya", "Uwineza", "Niyonkuru", "Gasana", "Kabayiza", "Umulisa"];
+            
+            // Updated array matching Nursery -> Primary 6 framework
+            const structuralClasses = [
+                "Nursery", "Baby Class", "Middle Class", "Pre-Primary", 
+                "P1", "P2", "P3", "P4", "P5", "P6"
+            ];
 
-            for (let idx = 1; idx <= 32; idx++) {
-                let fName = structuralFirstNames[idx % structuralFirstNames.length];
-                let lName = structuralLastNames[idx % structuralLastNames.length];
-                let assignedClass = structuralClasses[idx % structuralClasses.length];
-                let mockID = `STU-2026-${1000 + idx}`;
-                
-                let totalToPay = assignedClass === "S1" ? 400000 : 350000; 
-                let totalPaid = idx % 3 === 0 ? totalToPay : (idx % 3 === 1 ? Math.floor(totalToPay / 2) : 0);
+            let idCounter = 1;
 
-                studentsDB.push({
-                    id: mockID,
-                    name: `${lName} ${fName}`,
-                    className: assignedClass,
-                    guardianContact: `+250 788 ${Math.floor(100000 + Math.random() * 900000)}`,
-                    avatarBase64: null,
-                    financials: {
-                        totalToPay: totalToPay,
-                        totalPaid: totalPaid
-                    }
-                });
+            // Generate exactly 30 students for each developmental class level
+            structuralClasses.forEach(assignedClass => {
+                for (let i = 1; i <= 30; i++) {
+                    let fName = structuralFirstNames[(idCounter + i) % structuralFirstNames.length];
+                    let lName = structuralLastNames[(idCounter * i) % structuralLastNames.length];
+                    let mockID = `STU-2026-${1000 + idCounter}`;
+                    
+                    // Fee structural weights: Early Nursery vs Primary matrix rules
+                    let totalToPay = assignedClass.includes("P") ? 300000 : 250000; 
+                    let totalPaid = i % 3 === 0 ? totalToPay : (i % 3 === 1 ? Math.floor(totalToPay / 2) : 0);
 
-                attendanceDB[mockID] = "Present";
-                // Assign variable grades to see the sorting in action clearly
-                gradesDB[mockID] = Math.floor(50 + (idx * 1.5) % 50);
-            }
+                    studentsDB.push({
+                        id: mockID,
+                        name: `${lName} ${fName} (${i})`,
+                        className: assignedClass,
+                        guardianContact: `+250 788 ${Math.floor(100000 + Math.random() * 900000)}`,
+                        avatarBase64: null,
+                        financials: {
+                            totalToPay: totalToPay,
+                            totalPaid: totalPaid
+                        }
+                    });
+
+                    // Set randomized attendance states
+                    attendanceDB[mockID] = (i % 11 === 0) ? "Absent" : "Present";
+                    
+                    // Assign wide grade variants to showcase the cascading structural sorting logic
+                    gradesDB[mockID] = Math.floor(45 + (i * 3.7) % 55);
+
+                    idCounter++;
+                }
+            });
 
             libraryDB = [
-                { id: "BK-091", borrowerName: "Mugisha Eric", bookTitle: "Advanced Primary Mathematics P6", issueDate: "2026-05-10", isReturned: false },
-                { id: "BK-442", borrowerName: "Keza Aline", bookTitle: "Rwandan History and Heritage Vol I", issueDate: "2026-05-18", isReturned: true },
-                { id: "BK-108", borrowerName: "Uwase Divine", bookTitle: "English Literature Companion", issueDate: "2026-05-20", isReturned: false }
+                { id: "BK-091", borrowerName: "Keza Aline (1)", bookTitle: "Early Childhood Picture Reading Guide", issueDate: "2026-05-10", isReturned: false },
+                { id: "BK-442", borrowerName: "Mugisha Eric (2)", bookTitle: "Elementary Kinyarwanda Tales", issueDate: "2026-05-18", isReturned: true },
+                { id: "BK-108", borrowerName: "Uwase Divine (3)", bookTitle: "Primary Mathematics Workbook", issueDate: "2026-05-20", isReturned: false }
             ];
         }
 
@@ -854,10 +884,10 @@
                 classBox.style.display = "none";
                 noticeEl.innerText = "System Administrator configurations: Please input your institutional name details.";
             } else if (selectedRole === 'teacher') {
-                classLabel.innerText = "Designated Classroom Faculty Responsibility";
-                noticeEl.innerText = "Teacher configurations: Select the single grade loop you are assigned to teach.";
+                classLabel.innerText = "Designated Level Faculty Responsibility";
+                noticeEl.innerText = "Teacher configurations: Select the early childhood or primary grade loop you teach.";
             } else if (selectedRole === 'student') {
-                classLabel.innerText = "Academic Enrollment Grade Placement";
+                classLabel.innerText = "Academic Enrollment Level Placement";
                 noticeEl.innerText = "Student configurations: Select your active academic division tier.";
             } else if (selectedRole === 'parent') {
                 classBox.style.display = "none";
@@ -926,7 +956,7 @@
                     className: assignedClass,
                     guardianContact: contact || "+250 788 000 000",
                     avatarBase64: temporaryProfilePhotoBase64,
-                    financials: { totalToPay: assignedClass === "S1" ? 400000 : 350000, totalPaid: 0 }
+                    financials: { totalToPay: assignedClass.includes("P") ? 300000 : 250000, totalPaid: 0 }
                 });
                 attendanceDB[systemGeneratedStudentRef] = "Present";
                 gradesDB[systemGeneratedStudentRef] = 0;
@@ -950,12 +980,12 @@
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             
             let resolvedRole = "admin";
-            let targetClass = "P5";
+            let targetClass = "P1";
             let linkedId = null;
 
             if (user.includes("teacher")) {
                 resolvedRole = "teacher";
-                targetClass = user.includes("p6") ? "P6" : (user.includes("s1") ? "S1" : "P5");
+                targetClass = user.includes("p6") ? "P6" : (user.includes("nursery") ? "Nursery" : "P1");
             } else if (user.includes("parent")) {
                 resolvedRole = "parent";
                 linkedId = studentsDB[0] ? studentsDB[0].id : null; 
@@ -1009,13 +1039,14 @@
             } else if (activeUserSession.role === 'teacher') {
                 document.getElementById('teacher-sidebar-menu').style.display = 'block';
                 document.getElementById('teacher-welcome-title').innerText = `Welcome, Educator ${activeUserSession.fullName}`;
-                document.getElementById('teacher-meta-subtitle').innerText = `Primary Academic Registrar Room - Level: ${activeUserSession.assignedClass}`;
+                document.getElementById('teacher-meta-subtitle').innerText = `Academic Level Instructor Room - Assignment: ${activeUserSession.assignedClass}`;
                 switchTab('teacher-home');
             } else if (activeUserSession.role === 'student') {
                 document.getElementById('student-sidebar-menu').style.display = 'block';
                 switchTab('student-home');
             } else if (activeUserSession.role === 'parent') {
                 document.getElementById('parent-sidebar-menu').style.display = 'block';
+                document.getElementById('parent-welcome-subtitle').innerText = "Monitoring Student Files";
                 switchTab('parent-home');
             }
             
@@ -1158,7 +1189,7 @@
             const targetClass = activeUserSession.assignedClass;
             
             document.querySelectorAll('.target-class-display').forEach(el => el.innerText = `Class ${targetClass}`);
-            document.getElementById('teacher-class-metric').innerText = targetClass;
+            document.getElementById('teacher-class-metric').innerText = `${targetClass} (30 Students)`;
 
             const classFilteredStudents = studentsDB.filter(s => s.className === targetClass);
 
@@ -1167,7 +1198,7 @@
             const attPct = classFilteredStudents.length ? Math.round((totalPresent / classFilteredStudents.length) * 100) : 100;
             document.getElementById('teacher-dash-attendance').innerText = `${attPct}%`;
 
-            // Attendance Panel remains in order
+            // Attendance Panel
             const attBody = document.getElementById('teacher-attendance-body');
             attBody.innerHTML = "";
             classFilteredStudents.forEach(stu => {
@@ -1184,11 +1215,10 @@
                 </tr>`;
             });
 
-            // Academic Gradebook Entry Matrix with descending sorting implemented
+            // Academic Gradebook Entry Matrix sorted Descending (Highest to Lowest)
             const gradeBody = document.getElementById('teacher-grades-body');
             gradeBody.innerHTML = "";
 
-            // Clone, map matching scores, and sort array by grade descending (Highest to Lowest)
             const sortedGradeList = [...classFilteredStudents].map(stu => {
                 return {
                     ...stu,
@@ -1209,7 +1239,7 @@
             });
         }
 
-        // Personal student profile render
+        // Student Profile Viewer Panel
         function renderStudentPersonalPortal() {
             const targetStudentId = activeUserSession.linkedStudentId;
             const studentObj = studentsDB.find(s => s.id === targetStudentId);
@@ -1322,7 +1352,7 @@
             const contact = document.getElementById('guardianContact').value.trim();
             const newID = `STU-2026-${1000 + studentsDB.length + 1}`;
 
-            const feeBase = className === "S1" ? 400000 : 350000;
+            const feeBase = className.includes("P") ? 300000 : 250000;
 
             studentsDB.unshift({
                 id: newID,
@@ -1348,6 +1378,7 @@
             }
         }
 
+        // Dynamic tuition helper dialog tool
         function promptUpdatePayment(studentId) {
             const studentObj = studentsDB.find(s => s.id === studentId);
             if (!studentObj) return;
@@ -1374,6 +1405,7 @@
             renderTeacherClassroomLocker();
         }
 
+        // Modify Grade Runtime Core Action
         function promptAlterGradeScore(studentId) {
             const current = gradesDB[studentId] || 0;
             const entry = prompt(`Enter new cumulative test score out of 100 for student:`, current);
@@ -1389,7 +1421,7 @@
             renderTeacherClassroomLocker();
         }
 
-        // Library data mutations
+        // Library operations
         function openBorrowModal() {
             const borrower = prompt("Enter full name of structural borrower student profile:");
             if (!borrower) return;
@@ -1426,6 +1458,7 @@
             }
         }
 
+        // Pagination for Finance Registry Panel
         function changeFinancePage(direction) {
             const maxPage = Math.ceil(studentsDB.length / financeRecordsPerPage);
             const newPage = financeCurrentPage + direction;
@@ -1457,7 +1490,7 @@
             }
         }
 
-        // Global Initialization
+        // Global Initialization Loop
         window.onload = function() {
             seedSystemData();
         };
