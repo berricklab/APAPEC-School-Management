@@ -3,1531 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="window-title">APAPEC-IREBERO | School Management System</title>
+    <title>Browser LocalStorage Manager</title>
     <style>
-        /* CSS Theme Definitions */
         :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --accent-color: #10b981;
-            --danger-color: #ef4444;
-            --bg-color: #f3f4f6;
-            --surface-color: #ffffff;
-            --text-color: #1f2937;
-            --sidebar-text: #cbd5e1;
-            --sidebar-width: 260px;
-        }
-
-        [data-theme="light"] {
-            --primary-color: #0f172a;
-            --secondary-color: #2563eb;
-            --accent-color: #16a34a;
-            --danger-color: #dc2626;
-            --bg-color: #f8fafc;
-            --surface-color: #ffffff;
-            --text-color: #0f172a;
-            --sidebar-text: #94a3b8;
-        }
-
-        [data-theme="dark"] {
-            --primary-color: #0f172a;
-            --secondary-color: #3b82f6;
-            --accent-color: #34d399;
-            --danger-color: #f87171;
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --text-color: #f8fafc;
-            --sidebar-text: #94a3b8;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #ef4444;
+            --border: #e2e8f0;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.25s ease, color 0.25s ease;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-        }
-
-        /* --- LOGIN GATE SCREEN STYLES --- */
-        #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: var(--text-main);
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            overflow-y: auto;
-            padding: 20px;
         }
 
-        .login-card {
-            background: #ffffff;
-            padding: 40px;
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            padding: 30px;
             border-radius: 12px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            color: #1f2937;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
         }
 
-        .login-card h2 {
-            text-align: center;
-            margin-bottom: 5px;
-            color: #1e3a8a;
-        }
-
-        .login-card p.subtitle {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-bottom: 20px;
-        }
-
-        .toggle-auth-mode {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .toggle-auth-mode a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .toggle-auth-mode a:hover {
-            text-decoration: underline;
-        }
-
-        .profile-setup-notice {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #1e40af;
-            margin-bottom: 15px;
-        }
-
-        /* Profile Photo Styles */
-        .photo-preview-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: rgba(0, 0, 0, 0.02);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #ccc;
-        }
-
-        .profile-avatar-display {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
-            background-color: var(--secondary-color);
-            border: 3px solid #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .profile-header-card {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .table-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: white;
-            background-color: var(--primary-color);
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-
-        /* --- MAIN SYSTEM APP LAYOUT --- */
-        #app-container {
-            display: none; 
-        }
-
-        aside {
-            width: var(--sidebar-width);
-            background-color: var(--primary-color);
-            height: 100vh;
-            position: fixed;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 10;
-        }
-
-        .brand {
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
-            color: #ffffff;
-            word-wrap: break-word;
-        }
-
-        .menu-btn {
-            background: none;
-            border: none;
-            color: var(--sidebar-text);
-            padding: 12px 15px;
-            text-align: left;
-            width: 100%;
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: 6px;
+        h2 {
             margin-bottom: 8px;
-            transition: all 0.3s;
+            color: #0f172a;
         }
 
-        .menu-btn:hover, .menu-btn.active {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        main {
-            margin-left: var(--sidebar-width);
-            flex-grow: 1;
-            padding: 40px;
-            width: calc(100% - var(--sidebar-width));
-            overflow-y: auto;
-            height: 100vh;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: var(--surface-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        select.control-select {
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background: var(--surface-color);
-            color: var(--text-color);
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .page-section {
-            display: none;
-        }
-
-        .page-section.active {
-            display: block;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: var(--surface-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--secondary-color);
-        }
-
-        .card.success { border-left-color: var(--accent-color); }
-        .card.danger { border-left-color: var(--danger-color); }
-        .card.warning { border-left-color: #f59e0b; }
-
-        .card h3 {
+        p.subtitle {
             font-size: 0.9rem;
-            color: #6b7280;
-            text-transform: uppercase;
-        }
-
-        .card p {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-
-        .dashboard-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .dashboard-box {
-            background: var(--surface-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        form {
-            background: var(--surface-color);
-            padding: 25px;
-            border-radius: 8px;
-            max-width: 600px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            color: #64748b;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
-        .form-group label {
+        label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .school-edit-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            max-width: 400px;
-            margin-top: 5px;
-        }
-
-        .school-edit-container input {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            flex-grow: 1;
-            background: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .btn {
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background-color: var(--secondary-color); }
-        .btn-success { background-color: var(--accent-color); }
-        .btn-danger { background-color: var(--danger-color); }
-        .btn-sm { padding: 4px 8px; font-size: 0.8rem; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--surface-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        th {
-            background-color: rgba(0, 0, 0, 0.03);
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
             font-size: 0.85rem;
             font-weight: 600;
+            margin-bottom: 6px;
+            color: #475569;
         }
-        .badge.paid, .badge.returned, .badge.present { background-color: #d1fae5; color: #065f46; }
-        .badge.pending, .badge.borrowed, .badge.absent { background-color: #fef3c7; color: #92400e; }
 
-        /* Pagination Layout Control */
-        .pagination-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            background: var(--surface-color);
-            padding: 10px 15px;
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
             border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        .pagination-buttons {
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .button-group {
             display: flex;
-            gap: 5px;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 24px;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
+        button {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .modal.active { display: flex; }
+
+        .btn-save {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-clear {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid var(--border);
+        }
+
+        .btn-clear:hover {
+            background-color: #e2e8f0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .output-box {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 80px;
+        }
+
+        .output-header {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .data-display {
+            font-family: monospace;
+            font-size: 0.95rem;
+            word-break: break-all;
+            color: #0f172a;
+        }
+
+        .empty-state {
+            color: #94a3b8;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ================= 1. SECURE GATEWAY SCREEN ================= -->
-    <div id="login-screen">
-        <div class="login-card">
-            <h2 id="login-brand-title">APAPEC-IREBERO</h2>
-            <p class="subtitle" id="auth-subtitle">Unified Portal Authentication Gateway</p>
-            
-            <!-- View 1: Sign In Form -->
-            <div id="signin-view">
-                <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
-                    <div class="form-group">
-                        <label for="loginUser">Username / Identity String</label>
-                        <input type="text" id="loginUser" required placeholder="e.g., admin1, teacher1, parent1">
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPass">Password</label>
-                        <input type="password" id="loginPass" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
-                        Sign In to Portal
-                    </button>
-                </form>
-                <div class="toggle-auth-mode">
-                    Don't have an account? <a onclick="toggleAuthForm('signup')">Create one now &rarr;</a>
-                </div>
-            </div>
+    <div class="container">
+        <h2>Local Storage Sandbox</h2>
+        <p class="subtitle">Save keys and values securely inside your browser instance.</p>
 
-            <!-- View 2: Account Security Setup Form -->
-            <div id="signup-view" style="display: none;">
-                <form id="register-user-form" onsubmit="handleAccountCreationStage(event)" style="box-shadow:none; padding:0; max-width:100%;">
-                    <div class="form-group">
-                        <label for="regUser">Choose Unique Username</label>
-                        <input type="text" id="regUser" required placeholder="Enter custom username...">
-                    </div>
-                    <div class="form-group">
-                        <label for="regPass">Choose Password</label>
-                        <input type="password" id="regPass" required placeholder="••••••••">
-                    </div>
-                    <div class="form-group">
-                        <label for="regRole">Select System Clearance Role</label>
-                        <select id="regRole" onchange="adaptProfileRequirementNotice(this.value)">
-                            <option value="parent">Parent Portal Account</option>
-                            <option value="student">Student Profile</option>
-                            <option value="teacher">Teacher / Faculty Profile</option>
-                            <option value="admin">System Administrator</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
-                        Next: Complete Profile Setup &rarr;
-                    </button>
-                </form>
-                <div class="toggle-auth-mode">
-                    Already registered? <a onclick="toggleAuthForm('signin')">&larr; Back to Sign In</a>
-                </div>
-            </div>
+        <!-- Input Section -->
+        <div class="form-group">
+            <label for="storageKey">Data Key (Name)</label>
+            <input type="text" id="storageKey" placeholder="e.g., username, custom_theme, user_id">
+        </div>
 
-            <!-- View 3: Extended Profile Details Builder Form -->
-            <div id="profile-view" style="display: none;">
-                <div class="profile-setup-notice" id="profile-notice-text">
-                    Please provide your institutional data details to bind your user account.
-                </div>
-                <form id="profile-details-form" onsubmit="executeFullRegistration(event)" style="box-shadow:none; padding:0; max-width:100%;">
-                    
-                    <!-- Profile Photo Sub-section -->
-                    <div class="photo-preview-wrapper" id="photo-preview-container">
-                        <div id="photo-preview-element" class="profile-avatar-display">?</div>
-                        <div class="form-group" style="margin-bottom:0; width:100%;">
-                            <label for="profPhoto" style="text-align:center; font-size:0.8rem; color:#4b5563;">Upload Profile Picture</label>
-                            <input type="file" id="profPhoto" accept="image/*" onchange="processProfilePhotoUpload(this)" style="font-size:0.8rem; padding:5px;">
-                        </div>
-                    </div>
+        <div class="form-group">
+            <label for="storageValue">Data Value (Content)</label>
+            <input type="text" id="storageValue" placeholder="e.g., Alex_99, dark-mode, 40294">
+        </div>
 
-                    <div class="form-group" id="fullName-group-box">
-                        <label for="profFullName">Full Legal Name</label>
-                        <input type="text" id="profFullName" placeholder="Firstname Lastname" oninput="liveUpdateAvatarFallback(this.value)">
-                    </div>
-                    
-                    <div class="form-group" id="class-group-box">
-                        <label id="class-box-label">Academic Grade Assignment</label>
-                        <select id="profClass">
-                            <option value="P5">Primary 5 (P5)</option>
-                            <option value="P6">Primary 6 (P6)</option>
-                            <option value="S1">Senior 1 (S1)</option>
-                        </select>
-                    </div>
+        <div class="button-group">
+            <button class="btn-save" onclick="saveToLocalStorage()">Commit to Disk</button>
+            <button class="btn-clear" onclick="clearLocalStorage()">Wipe All</button>
+        </div>
 
-                    <!-- Explicit Parent Child Linking Logic Dropdown -->
-                    <div class="form-group" id="parent-student-link-box">
-                        <label for="parentStudentSelect">Select Your Child to Supervise</label>
-                        <select id="parentStudentSelect"></select>
-                    </div>
+        <hr>
 
-                    <div class="form-group" id="contact-group-box">
-                        <label for="profContact">Contact Phone Number</label>
-                        <input type="tel" id="profContact" placeholder="+250 788 000 000">
-                    </div>
-
-                    <button type="submit" class="btn btn-success" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
-                        Save Profile & Log In
-                    </button>
-                </form>
-            </div>
-
-            <div id="guide-injection-point"></div>
+        <!-- Dynamic Output Display Section -->
+        <div class="output-header">Current Disk Registry Storage Contents</div>
+        <div class="output-box">
+            <div id="storageDisplay" class="data-display"></div>
         </div>
     </div>
 
-
-    <!-- ================= 2. MAIN APPLICATION PLATFORM CONTAINER ================= -->
-    <div id="app-container">
-        <aside>
-            <div class="brand" id="sidebar-brand">APAPEC-IREBERO</div>
-            
-            <!-- Admin Menu -->
-            <div id="admin-sidebar-menu" style="display: none;">
-                <button class="menu-btn active" onclick="switchTab('dashboard')">Dashboard</button>
-                <button class="menu-btn" onclick="switchTab('students')">Students Register</button>
-                <button class="menu-btn" onclick="switchTab('add-student')">Admission Form</button>
-                <button class="menu-btn" onclick="switchTab('finance')">Fees Management</button>
-                <button class="menu-btn" onclick="switchTab('library')">Library System</button>
-            </div>
-
-            <!-- Teacher Menu -->
-            <div id="teacher-sidebar-menu" style="display: none;">
-                <button class="menu-btn active" onclick="switchTab('teacher-home')">Teacher Workspace</button>
-                <button class="menu-btn" onclick="switchTab('teacher-attendance')">Class Attendance</button>
-                <button class="menu-btn" onclick="switchTab('teacher-grades')">Academic Gradebook</button>
-            </div>
-
-            <!-- Student Menu -->
-            <div id="student-sidebar-menu" style="display: none;">
-                <button class="menu-btn active" onclick="switchTab('student-home')">My Student Profile</button>
-            </div>
-
-            <!-- Parent Menu -->
-            <div id="parent-sidebar-menu" style="display: none;">
-                <button class="menu-btn active" onclick="switchTab('parent-home')">Child Monitoring Hub</button>
-            </div>
-
-            <button class="btn btn-danger btn-sm" onclick="executeLogout()" style="margin-top: auto; width: 100%; padding: 10px;">
-                Secure Exit Sign-Out
-            </button>
-        </aside>
-
-        <main>
-            <header>
-                <h2 id="page-title">Workspace Dashboard</h2>
-                <div class="header-controls">
-                    <div style="background: var(--primary-color); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">
-                        Current Role: <span id="header-active-role-badge">-</span>
-                    </div>
-                    <div class="theme-selector">
-                        <select id="themeDropdown" class="control-select" onchange="changeTheme(this.value)">
-                            <option value="classic">Theme: Classic Blue</option>
-                            <option value="light">Theme: Light</option>
-                            <option value="dark">Theme: Dark</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-
-            <!-- ================= ADMIN PAGES SECTION ================= -->
-            <section id="dashboard" class="page-section">
-                <div class="dashboard-box" style="border-left: 5px solid var(--primary-color);">
-                    <h4 style="margin-bottom: 5px;">Configure School Identity</h4>
-                    <div class="school-edit-container">
-                        <input type="text" id="schoolNameInput" value="APAPEC-IREBERO">
-                        <button class="btn btn-primary" onclick="updateSchoolName()">Save Name</button>
-                    </div>
-                </div>
-
-                <div class="card-grid">
-                    <div class="card"><h3>Total Students</h3><p id="dash-student-count">50</p></div>
-                    <div class="card success"><h3>Active Classes</h3><p id="dash-class-count">12</p></div>
-                    <div class="card"><h3>Books Checked Out</h3><p id="dash-books-count">2</p></div>
-                </div>
-
-                <div class="dashboard-layout">
-                    <div class="dashboard-box">
-                        <h3 style="margin-bottom: 10px;">Quick Student Status Panel (Recent Entries)</h3>
-                        <table>
-                            <thead><tr><th>Name</th><th>Class</th><th>Action</th></tr></thead>
-                            <tbody id="dash-quick-table"></tbody>
-                        </table>
-                    </div>
-                    <div class="dashboard-box" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color);">
-                        <h4 style="color: var(--accent-color); margin-bottom: 10px;">Data Sovereignty Active</h4>
-                        <p style="font-size: 0.9rem; line-height: 1.4;">
-                            Data structures enforce isolation rules. Teachers only manage their classes, and parents can only supervise their linked children.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="students" class="page-section">
-                <h3>Registered Students Database</h3>
-                <table id="student-table">
-                    <thead><tr><th>ID</th><th>Avatar</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-                <div class="pagination-container">
-                    <div id="student-page-info" style="font-size:0.9rem; font-weight:500;">Showing 1-10 of 50 students</div>
-                    <div class="pagination-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="changeStudentPage(-1)">&larr; Prev</button>
-                        <button class="btn btn-primary btn-sm" onclick="changeStudentPage(1)">Next &rarr;</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="add-student" class="page-section">
-                <h3>New Student Admission</h3><br>
-                <form id="admission-form" onsubmit="registerStudent(event)">
-                    <div class="form-group"><label>Full Name</label><input type="text" id="studentName" required></div>
-                    <div class="form-group">
-                        <label>Assign Class</label>
-                        <select id="studentClass">
-                            <option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Guardian Phone Number</label><input type="tel" id="guardianContact" required></div>
-                    <button type="submit" class="btn btn-success">Register Student</button>
-                </form>
-            </section>
-
-            <section id="finance" class="page-section">
-                <h3>Tuition & Fees Ledger</h3>
-                <table id="finance-table">
-                    <thead><tr><th>Student Name</th><th>Class</th><th>Term Fee</th><th>Status</th><th>Action</th></tr></thead>
-                    <tbody id="finance-table-body"></tbody>
-                </table>
-                <div class="pagination-container">
-                    <div id="finance-page-info" style="font-size:0.9rem; font-weight:500;">Showing 1-10 rows</div>
-                    <div class="pagination-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="changeFinancePage(-1)">&larr; Prev</button>
-                        <button class="btn btn-primary btn-sm" onclick="changeFinancePage(1)">Next &rarr;</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="library" class="page-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3>Library Book Borrowing Tracking Registry</h3>
-                    <button class="btn btn-success" onclick="openBorrowModal()">Issue/Borrow Book</button>
-                </div>
-                <table>
-                    <thead><tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr></thead>
-                    <tbody id="library-table-body"></tbody>
-                </table>
-            </section>
-
-            <!-- ================= TEACHER WORKSPACE PAGES SECTION ================= -->
-            <section id="teacher-home" class="page-section">
-                <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #10b981); color: white; padding: 25px;">
-                    <div class="profile-header-card">
-                        <div id="teacher-dash-avatar" class="profile-avatar-display" style="width:75px; height:75px; font-size:1.5rem;">FI</div>
-                        <div>
-                            <h2 id="teacher-welcome-title">Welcome to the Faculty Room Dashboard</h2>
-                            <p id="teacher-meta-subtitle" style="margin-top: 5px; opacity: 0.9;">Logged in as Instructor</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard-box" style="margin-top: 20px; background-color: #fef3c7; border-left: 4px solid #f59e0b; color: #92400e;">
-                    <strong>🛡️ Isolation Rule Enforced:</strong> You are authorized to access and alter student tracking catalogs for your designated class assignment <strong>only</strong>.
-                </div>
-                <div class="card-grid" style="margin-top:25px;">
-                    <div class="card success"><h3>Your Assigned Grade</h3><p id="teacher-class-metric">-</p><span style="font-size:0.8rem; color:#6b7280;">Data isolation active</span></div>
-                    <div class="card warning"><h3>Classroom Attendance</h3><p id="teacher-dash-attendance">100%</p><span style="font-size:0.8rem; color:#6b7280;">Isolated class percentage</span></div>
-                </div>
-            </section>
-
-            <section id="teacher-attendance" class="page-section">
-                <h3>Daily Attendance Roster Manager (<span class="target-class-display">-</span>)</h3>
-                <table>
-                    <thead><tr><th>Student ID</th><th>Avatar</th><th>Name</th><th>Class</th><th>Status Attendance</th><th>Action Button</th></tr></thead>
-                    <tbody id="teacher-attendance-body"></tbody>
-                </table>
-            </section>
-
-            <section id="teacher-grades" class="page-section">
-                <h3>Continuous Assessment Entry Matrix (<span class="target-class-display">-</span>)</h3>
-                <table>
-                    <thead><tr><th>Student Name</th><th>Assigned Class</th><th>Current Recorded Grade Score</th><th>Action</th></tr></thead>
-                    <tbody id="teacher-grades-body"></tbody>
-                </table>
-            </section>
-
-            <!-- ================= STUDENT WORKSPACE PAGE SECTION ================= -->
-            <section id="student-home" class="page-section">
-                <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 25px;">
-                    <div class="profile-header-card">
-                        <div id="student-dash-avatar" class="profile-avatar-display" style="width:75px; height:75px; font-size:1.5rem;">S</div>
-                        <div>
-                            <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
-                            <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration Profile Loaded</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-grid" style="margin-top: 25px;">
-                    <div class="card" id="student-fee-card"><h3>My Finance Status</h3><p id="portal-fee-status">-</p></div>
-                    <div class="card success"><h3>Academic Enrollment</h3><p id="portal-class-assignment">-</p></div>
-                    <div class="card warning"><h3>My Classroom Grade Score</h3><p id="portal-grade-display">Not Marked</p></div>
-                    <div class="card" id="portal-attendance-card"><h3>My Attendance Record</h3><p id="portal-attendance-status">Present</p></div>
-                </div>
-                
-                <div class="dashboard-box">
-                    <h3>My Borrowed Books Locker</h3>
-                    <table>
-                        <thead><tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
-                        <tbody id="portal-books-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- ================= PARENT PORTAL MONITORING SECTION ================= -->
-            <section id="parent-home" class="page-section">
-                <div class="dashboard-box" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; padding: 25px;">
-                    <div class="profile-header-card">
-                        <div class="profile-avatar-display" style="width:75px; height:75px; font-size:1.5rem; background-color: #4f46e5;">👪</div>
-                        <div>
-                            <h2>Institutional Parent Dashboard Portal</h2>
-                            <p id="parent-welcome-subtitle" style="margin-top: 5px; opacity: 0.9;">Monitoring Student Files</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-box" style="margin-top: 20px; background-color: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; font-size: 0.9rem;">
-                    <strong>🔒 Dynamic Child Security Sandbox Enabled:</strong> This session token can exclusively parse records assigned to your designated dependent child. All other institutional profiles are restricted.
-                </div>
-
-                <h3 style="margin-top: 25px; margin-bottom: 15px;">Monitored Student Profile Record: <span id="parent-linked-child-name" style="color:var(--secondary-color);">-</span></h3>
-                
-                <div class="card-grid">
-                    <div class="card" id="parent-fee-card"><h3>Tuition Payment Status</h3><p id="parent-fee-status">-</p></div>
-                    <div class="card success"><h3>Classroom Placement</h3><p id="parent-class-assignment">-</p></div>
-                    <div class="card warning"><h3>Latest Evaluation Mark</h3><p id="parent-grade-display">-</p></div>
-                    <div class="card" id="parent-attendance-card"><h3>Live Term Attendance</h3><p id="parent-attendance-status">-</p></div>
-                </div>
-
-                <div class="dashboard-box">
-                    <h3>Child's Borrowed Library Log Directory</h3>
-                    <table style="box-shadow: none; margin-top: 15px;">
-                        <thead><tr><th>Book Title</th><th>Checked Out Date</th><th>Status</th></tr></thead>
-                        <tbody id="parent-books-body"></tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Modals -->
-    <div class="modal" id="editModal">
-        <form id="edit-form" onsubmit="saveStudentEdit(event)">
-            <h3 style="margin-bottom: 15px;">Modify Registry Records</h3>
-            <input type="hidden" id="editStudentId">
-            <div class="form-group"><label>Full Name</label><input type="text" id="editStudentName" required></div>
-            <div class="form-group">
-                <label>Class</label>
-                <select id="editStudentClass">
-                    <option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Guardian Contact</label><input type="text" id="editGuardianContact" required></div>
-            <div class="form-group">
-                <label>Payment Status</label>
-                <select id="editStatus"><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button type="button" class="btn btn-danger" onclick="closeModal('editModal')">Cancel</button>
-                <button type="submit" class="btn btn-success">Save Changes</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="borrowModal">
-        <form id="borrow-form" onsubmit="submitBorrowForm(event)">
-            <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
-            <div class="form-group" id="borrower-selection-group">
-                <label>Select Student Target</label>
-                <select id="borrowerSelect"></select>
-            </div>
-            <div class="form-group">
-                <label>Textbook Title</label>
-                <select id="bookSelect" required>
-                    <option value="Mathematics REB Pupil's Book P5">Mathematics REB Pupil's Book P5</option>
-                    <option value="English Skills Secondary S1">English Skills Secondary S1</option>
-                    <option value="Science and Technology Primary P6">Science and Technology Primary P6</option>
-                    <option value="Social Studies Kinyarwanda Companion">Social Studies Kinyarwanda Companion</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Issue Date</label><input type="date" id="borrowDate" required></div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button type="button" class="btn btn-danger" onclick="closeModal('borrowModal')">Cancel</button>
-                <button type="submit" class="btn btn-success">Confirm Transaction</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- JavaScript Control Matrix Engine -->
     <script>
-        // --- 1. PRE-POPULATED HARDCODED INSTITUTIONAL SYSTEM STORAGE SEEDS ---
-        const baseStudents = [
-            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 001", status: "Paid", attendance: "Present", score: 88, linkedUser: "student1" },
-            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 111 002", status: "Pending", attendance: "Present", score: 74, linkedUser: "student2" },
-            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 111 003", status: "Paid", attendance: "Absent", score: 91, linkedUser: "student3" },
-            { id: "REG-004", name: "Cedric Izere", class: "P5", contact: "+250 788 111 004", status: "Paid", attendance: "Present", score: 65, linkedUser: "student4" },
-            { id: "REG-005", name: "Liliane Umutoni", class: "P6", contact: "+250 788 111 005", status: "Pending", attendance: "Present", score: 82, linkedUser: "student5" },
-            { id: "REG-006", name: "Arnaud Kwizera", class: "S1", contact: "+250 788 111 006", status: "Paid", attendance: "Present", score: 78, linkedUser: "student6" },
-            { id: "REG-007", name: "Grace Ineza", class: "P5", contact: "+250 788 111 007", status: "Paid", attendance: "Present", score: 95, linkedUser: "student7" },
-            { id: "REG-008", name: "Patrick Ishimwe", class: "P6", contact: "+250 788 111 008", status: "Paid", attendance: "Absent", score: 59, linkedUser: "student8" },
-            { id: "REG-009", name: "Sandrine Keza", class: "S1", contact: "+250 788 111 009", status: "Pending", attendance: "Present", score: 70, linkedUser: "student9" },
-            { id: "REG-010", name: "Olivier Nshuti", class: "P5", contact: "+250 788 111 010", status: "Paid", attendance: "Present", score: 84, linkedUser: "student10" },
-            { id: "REG-011", name: "Diane Gakire", class: "P6", contact: "+250 788 111 011", status: "Paid", attendance: "Present", score: 77, linkedUser: "student11" },
-            { id: "REG-012", name: "Bertrand Muhire", class: "S1", contact: "+250 788 111 012", status: "Pending", attendance: "Absent", score: 62, linkedUser: "student12" },
-            { id: "REG-013", name: "Fiona Gisa", class: "P5", contact: "+250 788 111 013", status: "Paid", attendance: "Present", score: 90, linkedUser: "student13" },
-            { id: "REG-014", name: "Eric Dusingize", class: "P6", contact: "+250 788 111 014", status: "Paid", attendance: "Present", score: 85, linkedUser: "student14" },
-            { id: "REG-015", name: "Chantal Uwineza", class: "S1", contact: "+250 788 111 015", status: "Pending", attendance: "Present", score: 73, linkedUser: "student15" },
-            { id: "REG-016", name: "Yvan Rwigema", class: "P5", contact: "+250 788 111 016", status: "Paid", attendance: "Present", score: 68, linkedUser: "student16" },
-            { id: "REG-017", name: "Aline Mutesi", class: "P6", contact: "+250 788 111 017", status: "Paid", attendance: "Present", score: 92, linkedUser: "student17" },
-            { id: "REG-018", name: "Jean Paul Nkurunziza", class: "S1", contact: "+250 788 111 018", status: "Pending", attendance: "Absent", score: 55, linkedUser: "student18" },
-            { id: "REG-019", name: "Solange Umutesi", class: "P5", contact: "+250 788 111 019", status: "Paid", attendance: "Present", score: 81, linkedUser: "student19" },
-            { id: "REG-020", name: "Moses Kagame", class: "P6", contact: "+250 788 111 020", status: "Paid", attendance: "Present", score: 89, linkedUser: "student20" },
-            { id: "REG-021", name: "Sonia Uwera", class: "S1", contact: "+250 788 111 021", status: "Pending", attendance: "Present", score: 76, linkedUser: "student21" },
-            { id: "REG-022", name: "Christian Shema", class: "P5", contact: "+250 788 111 022", status: "Paid", attendance: "Present", score: 64, linkedUser: "student22" },
-            { id: "REG-023", name: "Angelique Uwamahoro", class: "P6", contact: "+250 788 111 023", status: "Paid", attendance: "Present", score: 94, linkedUser: "student23" },
-            { id: "REG-024", name: "Blaise Mugabo", class: "S1", contact: "+250 788 111 024", status: "Pending", attendance: "Absent", score: 50, linkedUser: "student24" },
-            { id: "REG-025", name: "Claudine Mutoni", class: "P5", contact: "+250 788 111 025", status: "Paid", attendance: "Present", score: 83, linkedUser: "student25" },
-            { id: "REG-026", name: "Emmanuel Ndahimana", class: "P6", contact: "+250 788 111 026", status: "Paid", attendance: "Present", score: 79, linkedUser: "student26" },
-            { id: "REG-027", name: "Josiane Umuhoza", class: "S1", contact: "+250 788 111 027", status: "Pending", attendance: "Present", score: 71, linkedUser: "student27" },
-            { id: "REG-028", name: "Pacifique Iradukunda", class: "P5", contact: "+250 788 111 028", status: "Paid", attendance: "Present", score: 87, linkedUser: "student28" },
-            { id: "REG-029", name: "Valentine Mukamana", class: "P6", contact: "+250 788 111 029", status: "Paid", attendance: "Present", score: 80, linkedUser: "student29" },
-            { id: "REG-030", name: "Thierry Kamanzi", class: "S1", contact: "+250 788 111 030", status: "Pending", attendance: "Absent", score: 66, linkedUser: "student30" },
-            { id: "REG-031", name: "Marie Claire Nyinawumuntu", class: "P5", contact: "+250 788 111 031", status: "Paid", attendance: "Present", score: 72, linkedUser: null },
-            { id: "REG-032", name: "Justin Niyomugabo", class: "P6", contact: "+250 788 111 032", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
-            { id: "REG-033", name: "Beata Uwimana", class: "S1", contact: "+250 788 111 033", status: "Paid", attendance: "Present", score: 93, linkedUser: null },
-            { id: "REG-034", name: "Gaspard Habimana", class: "P5", contact: "+250 788 111 034", status: "Pending", attendance: "Present", score: 58, linkedUser: null },
-            { id: "REG-035", name: "Emelyne Kaneza", class: "P6", contact: "+250 788 111 035", status: "Paid", attendance: "Present", score: 80, linkedUser: null },
-            { id: "REG-036", name: "Florent Niyonisaba", class: "S1", contact: "+250 788 111 036", status: "Paid", attendance: "Absent", score: 69, linkedUser: null },
-            { id: "REG-037", name: "Honorine Uwiragiye", class: "P5", contact: "+250 788 111 037", status: "Paid", attendance: "Present", score: 75, linkedUser: null },
-            { id: "REG-038", name: "Innocent Mbonigaba", class: "P6", contact: "+250 788 111 038", status: "Pending", attendance: "Present", score: 63, linkedUser: null },
-            { id: "REG-039", name: "Janviere Mukamisha", class: "S1", contact: "+250 788 111 039", status: "Paid", attendance: "Present", score: 84, linkedUser: null },
-            { id: "REG-040", name: "Kennedy Ntwali", class: "P5", contact: "+250 788 111 040", status: "Paid", attendance: "Present", score: 78, linkedUser: null },
-            { id: "REG-041", name: "Leopold Munyaneza", class: "P6", contact: "+250 788 111 041", status: "Paid", attendance: "Present", score: 82, linkedUser: null },
-            { id: "REG-042", name: "Micheline Uwamariya", class: "S1", contact: "+250 788 111 042", status: "Pending", attendance: "Absent", score: 61, linkedUser: null },
-            { id: "REG-043", name: "Norbert Rutaganda", class: "P5", contact: "+250 788 111 043", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
-            { id: "REG-044", name: "Odette Nyiramana", class: "P6", contact: "+250 788 111 044", status: "Paid", attendance: "Present", score: 89, linkedUser: null },
-            { id: "REG-045", name: "Pascal Nsengiyumva", class: "S1", contact: "+250 788 111 045", status: "Pending", attendance: "Present", score: 70, linkedUser: null },
-            { id: "REG-046", name: "Regine Akaliza", class: "P5", contact: "+250 788 111 046", status: "Paid", attendance: "Present", score: 91, linkedUser: null },
-            { id: "REG-047", name: "Sylvestre Murenzi", class: "P6", contact: "+250 788 111 047", status: "Paid", attendance: "Present", score: 67, linkedUser: null },
-            { id: "REG-048", name: "Telesphore Hategekimana", class: "S1", contact: "+250 788 111 048", status: "Pending", attendance: "Absent", score: 54, linkedUser: null },
-            { id: "REG-049", name: "Vestine Nyiransabimana", class: "P5", contact: "+250 788 111 049", status: "Paid", attendance: "Present", score: 83, linkedUser: null },
-            { id: "REG-050", name: "Zacharie Twagirimana", class: "P6", contact: "+250 788 111 050", status: "Paid", attendance: "Present", score: 79, linkedUser: null }
-        ];
-
-        const baseTeachers = {
-            "FAC-001": { name: "Jean de Dieu Tumusime", classAssignment: "P5", contact: "+250 788 222 001" },
-            "FAC-002": { name: "Marie Chantal Mukagasana", classAssignment: "P6", contact: "+250 788 222 002" },
-            "FAC-003": { name: "Emmanuel Ruzindana", classAssignment: "S1", contact: "+250 788 222 003" },
-            "FAC-004": { name: "Alphonsine Umurerwa", classAssignment: "P5", contact: "+250 788 222 004" },
-            "FAC-005": { name: "Charles Niyonsenga", classAssignment: "P6", contact: "+250 788 222 005" },
-            "FAC-006": { name: "Athanase Mutabazi", classAssignment: "S1", contact: "+250 788 222 006" },
-            "FAC-007": { name: "Serafina Mukamurenzi", classAssignment: "P5", contact: "+250 788 222 007" },
-            "FAC-008": { name: "Anastase Ndizeye", classAssignment: "P6", contact: "+250 788 222 008" },
-            "FAC-009": { name: "Evelyne Uwimana", classAssignment: "S1", contact: "+250 788 222 009" },
-            "FAC-010": { name: "Theoneste Hakizimana", classAssignment: "P5", contact: "+250 788 222 010" },
-            "FAC-011": { name: "Claudine Uwamahoro", classAssignment: "P6", contact: "+250 788 222 011" },
-            "FAC-012": { name: "Bosco Nsabimana", classAssignment: "S1", contact: "+250 788 222 012" }
-        };
-
-        // --- 2. FAILSAFE FORCED SEED STORAGE INITIALIZER ---
-        // Overrides any empty or corrupt matrices to guarantee login compliance on load
-        function initializeDatabaseForceSeed() {
-            localStorage.setItem('sms_students', JSON.stringify(baseStudents));
-            localStorage.setItem('sms_teachers', JSON.stringify(baseTeachers));
-
-            let generatedAccounts = {};
-            // Generate Admin Credentials (admin1 - admin10)
-            for (let i = 1; i <= 10; i++) {
-                generatedAccounts[`admin${i}`] = { password: `admin${i}`, role: "admin", profileRef: `ADM-0${i}` };
-            }
-            // Generate Teacher Credentials (teacher1 - teacher12)
-            for (let i = 1; i <= 12; i++) {
-                let refStr = `FAC-0${i < 10 ? '0' + i : i}`;
-                generatedAccounts[`teacher${i}`] = { password: `teacher${i}`, role: "teacher", profileRef: refStr };
-            }
-            // Generate Parent Credentials (parent1 - parent30)
-            for (let i = 1; i <= 30; i++) {
-                let refStr = `REG-0${i < 10 ? '0' + i : i}`;
-                generatedAccounts[`parent${i}`] = { password: `parent${i}`, role: "parent", profileRef: refStr };
-            }
-            // Generate Student Credentials (student1 - student30)
-            for (let i = 1; i <= 30; i++) {
-                let refStr = `REG-0${i < 10 ? '0' + i : i}`;
-                generatedAccounts[`student${i}`] = { password: `student${i}`, role: "student", profileRef: refStr };
-            }
-
-            localStorage.setItem('sms_accounts', JSON.stringify(generatedAccounts));
-        }
-
-        // Always run the seed guarantee strategy on first render parse
-        initializeDatabaseForceSeed();
-
-        // Load active runtime contexts directly from the forced seed values
-        let studentsList = JSON.parse(localStorage.getItem('sms_students'));
-        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers'));
-        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts'));
-
-        let libraryLedger = JSON.parse(localStorage.getItem('sms_library')) || [
-            { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
-            { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
-        ];
-
-        let currentSchoolName = localStorage.getItem('sms_school_name') || "APAPEC-IREBERO";
-        let schoolMetrics = { classesCount: 12 };
-        let activePortalRole = ""; 
-        let currentViewStudentId = "REG-001"; 
-        let parentLinkedChildId = "REG-001";
-
-        let temporaryAccountData = null; 
-        let temporaryUploadedPhotoBase64 = null;
-
-        let studentCurrentPage = 0;
-        let financeCurrentPage = 0;
-        const rowsPerPage = 10;
-
-        function commitSystemStateToDisk() {
-            localStorage.setItem('sms_accounts', JSON.stringify(accountsDatabase));
-            localStorage.setItem('sms_teachers', JSON.stringify(teachersDatabase));
-            localStorage.setItem('sms_students', JSON.stringify(studentsList));
-            localStorage.setItem('sms_library', JSON.stringify(libraryLedger));
-            localStorage.setItem('sms_school_name', currentSchoolName);
-        }
-
-        function getAvatarMarkup(name, photoBase64, customStyleClass = "table-avatar") {
-            if (photoBase64) return `<img src="${photoBase64}" class="${customStyleClass}" alt="${name}">`;
-            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "?";
-            return `<div class="${customStyleClass}">${initials}</div>`;
-        }
-
-        function liveUpdateAvatarFallback(nameString) {
-            if (temporaryUploadedPhotoBase64) return; 
-            const previewEl = document.getElementById('photo-preview-element');
-            if (!nameString.trim()) { previewEl.innerText = "?"; return; }
-            previewEl.innerText = nameString.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "?";
-        }
-
-        function processProfilePhotoUpload(inputElement) {
-            const file = inputElement.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    temporaryUploadedPhotoBase64 = e.target.result;
-                    const previewEl = document.getElementById('photo-preview-element');
-                    previewEl.innerText = "";
-                    previewEl.style.backgroundImage = `url('${temporaryUploadedPhotoBase64}')`;
-                    previewEl.style.backgroundSize = "cover";
-                    previewEl.style.backgroundPosition = "center";
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // --- AUTH INTERFACE VIEW ROUTING ENGINE ---
-        function toggleAuthForm(viewMode) {
-            const oldGuide = document.getElementById('creation-guide-box');
-            if (oldGuide) oldGuide.remove();
-
-            document.getElementById('signin-view').style.display = 'none';
-            document.getElementById('signup-view').style.display = 'none';
-            document.getElementById('profile-view').style.display = 'none';
-
-            if (viewMode === 'signin') {
-                document.getElementById('signin-view').style.display = 'block';
-                document.getElementById('auth-subtitle').innerText = 'Unified Portal Authentication Gateway';
-            } else if (viewMode === 'signup') {
-                document.getElementById('signup-view').style.display = 'block';
-                document.getElementById('auth-subtitle').innerText = 'Step 1: Security Account Identity Setup';
-                adaptProfileRequirementNotice(document.getElementById('regRole').value);
-            } else if (viewMode === 'profile') {
-                document.getElementById('profile-view').style.display = 'block';
-                document.getElementById('auth-subtitle').innerText = 'Step 2: Initialize Profile Configuration';
-                
-                temporaryUploadedPhotoBase64 = null;
-                document.getElementById('photo-preview-element').innerText = "?";
-                document.getElementById('photo-preview-element').style.backgroundImage = "none";
-            }
-        }
-
-        function adaptProfileRequirementNotice(selectedRole) {
-            const textEl = document.getElementById('profile-notice-text');
-            const classBox = document.getElementById('class-group-box');
-            const classLabel = document.getElementById('class-box-label');
-            const contactBox = document.getElementById('contact-group-box');
-            const parentLinkBox = document.getElementById('parent-student-link-box');
-            const photoContainer = document.getElementById('photo-preview-container');
-            const fullNameBox = document.getElementById('fullName-group-box');
-
-            classBox.style.display = 'block';
-            contactBox.style.display = 'block';
-            parentLinkBox.style.display = 'none';
-            photoContainer.style.display = 'flex';
-            fullNameBox.style.display = 'block';
-
-            if (selectedRole === 'student') {
-                textEl.innerText = "Student accounts instantiate file systems manageable by relevant instructors.";
-                classLabel.innerText = "Academic Class Grade Enrollment";
-            } else if (selectedRole === 'teacher') {
-                textEl.innerText = "Teacher registration dynamically binds you to data manipulation for your specified class only.";
-                classLabel.innerText = "Authorized Target Class Tracking";
-            } else if (selectedRole === 'parent') {
-                textEl.innerText = "Parent registration enforces a permanent target link to your child's specific record file.";
-                classBox.style.display = 'none';
-                photoContainer.style.display = 'none';
-                fullNameBox.style.display = 'none';
-                parentLinkBox.style.display = 'block';
-
-                const selectEl = document.getElementById('parentStudentSelect');
-                selectEl.innerHTML = '';
-                studentsList.forEach(s => {
-                    selectEl.innerHTML += `<option value="${s.id}">${s.name} [Grade ${s.class}]</option>`;
-                });
-            } else if (selectedRole === 'admin') {
-                textEl.innerText = "Global systems administrator account infrastructure setup clearance initialization.";
-                classBox.style.display = 'none';
-                contactBox.style.display = 'none';
-                parentLinkBox.style.display = 'none';
-            }
-        }
-
-        function handleAccountCreationStage(event) {
-            event.preventDefault();
-            const usernameInput = document.getElementById('regUser').value.trim().toLowerCase();
-            const passwordInput = document.getElementById('regPass').value.trim();
-            const assignedRole = document.getElementById('regRole').value;
-
-            if (accountsDatabase[usernameInput]) {
-                alert("Username collision detected. Please write a distinct unique handle.");
+        // Reads data from LocalStorage and compiles it into the view layout
+        function updateStorageDisplay() {
+            const displayEngine = document.getElementById('storageDisplay');
+            
+            // Check if storage holds data strings
+            if (localStorage.length === 0) {
+                displayEngine.innerHTML = '<span class="empty-state">No local data found. Storage is empty.</span>';
                 return;
             }
 
-            temporaryAccountData = { username: usernameInput, password: passwordInput, role: assignedRole };
-            toggleAuthForm('profile');
-        }
-
-        function executeFullRegistration(event) {
-            event.preventDefault();
-            if (!temporaryAccountData) return;
-
-            const fullName = document.getElementById('profFullName').value.trim();
-            const selectionClass = document.getElementById('profClass').value;
-            const contactNum = document.getElementById('profContact').value.trim() || "Not Provided";
+            let htmlRegistryOutput = '<ul style="list-style-type: none; padding-left: 0;">';
             
-            const uName = temporaryAccountData.username;
-            const uRole = temporaryAccountData.role;
-            let referenceTokenId = "SYS-GEN";
-
-            if (uRole === 'student') {
-                referenceTokenId = `REG-0${studentsList.length + 1}`;
-                studentsList.push({
-                    id: referenceTokenId, name: fullName, class: selectionClass, contact: contactNum,
-                    status: "Pending", attendance: "Present", score: 0, linkedUser: uName, photo: temporaryUploadedPhotoBase64
-                });
-            } else if (uRole === 'teacher') {
-                referenceTokenId = `FAC-0${Object.keys(teachersDatabase).length + 1}`;
-                teachersDatabase[referenceTokenId] = {
-                    name: fullName, classAssignment: selectionClass, contact: contactNum, photo: temporaryUploadedPhotoBase64
-                };
-            } else if (uRole === 'parent') {
-                referenceTokenId = document.getElementById('parentStudentSelect').value;
-            }
-
-            accountsDatabase[uName] = { password: temporaryAccountData.password, role: uRole, profileRef: referenceTokenId };
-            commitSystemStateToDisk();
-
-            alert(`Profile linked and written to local database registry for user "${uName}".`);
-            
-            document.getElementById('register-user-form').reset();
-            document.getElementById('profile-details-form').reset();
-            
-            if (uRole === 'student') currentViewStudentId = referenceTokenId; 
-            if (uRole === 'teacher') window.currentTeacherRef = referenceTokenId;
-            if (uRole === 'parent') parentLinkedChildId = referenceTokenId;
-            
-            launchPortal(uRole);
-            temporaryAccountData = null; 
-            temporaryUploadedPhotoBase64 = null;
-        }
-
-        // --- AUTHENTICATION LOGIN DISPATCHER ---
-        function executeSystemLogin(event) {
-            event.preventDefault();
-            const user = document.getElementById('loginUser').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value.trim();
-
-            if (accountsDatabase[user] && accountsDatabase[user].password === pass) {
-                const verifiedRole = accountsDatabase[user].role;
-                const ref = accountsDatabase[user].profileRef;
+            // Loop through all items committed inside browser memory
+            for (let i = 0; i < localStorage.length; i++) {
+                const currentKey = localStorage.key(i);
+                const currentValue = localStorage.getItem(currentKey);
                 
-                if (verifiedRole === 'student') currentViewStudentId = ref;
-                else if (verifiedRole === 'teacher') window.currentTeacherRef = ref;
-                else if (verifiedRole === 'parent') parentLinkedChildId = ref;
-                
-                launchPortal(verifiedRole);
-                return;
-            } 
-            showAccountCreationGuide();
-        }
-
-        function showAccountCreationGuide() {
-            const insertionPoint = document.getElementById('guide-injection-point');
-            if(document.getElementById('creation-guide-box')) return;
-            const guideBox = document.createElement('div');
-            guideBox.id = 'creation-guide-box';
-            guideBox.style.cssText = `background: #fef2f2; border-left: 4px solid var(--danger-color); padding: 15px; margin-top: 20px; font-size: 0.85rem; color: #991b1b;`;
-            guideBox.innerHTML = `<strong>❌ Verification failure.</strong> Account mismatch. Double-check your access matrix credentials (e.g., admin1, teacher1, parent1).`;
-            insertionPoint.appendChild(guideBox);
-        }
-
-        function launchPortal(role) {
-            activePortalRole = role;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            document.getElementById('header-active-role-badge').innerText = role.toUpperCase();
-
-            document.getElementById('admin-sidebar-menu').style.display = (role === 'admin') ? 'block' : 'none';
-            document.getElementById('teacher-sidebar-menu').style.display = (role === 'teacher') ? 'block' : 'none';
-            document.getElementById('student-sidebar-menu').style.display = (role === 'student') ? 'block' : 'none';
-            document.getElementById('parent-sidebar-menu').style.display = (role === 'parent') ? 'block' : 'none';
-
-            if (role === 'admin') switchTab('dashboard');
-            if (role === 'teacher') switchTab('teacher-home');
-            if (role === 'student') switchTab('student-home');
-            if (role === 'parent') switchTab('parent-home');
-        }
-
-        function executeLogout() {
-            activePortalRole = "";
-            document.getElementById('login-form').reset();
-            toggleAuthForm('signin');
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex';
-        }
-
-        // --- NAVIGATION ENGINE TAB ROUTER ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            if(window.event && window.event.target.classList.contains('menu-btn')) {
-                window.event.target.classList.add('active');
+                htmlRegistryOutput += `
+                    <li style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
+                        <span><strong>${escapeHTML(currentKey)}</strong>: "${escapeHTML(currentValue)}"</span>
+                        <button onclick="removeItem('${escapeHTML(currentKey)}')" style="padding: 2px 6px; font-size: 0.75rem; background: #fee2e2; color: #ef4444; border-radius: 4px; border:none; flex:none; width:auto; cursor:pointer;">Delete</button>
+                    </li>`;
             }
-
-            if(tabId === 'dashboard') renderDashboardView();
-            if(tabId === 'finance') { financeCurrentPage = 0; renderFinanceTable(); }
-            if(tabId === 'students') { studentCurrentPage = 0; renderStudentsTable(); }
-            if(tabId === 'library') renderLibraryTable();
-            if(tabId === 'teacher-attendance') renderTeacherAttendanceTable();
-            if(tabId === 'teacher-grades') renderTeacherGradesTable();
-            if(tabId === 'teacher-home') renderTeacherHomeDashboard();
-            if(tabId === 'student-home') renderStudentPortalDashboard();
-            if(tabId === 'parent-home') renderParentPortalDashboard();
             
-            updateDashboardMetrics();
+            htmlRegistryOutput += '</ul>';
+            displayEngine.innerHTML = htmlRegistryOutput;
         }
 
-        // --- ISOLATED TEACHER CONTROL ENGINE ---
-        function getTeacherAssignedClass() {
-            const ref = window.currentTeacherRef || "FAC-001";
-            const profile = teachersDatabase[ref] || { classAssignment: "P5" };
-            return profile.classAssignment;
-        }
+        // Writes a key/value pair straight into browser disk storage
+        function saveToLocalStorage() {
+            const keyInput = document.getElementById('storageKey').value.trim();
+            const valueInput = document.getElementById('storageValue').value.trim();
 
-        function renderTeacherHomeDashboard() {
-            const ref = window.currentTeacherRef || "FAC-001";
-            const profile = teachersDatabase[ref] || { name: "Faculty Instructor", classAssignment: "P5", photo: null };
-            
-            document.getElementById('teacher-welcome-title').innerText = `Faculty Module: ${profile.name}`;
-            document.getElementById('teacher-meta-subtitle').innerText = `Assigned Clearance Domain Zone: Grade ${profile.classAssignment} Student Listings Only`;
-            document.getElementById('teacher-class-metric').innerText = `Class ${profile.classAssignment}`;
-
-            document.querySelectorAll('.target-class-display').forEach(el => el.innerText = `Class ${profile.classAssignment}`);
-
-            const avatarBox = document.getElementById('teacher-dash-avatar');
-            if (profile.photo) {
-                avatarBox.innerText = ""; avatarBox.style.backgroundImage = `url('${profile.photo}')`;
-                avatarBox.style.backgroundSize = "cover"; avatarBox.style.backgroundPosition = "center";
-            } else {
-                avatarBox.innerText = profile.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                avatarBox.style.backgroundImage = "none";
-            }
-            calculateTeacherMetrics(profile.classAssignment);
-        }
-
-        function renderTeacherAttendanceTable() {
-            const targetClass = getTeacherAssignedClass();
-            const tbody = document.getElementById('teacher-attendance-body');
-            tbody.innerHTML = '';
-            
-            const isolatedStudents = studentsList.filter(s => s.class === targetClass);
-            
-            isolatedStudents.forEach(student => {
-                const badgeClass = student.attendance === 'Present' ? 'present' : 'absent';
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${getAvatarMarkup(student.name, student.photo)}</td>
-                        <td><strong>${student.name}</strong></td>
-                        <td>Grade ${student.class}</td>
-                        <td><span class="badge ${badgeClass}">${student.attendance}</span></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" onclick="toggleAttendance('${student.id}', 'Present')">Present</button>
-                            <button class="btn btn-danger btn-sm" onclick="toggleAttendance('${student.id}', 'Absent')">Absent</button>
-                        </td>
-                    </tr>`;
-            });
-            calculateTeacherMetrics(targetClass);
-        }
-
-        function toggleAttendance(studentId, status) {
-            const student = studentsList.find(s => s.id === studentId);
-            if(student) {
-                student.attendance = status;
-                commitSystemStateToDisk();
-                renderTeacherAttendanceTable();
-            }
-        }
-
-        function renderTeacherGradesTable() {
-            const targetClass = getTeacherAssignedClass();
-            const tbody = document.getElementById('teacher-grades-body');
-            tbody.innerHTML = '';
-            
-            const isolatedStudents = studentsList.filter(s => s.class === targetClass);
-            
-            isolatedStudents.forEach(student => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${student.name}</strong></td>
-                        <td>Grade ${student.class}</td>
-                        <td><span style="font-weight:bold; color:var(--secondary-color);">${student.score}%</span></td>
-                        <td><button class="btn btn-primary btn-sm" onclick="inputTeacherGrade('${student.id}')">Input Mark</button></td>
-                    </tr>`;
-            });
-        }
-
-        function inputTeacherGrade(studentId) {
-            const student = studentsList.find(s => s.id === studentId);
-            if(student) {
-                let currentScore = prompt(`Enter evaluation percentage mark for ${student.name}:`, student.score);
-                if(currentScore !== null && !isNaN(currentScore) && currentScore.trim() !== "") {
-                    student.score = Math.min(100, Math.max(0, parseInt(currentScore)));
-                    commitSystemStateToDisk();
-                    renderTeacherGradesTable();
-                }
-            }
-        }
-
-        // --- PARENT PORTAL MONITORING HUB ---
-        function renderParentPortalDashboard() {
-            const childFile = studentsList.find(s => s.id === parentLinkedChildId);
-            
-            if(!childFile) {
-                document.getElementById('parent-linked-child-name').innerText = "Unlinked Session Error";
+            if (!keyInput || !valueInput) {
+                alert("Please fill out both the Key and Value input fields before attempting to save.");
                 return;
             }
 
-            document.getElementById('parent-welcome-subtitle').innerText = `Security Boundary Enforcement Token ID: ${childFile.id}`;
-            document.getElementById('parent-linked-child-name').innerText = childFile.name;
+            // Central LocalStorage Engine execution command
+            localStorage.setItem(keyInput, valueInput);
+
+            // Reset inputs and refresh view layout
+            document.getElementById('storageKey').value = '';
+            document.getElementById('storageValue').value = '';
+            updateStorageDisplay();
+        }
+
+        // Erases an individual item using its key identification string
+        function removeItem(targetKey) {
+            localStorage.removeItem(targetKey);
+            updateStorageDisplay();
+        }
+
+        // Wipes all data keys completely out of this domain's LocalStorage engine space
+        function clearLocalStorage() {
+            if (localStorage.length === 0) return;
             
-            document.getElementById('parent-class-assignment').innerText = `Grade ${childFile.class}`;
-            document.getElementById('parent-grade-display').innerText = `${childFile.score}%`;
-            
-            document.getElementById('parent-fee-status').innerText = childFile.status;
-            document.getElementById('parent-fee-card').className = childFile.status === 'Paid' ? 'card success' : 'card danger';
-
-            document.getElementById('parent-attendance-status').innerText = childFile.attendance;
-            document.getElementById('parent-attendance-card').className = childFile.attendance === 'Present' ? 'card success' : 'card danger';
-
-            const booksBody = document.getElementById('parent-books-body');
-            booksBody.innerHTML = '';
-            
-            const isolatedRecords = libraryLedger.filter(item => item.studentId === childFile.id);
-            if (isolatedRecords.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No actively borrowed books recorded on file for this child.</td></tr>`;
-            } else {
-                isolatedRecords.forEach(item => {
-                    booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
-                });
+            if (confirm("Are you sure you want to permanently clear all data keys from storage?")) {
+                localStorage.clear();
+                updateStorageDisplay();
             }
         }
 
-        // --- STUDENT HUB VIEW ENGINE ---
-        function renderStudentPortalDashboard() {
-            let currentStudent = studentsList.find(s => s.id === currentViewStudentId) || studentsList[0];
-
-            document.getElementById('portal-welcome-name').innerText = `Welcome Back, ${currentStudent.name}!`;
-            document.getElementById('portal-student-meta').innerText = `Profile ID: ${currentStudent.id} | Placement: Class ${currentStudent.class}`;
-            document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
-            document.getElementById('portal-grade-display').innerText = `${currentStudent.score}%`;
-            
-            const avatarBox = document.getElementById('student-dash-avatar');
-            if (currentStudent.photo) {
-                avatarBox.innerText = ""; avatarBox.style.backgroundImage = `url('${currentStudent.photo}')`;
-                avatarBox.style.backgroundSize = "cover"; avatarBox.style.backgroundPosition = "center";
-            } else {
-                avatarBox.innerText = currentStudent.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                avatarBox.style.backgroundImage = "none";
-            }
-
-            document.getElementById('portal-fee-status').innerText = currentStudent.status;
-            document.getElementById('student-fee-card').className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
-
-            document.getElementById('portal-attendance-status').innerText = currentStudent.attendance;
-            document.getElementById('portal-attendance-card').className = currentStudent.attendance === 'Present' ? 'card success' : 'card danger';
-
-            const booksBody = document.getElementById('portal-books-body');
-            booksBody.innerHTML = '';
-            const records = libraryLedger.filter(item => item.studentId === currentStudent.id);
-            if (records.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No library records currently checked out.</td></tr>`;
-            } else {
-                records.forEach(item => {
-                    booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
-                });
-            }
+        // Basic helper function to keep text output rendering safely formatted
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
 
-        // --- GLOBAL ADMIN MODULE COMPILING PANELS ---
-        function updateSchoolName() {
-            const inputVal = document.getElementById('schoolNameInput').value.trim();
-            if(inputVal !== "") {
-                currentSchoolName = inputVal;
-                commitSystemStateToDisk();
-                document.getElementById('sidebar-brand').innerText = currentSchoolName;
-                document.getElementById('login-brand-title').innerText = currentSchoolName;
-            }
-        }
-
-        function changeTheme(themeName) {
-            if (themeName === 'classic') document.documentElement.removeAttribute('data-theme');
-            else document.documentElement.setAttribute('data-theme', themeName);
-        }
-
-        function updateDashboardMetrics() {
-            const activeBorrowedCount = libraryLedger.filter(item => item.status === 'Borrowed').length;
-            if(document.getElementById('dash-student-count')) document.getElementById('dash-student-count').innerText = studentsList.length;
-            if(document.getElementById('dash-class-count')) document.getElementById('dash-class-count').innerText = schoolMetrics.classesCount;
-            if(document.getElementById('dash-books-count')) document.getElementById('dash-books-count').innerText = activeBorrowedCount;
-        }
-
-        function renderDashboardView() {
-            const tbody = document.getElementById('dash-quick-table');
-            tbody.innerHTML = '';
-            const quickSlice = studentsList.slice(0, 5);
-            quickSlice.forEach(student => {
-                tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
-            });
-        }
-
-        function renderStudentsTable() {
-            const tbody = document.querySelector('#student-table tbody');
-            tbody.innerHTML = '';
-            
-            const start = studentCurrentPage * rowsPerPage;
-            const end = Math.min(start + rowsPerPage, studentsList.length);
-            const activePageSlice = studentsList.slice(start, end);
-
-            activePageSlice.forEach(student => {
-                tbody.innerHTML += `<tr><td>${student.id}</td><td>${getAvatarMarkup(student.name, student.photo)}</td><td>${student.name}</td><td>Grade ${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
-            });
-
-            document.getElementById('student-page-info').innerText = `Showing ${start + 1}-${end} of ${studentsList.length} students`;
-        }
-
-        function changeStudentPage(direction) {
-            const maxPage = Math.ceil(studentsList.length / rowsPerPage) - 1;
-            studentCurrentPage = Math.min(maxPage, Math.max(0, studentCurrentPage + direction));
-            renderStudentsTable();
-        }
-
-        function renderFinanceTable() {
-            const tbody = document.getElementById('finance-table-body');
-            tbody.innerHTML = '';
-
-            const start = financeCurrentPage * rowsPerPage;
-            const end = Math.min(start + rowsPerPage, studentsList.length);
-            const activePageSlice = studentsList.slice(start, end);
-
-            activePageSlice.forEach(student => {
-                const badgeClass = student.status === 'Paid' ? 'paid' : 'pending';
-                tbody.innerHTML += `<tr><td>${student.name}</td><td>Grade ${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
-            });
-
-            document.getElementById('finance-page-info').innerText = `Showing ${start + 1}-${end} of ${studentsList.length} metrics`;
-        }
-
-        function changeFinancePage(direction) {
-            const maxPage = Math.ceil(studentsList.length / rowsPerPage) - 1;
-            financeCurrentPage = Math.min(maxPage, Math.max(0, financeCurrentPage + direction));
-            renderFinanceTable();
-        }
-
-        function renderLibraryTable() {
-            const tbody = document.getElementById('library-table-body');
-            tbody.innerHTML = '';
-            libraryLedger.forEach(item => {
-                const badgeClass = item.status === 'Borrowed' ? 'borrowed' : 'returned';
-                const buttonDisplay = item.status === 'Borrowed' ? `<button class="btn btn-success btn-sm" onclick="toggleBookReturn(${item.id})">Mark Returned</button>` : `<span style="color:#6b7280; font-size:0.85rem;">Closed</span>`;
-                tbody.innerHTML += `<tr><td><strong>${item.studentName}</strong></td><td>${item.bookTitle}</td><td>${item.date}</td><td><span class="badge ${badgeClass}">${item.status}</span></td><td>${buttonDisplay}</td></tr>`;
-            });
-        }
-
-        function toggleBookReturn(transactionId) {
-            const targetRecord = libraryLedger.find(item => item.id === transactionId);
-            if(targetRecord) {
-                targetRecord.status = 'Returned'; commitSystemStateToDisk();
-                renderLibraryTable(); updateDashboardMetrics();
-            }
-        }
-
-        function openBorrowModal() {
-            document.getElementById('borrowDate').value = new Date().toISOString().split('T')[0];
-            const selectEl = document.getElementById('borrowerSelect');
-            selectEl.innerHTML = '';
-            studentsList.forEach(student => { 
-                selectEl.innerHTML += `<option value="${student.id}">${student.name} [Grade ${student.class}]</option>`; 
-            });
-            document.getElementById('borrowModal').classList.add('active');
-        }
-
-        function submitBorrowForm(event) {
-            event.preventDefault();
-            const studentId = document.getElementById('borrowerSelect').value;
-            const targetStudent = studentsList.find(s => s.id === studentId);
-            const bookTitle = document.getElementById('bookSelect').value;
-            const borrowDate = document.getElementById('borrowDate').value;
-
-            if (targetStudent) {
-                libraryLedger.push({ id: libraryLedger.length + 1, studentId: targetStudent.id, studentName: targetStudent.name, bookTitle: bookTitle, date: borrowDate, status: 'Borrowed' });
-                commitSystemStateToDisk(); closeModal('borrowModal');
-                renderLibraryTable(); updateDashboardMetrics();
-            }
-        }
-
-        function registerStudent(event) {
-            event.preventDefault();
-            const name = document.getElementById('studentName').value;
-            const className = document.getElementById('studentClass').value;
-            const contact = document.getElementById('guardianContact').value;
-            
-            studentsList.push({ id: `REG-0${studentsList.length + 1}`, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
-            commitSystemStateToDisk(); document.getElementById('admission-form').reset();
-            switchTab('dashboard');
-        }
-
-        function openEditModal(studentId) {
-            const student = studentsList.find(s => s.id === studentId);
-            if (!student) return;
-            document.getElementById('editStudentId').value = student.id;
-            document.getElementById('editStudentName').value = student.name;
-            document.getElementById('editStudentClass').value = student.class;
-            document.getElementById('editGuardianContact').value = student.contact;
-            document.getElementById('editStatus').value = student.status;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-
-        function saveStudentEdit(event) {
-            event.preventDefault();
-            const id = document.getElementById('editStudentId').value;
-            const index = studentsList.findIndex(s => s.id === id);
-
-            if (index != -1) {
-                const newName = document.getElementById('editStudentName').value;
-                studentsList[index].name = newName;
-                studentsList[index].class = document.getElementById('editStudentClass').value;
-                studentsList[index].contact = document.getElementById('editGuardianContact').value;
-                studentsList[index].status = document.getElementById('editStatus').value;
-                
-                libraryLedger.forEach(item => { if(item.studentId === id) item.studentName = newName; });
-                commitSystemStateToDisk(); closeModal('editModal');
-                
-                renderDashboardView(); renderStudentsTable(); renderFinanceTable(); updateDashboardMetrics();
-            }
-        }
-
-        function calculateTeacherMetrics(targetClass) {
-            const isolated = studentsList.filter(s => s.class === targetClass);
-            const presentCount = isolated.filter(s => s.attendance === 'Present').length;
-            const percent = isolated.length ? Math.round((presentCount / isolated.length) * 100) : 100;
-            const metricEl = document.getElementById('teacher-dash-attendance');
-            if(metricEl) metricEl.innerText = `${percent}%`;
-        }
-
-        // Initialize Renders
-        document.getElementById('sidebar-brand').innerText = currentSchoolName;
-        document.getElementById('login-brand-title').innerText = currentSchoolName;
-        renderDashboardView();
-        updateDashboardMetrics();
+        // Initial boot render invocation to parse existing entries
+        updateStorageDisplay();
     </script>
 </body>
 </html>
