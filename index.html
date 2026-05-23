@@ -94,10 +94,10 @@
             display: block;
         }
 
-        /* Dashboard Cards */
+        /* Dashboard Cards & Inline Controls */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -108,6 +108,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             border-left: 5px solid var(--secondary-color);
+            position: relative;
         }
 
         .card.success { border-left-color: var(--accent-color); }
@@ -122,6 +123,32 @@
             font-size: 2rem;
             font-weight: bold;
             margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .inline-edit-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        /* Dashboard Split Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         /* Forms & Interactive Elements */
@@ -164,6 +191,7 @@
         .btn-primary { background-color: var(--secondary-color); }
         .btn-success { background-color: var(--accent-color); }
         .btn-danger { background-color: var(--danger-color); }
+        .btn-sm { padding: 4px 8px; font-size: 0.8rem; }
 
         /* Data Tables */
         table {
@@ -177,7 +205,7 @@
         }
 
         th, td {
-            padding: 15px;
+            padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e5e7eb;
         }
@@ -186,10 +214,6 @@
             background-color: #f8fafc;
             color: var(--primary-color);
             font-weight: 600;
-        }
-
-        tr:hover {
-            background-color: #f8fafc;
         }
 
         .badge {
@@ -201,7 +225,7 @@
         .badge.paid { background-color: #d1fae5; color: #065f46; }
         .badge.pending { background-color: #fef3c7; color: #92400e; }
 
-        /* Modal Overlay for Editing */
+        /* Modal Overlays */
         .modal {
             display: none;
             position: fixed;
@@ -238,18 +262,46 @@
                 <div class="card">
                     <h3>Total Students</h3>
                     <p id="dash-student-count">3</p>
+                    <span style="font-size: 0.85rem; color: #6b7280;">Managed via admissions</span>
                 </div>
                 <div class="card success">
                     <h3>Active Classes</h3>
-                    <p>12</p>
+                    <p id="dash-class-count">12</p>
+                    <button class="inline-edit-btn" onclick="editDashboardMetric('classes')">Update Classes Count</button>
                 </div>
                 <div class="card">
                     <h3>Total Staff</h3>
-                    <p>24</p>
+                    <p id="dash-staff-count">24</p>
+                    <button class="inline-edit-btn" onclick="editDashboardMetric('staff')">Update Staff Count</button>
                 </div>
             </div>
-            <h3>Recent Activity</h3>
-            <p style="color: #6b7280; margin-top: 10px;">All school systems operational. Live data editing enabled.</p>
+
+            <div class="dashboard-layout">
+                <!-- Quick Student Summary Board -->
+                <div class="dashboard-box">
+                    <h3 style="margin-bottom: 10px;">Quick Student Directory Control</h3>
+                    <table style="margin-top: 0; box-shadow: none;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-quick-table">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Metrics Control Info box -->
+                <div class="dashboard-box" style="background-color: #eff6ff; border: 1px solid #bfdbfe;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 10px;">Live Editing Notice</h4>
+                    <p style="font-size: 0.9rem; color: #1e40af; line-height: 1.4;">
+                        You are in operational manager mode. Changes made to metrics or student records here dynamically cascade down to both the Finance Ledger and the core Student Registry tabs automatically.
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- Students List Section -->
@@ -265,9 +317,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Populated by JavaScript -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </section>
 
@@ -315,14 +365,12 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="finance-table-body">
-                    <!-- Loaded dynamically via JS -->
-                </tbody>
+                <tbody id="finance-table-body"></tbody>
             </table>
         </section>
     </main>
 
-    <!-- Edit Student Modal Popup -->
+    <!-- Global Edit Student Modal Popup -->
     <div class="modal" id="editModal">
         <form id="edit-form" onsubmit="saveStudentEdit(event)">
             <h3 style="margin-bottom: 15px;">Edit Student Details</h3>
@@ -367,7 +415,12 @@
 
     <!-- JavaScript Data Control Logic -->
     <script>
-        // In-memory data store initializing with starting data
+        // Application State
+        let schoolMetrics = {
+            classesCount: 12,
+            staffCount: 24
+        };
+
         let studentsList = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid" },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending" },
@@ -380,18 +433,56 @@
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(tabId).classList.add('active');
-            if(event) event.target.classList.add('active');
+            if(event && event.target.classList.contains('menu-btn')) {
+                event.target.classList.add('active');
+            }
 
+            if(tabId === 'dashboard') renderDashboardView();
             if(tabId === 'finance') renderFinanceTable();
             if(tabId === 'students') renderStudentsTable();
             updateDashboardMetrics();
         }
 
-        function updateDashboardMetrics() {
-            document.getElementById('dash-student-count').innerText = studentsList.length;
+        // EDIT METRICS DIRECTLY IN THE DASHBOARD CARDS
+        function editDashboardMetric(type) {
+            if(type === 'classes') {
+                let newValue = prompt("Enter new total count of active classes:", schoolMetrics.classesCount);
+                if (newValue !== null && !isNaN(newValue) && newValue.trim() !== "") {
+                    schoolMetrics.classesCount = parseInt(newValue);
+                }
+            } else if(type === 'staff') {
+                let newValue = prompt("Enter updated staff headcount:", schoolMetrics.staffCount);
+                if (newValue !== null && !isNaN(newValue) && newValue.trim() !== "") {
+                    schoolMetrics.staffCount = parseInt(newValue);
+                }
+            }
+            updateDashboardMetrics();
         }
 
-        // Render Student Directory Table with Edit Buttons
+        function updateDashboardMetrics() {
+            document.getElementById('dash-student-count').innerText = studentsList.length;
+            document.getElementById('dash-class-count').innerText = schoolMetrics.classesCount;
+            document.getElementById('dash-staff-count').innerText = schoolMetrics.staffCount;
+        }
+
+        // Render Quick View elements in Dashboard Layout
+        function renderDashboardView() {
+            const tbody = document.getElementById('dash-quick-table');
+            tbody.innerHTML = '';
+            studentsList.forEach(student => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${student.name}</strong></td>
+                        <td><span style="color:#4b5563;">Class ${student.class}</span></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Quick Modify</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Render Student Registry
         function renderStudentsTable() {
             const tbody = document.querySelector('#student-table tbody');
             tbody.innerHTML = '';
@@ -410,7 +501,7 @@
             });
         }
 
-        // Render Finance Ledger Table with Edit Buttons
+        // Render Finance Registry Table
         function renderFinanceTable() {
             const tbody = document.getElementById('finance-table-body');
             tbody.innerHTML = '';
@@ -430,30 +521,24 @@
             });
         }
 
-        // Admission Logic
+        // Admission Form Action
         function registerStudent(event) {
             event.preventDefault();
-            
             const name = document.getElementById('studentName').value;
             const className = document.getElementById('studentClass').value;
             const contact = document.getElementById('guardianContact').value;
             const newId = `REG-00${studentsList.length + 1}`;
 
             studentsList.push({
-                id: newId,
-                name: name,
-                class: className,
-                contact: contact,
-                status: 'Pending'
+                id: newId, name: name, class: className, contact: contact, status: 'Pending'
             });
 
             document.getElementById('admission-form').reset();
             alert(`Successfully Registered ${name}!`);
-            updateDashboardMetrics();
-            switchTab('students');
+            switchTab('dashboard');
         }
 
-        // Modal Action: Open & pre-populate data
+        // Modal Utilities
         function openEditModal(studentId) {
             const student = studentsList.find(s => s.id === studentId);
             if (!student) return;
@@ -467,36 +552,34 @@
             document.getElementById('editModal').classList.add('active');
         }
 
-        // Modal Action: Close
         function closeModal() {
             document.getElementById('editModal').classList.remove('active');
         }
 
-        // Form Submit: Save the updated arrays
         function saveStudentEdit(event) {
             event.preventDefault();
-            
             const id = document.getElementById('editStudentId').value;
-            const studentIndex = studentsList.findIndex(s => s.id === id);
+            const index = studentsList.findIndex(s => s.id === id);
 
-            if (studentIndex !== -1) {
-                // Update properties in memory
-                studentsList[studentIndex].name = document.getElementById('editStudentName').value;
-                studentsList[studentIndex].class = document.getElementById('editStudentClass').value;
-                studentsList[studentIndex].contact = document.getElementById('editGuardianContact').value;
-                studentsList[studentIndex].status = document.getElementById('editStatus').value;
+            if (index !== -1) {
+                studentsList[index].name = document.getElementById('editStudentName').value;
+                studentsList[index].class = document.getElementById('editStudentClass').value;
+                studentsList[index].contact = document.getElementById('editGuardianContact').value;
+                studentsList[index].status = document.getElementById('editStatus').value;
                 
                 closeModal();
                 
-                // Refresh data states based on active views
+                // Smart Refresh whatever panel view is currently operational
+                renderDashboardView();
                 renderStudentsTable();
                 renderFinanceTable();
                 updateDashboardMetrics();
             }
         }
 
-        // Run baseline loader
-        renderStudentsTable();
+        // Boot-up initialization sequence
+        renderDashboardView();
+        updateDashboardMetrics();
     </script>
 </body>
 </html>
