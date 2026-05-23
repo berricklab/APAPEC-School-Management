@@ -221,6 +221,8 @@
             flex-grow: 1;
             padding: 40px;
             width: calc(100% - var(--sidebar-width));
+            overflow-y: auto;
+            height: 100vh;
         }
 
         header {
@@ -396,6 +398,23 @@
         .badge.paid, .badge.returned, .badge.present { background-color: #d1fae5; color: #065f46; }
         .badge.pending, .badge.borrowed, .badge.absent { background-color: #fef3c7; color: #92400e; }
 
+        /* Pagination Layout Control */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            background: var(--surface-color);
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -421,7 +440,7 @@
                 <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
                     <div class="form-group">
                         <label for="loginUser">Username / Identity String</label>
-                        <input type="text" id="loginUser" required placeholder="e.g., admin, teacher5, parent">
+                        <input type="text" id="loginUser" required placeholder="e.g., admin1, teacher1, parent1">
                     </div>
                     <div class="form-group">
                         <label for="loginPass">Password</label>
@@ -581,14 +600,14 @@
                 </div>
 
                 <div class="card-grid">
-                    <div class="card"><h3>Total Students</h3><p id="dash-student-count">3</p></div>
+                    <div class="card"><h3>Total Students</h3><p id="dash-student-count">50</p></div>
                     <div class="card success"><h3>Active Classes</h3><p id="dash-class-count">12</p></div>
                     <div class="card"><h3>Books Checked Out</h3><p id="dash-books-count">2</p></div>
                 </div>
 
                 <div class="dashboard-layout">
                     <div class="dashboard-box">
-                        <h3 style="margin-bottom: 10px;">Quick Student Status Panel</h3>
+                        <h3 style="margin-bottom: 10px;">Quick Student Status Panel (Recent Entries)</h3>
                         <table>
                             <thead><tr><th>Name</th><th>Class</th><th>Action</th></tr></thead>
                             <tbody id="dash-quick-table"></tbody>
@@ -609,6 +628,13 @@
                     <thead><tr><th>ID</th><th>Avatar</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr></thead>
                     <tbody></tbody>
                 </table>
+                <div class="pagination-container">
+                    <div id="student-page-info" style="font-size:0.9rem; font-weight:500;">Showing 1-10 of 50 students</div>
+                    <div class="pagination-buttons">
+                        <button class="btn btn-primary btn-sm" onclick="changeStudentPage(-1)">&larr; Prev</button>
+                        <button class="btn btn-primary btn-sm" onclick="changeStudentPage(1)">Next &rarr;</button>
+                    </div>
+                </div>
             </section>
 
             <section id="add-student" class="page-section">
@@ -628,10 +654,17 @@
 
             <section id="finance" class="page-section">
                 <h3>Tuition & Fees Ledger</h3>
-                <table>
+                <table id="finance-table">
                     <thead><tr><th>Student Name</th><th>Class</th><th>Term Fee</th><th>Status</th><th>Action</th></tr></thead>
                     <tbody id="finance-table-body"></tbody>
                 </table>
+                <div class="pagination-container">
+                    <div id="finance-page-info" style="font-size:0.9rem; font-weight:500;">Showing 1-10 rows</div>
+                    <div class="pagination-buttons">
+                        <button class="btn btn-primary btn-sm" onclick="changeFinancePage(-1)">&larr; Prev</button>
+                        <button class="btn btn-primary btn-sm" onclick="changeFinancePage(1)">Next &rarr;</button>
+                    </div>
+                </div>
             </section>
 
             <section id="library" class="page-section">
@@ -720,7 +753,6 @@
                     </div>
                 </div>
                 
-                <!-- Explicit isolation message display banner for clarity -->
                 <div class="dashboard-box" style="margin-top: 20px; background-color: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; font-size: 0.9rem;">
                     <strong>🔒 Dynamic Child Security Sandbox Enabled:</strong> This session token can exclusively parse records assigned to your designated dependent child. All other institutional profiles are restricted.
                 </div>
@@ -795,23 +827,107 @@
 
     <!-- JavaScript Control Matrix Engine -->
     <script>
-        // --- DATA PERSISTENCE INITIALIZATION LAYER ---
-        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts')) || {
-            "admin": { password: "admin", role: "admin", profileRef: "ADM-MAIN" },
-            "teacher5": { password: "p5", role: "teacher", profileRef: "FAC-001" },
-            "student": { password: "student", role: "student", profileRef: "REG-001" },
-            "parent": { password: "parent", role: "parent", profileRef: "REG-001" } // Links to Kelia Mugisha by default
-        };
-
-        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers')) || {
-            "FAC-001": { name: "P5 Instructor", classAssignment: "P5", contact: "+250 788 000 111", photo: null }
-        };
-
-        let studentsList = JSON.parse(localStorage.getItem('sms_students')) || [
-            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88, linkedUser: "student", photo: null },
-            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74, linkedUser: null, photo: null },
-            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid", attendance: "Absent", score: 91, linkedUser: null, photo: null }
+        // --- 1. EXPANDED PRODUCTION ENTERPRISE SYSTEM DATA SEEDS ---
+        
+        // 50 Student Resource Matrix Objects
+        const baseStudents = [
+            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 001", status: "Paid", attendance: "Present", score: 88, linkedUser: "student1" },
+            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 111 002", status: "Pending", attendance: "Present", score: 74, linkedUser: "student2" },
+            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 111 003", status: "Paid", attendance: "Absent", score: 91, linkedUser: "student3" },
+            { id: "REG-004", name: "Cedric Izere", class: "P5", contact: "+250 788 111 004", status: "Paid", attendance: "Present", score: 65, linkedUser: "student4" },
+            { id: "REG-005", name: "Liliane Umutoni", class: "P6", contact: "+250 788 111 005", status: "Pending", attendance: "Present", score: 82, linkedUser: "student5" },
+            { id: "REG-006", name: "Arnaud Kwizera", class: "S1", contact: "+250 788 111 006", status: "Paid", attendance: "Present", score: 78, linkedUser: "student6" },
+            { id: "REG-007", name: "Grace Ineza", class: "P5", contact: "+250 788 111 007", status: "Paid", attendance: "Present", score: 95, linkedUser: "student7" },
+            { id: "REG-008", name: "Patrick Ishimwe", class: "P6", contact: "+250 788 111 008", status: "Paid", attendance: "Absent", score: 59, linkedUser: "student8" },
+            { id: "REG-009", name: "Sandrine Keza", class: "S1", contact: "+250 788 111 009", status: "Pending", attendance: "Present", score: 70, linkedUser: "student9" },
+            { id: "REG-010", name: "Olivier Nshuti", class: "P5", contact: "+250 788 111 010", status: "Paid", attendance: "Present", score: 84, linkedUser: "student10" },
+            { id: "REG-011", name: "Diane Gakire", class: "P6", contact: "+250 788 111 011", status: "Paid", attendance: "Present", score: 77, linkedUser: "student11" },
+            { id: "REG-012", name: "Bertrand Muhire", class: "S1", contact: "+250 788 111 012", status: "Pending", attendance: "Absent", score: 62, linkedUser: "student12" },
+            { id: "REG-013", name: "Fiona Gisa", class: "P5", contact: "+250 788 111 013", status: "Paid", attendance: "Present", score: 90, linkedUser: "student13" },
+            { id: "REG-014", name: "Eric Dusingize", class: "P6", contact: "+250 788 111 014", status: "Paid", attendance: "Present", score: 85, linkedUser: "student14" },
+            { id: "REG-015", name: "Chantal Uwineza", class: "S1", contact: "+250 788 111 015", status: "Pending", attendance: "Present", score: 73, linkedUser: "student15" },
+            { id: "REG-016", name: "Yvan Rwigema", class: "P5", contact: "+250 788 111 016", status: "Paid", attendance: "Present", score: 68, linkedUser: "student16" },
+            { id: "REG-017", name: "Aline Mutesi", class: "P6", contact: "+250 788 111 017", status: "Paid", attendance: "Present", score: 92, linkedUser: "student17" },
+            { id: "REG-018", name: "Jean Paul Nkurunziza", class: "S1", contact: "+250 788 111 018", status: "Pending", attendance: "Absent", score: 55, linkedUser: "student18" },
+            { id: "REG-019", name: "Solange Umutesi", class: "P5", contact: "+250 788 111 019", status: "Paid", attendance: "Present", score: 81, linkedUser: "student19" },
+            { id: "REG-020", name: "Moses Kagame", class: "P6", contact: "+250 788 111 020", status: "Paid", attendance: "Present", score: 89, linkedUser: "student20" },
+            { id: "REG-021", name: "Sonia Uwera", class: "S1", contact: "+250 788 111 021", status: "Pending", attendance: "Present", score: 76, linkedUser: "student21" },
+            { id: "REG-022", name: "Christian Shema", class: "P5", contact: "+250 788 111 022", status: "Paid", attendance: "Present", score: 64, linkedUser: "student22" },
+            { id: "REG-023", name: "Angelique Uwamahoro", class: "P6", contact: "+250 788 111 023", status: "Paid", attendance: "Present", score: 94, linkedUser: "student23" },
+            { id: "REG-024", name: "Blaise Mugabo", class: "S1", contact: "+250 788 111 024", status: "Pending", attendance: "Absent", score: 50, linkedUser: "student24" },
+            { id: "REG-025", name: "Claudine Mutoni", class: "P5", contact: "+250 788 111 025", status: "Paid", attendance: "Present", score: 83, linkedUser: "student25" },
+            { id: "REG-026", name: "Emmanuel Ndahimana", class: "P6", contact: "+250 788 111 026", status: "Paid", attendance: "Present", score: 79, linkedUser: "student26" },
+            { id: "REG-027", name: "Josiane Umuhoza", class: "S1", contact: "+250 788 111 027", status: "Pending", attendance: "Present", score: 71, linkedUser: "student27" },
+            { id: "REG-028", name: "Pacifique Iradukunda", class: "P5", contact: "+250 788 111 028", status: "Paid", attendance: "Present", score: 87, linkedUser: "student28" },
+            { id: "REG-029", name: "Valentine Mukamana", class: "P6", contact: "+250 788 111 029", status: "Paid", attendance: "Present", score: 80, linkedUser: "student29" },
+            { id: "REG-030", name: "Thierry Kamanzi", class: "S1", contact: "+250 788 111 030", status: "Pending", attendance: "Absent", score: 66, linkedUser: "student30" },
+            { id: "REG-031", name: "Marie Claire Nyinawumuntu", class: "P5", contact: "+250 788 111 031", status: "Paid", attendance: "Present", score: 72 },
+            { id: "REG-032", name: "Justin Niyomugabo", class: "P6", contact: "+250 788 111 032", status: "Paid", attendance: "Present", score: 86 },
+            { id: "REG-033", name: "Beata Uwimana", class: "S1", contact: "+250 788 111 033", status: "Paid", attendance: "Present", score: 93 },
+            { id: "REG-034", name: "Gaspard Habimana", class: "P5", contact: "+250 788 111 034", status: "Pending", attendance: "Present", score: 58 },
+            { id: "REG-035", name: "Emelyne Kaneza", class: "P6", contact: "+250 788 111 035", status: "Paid", attendance: "Present", score: 80 },
+            { id: "REG-036", name: "Florent Niyonisaba", class: "S1", contact: "+250 788 111 036", status: "Paid", attendance: "Absent", score: 69 },
+            { id: "REG-037", name: "Honorine Uwiragiye", class: "P5", contact: "+250 788 111 037", status: "Paid", attendance: "Present", score: 75 },
+            { id: "REG-038", name: "Innocent Mbonigaba", class: "P6", contact: "+250 788 111 038", status: "Pending", attendance: "Present", score: 63 },
+            { id: "REG-039", name: "Janviere Mukamisha", class: "S1", contact: "+250 788 111 039", status: "Paid", attendance: "Present", score: 84 },
+            { id: "REG-040", name: "Kennedy Ntwali", class: "P5", contact: "+250 788 111 040", status: "Paid", attendance: "Present", score: 78 },
+            { id: "REG-041", name: "Leopold Munyaneza", class: "P6", contact: "+250 788 111 041", status: "Paid", attendance: "Present", score: 82 },
+            { id: "REG-042", name: "Micheline Uwamariya", class: "S1", contact: "+250 788 111 042", status: "Pending", attendance: "Absent", score: 61 },
+            { id: "REG-043", name: "Norbert Rutaganda", class: "P5", contact: "+250 788 111 043", status: "Paid", attendance: "Present", score: 86 },
+            { id: "REG-044", name: "Odette Nyiramana", class: "P6", contact: "+250 788 111 044", status: "Paid", attendance: "Present", score: 89 },
+            { id: "REG-045", name: "Pascal Nsengiyumva", class: "S1", contact: "+250 788 111 045", status: "Pending", attendance: "Present", score: 70 },
+            { id: "REG-046", name: "Regine Akaliza", class: "P5", contact: "+250 788 111 046", status: "Paid", attendance: "Present", score: 91 },
+            { id: "REG-047", name: "Sylvestre Murenzi", class: "P6", contact: "+250 788 111 047", status: "Paid", attendance: "Present", score: 67 },
+            { id: "REG-048", name: "Telesphore Hategekimana", class: "S1", contact: "+250 788 111 048", status: "Pending", attendance: "Absent", score: 54 },
+            { id: "REG-049", name: "Vestine Nyiransabimana", class: "P5", contact: "+250 788 111 049", status: "Paid", attendance: "Present", score: 83 },
+            { id: "REG-050", name: "Zacharie Twagirimana", class: "P6", contact: "+250 788 111 050", status: "Paid", attendance: "Present", score: 79 }
         ];
+
+        // 12 Faculty Room Profile Objects
+        const baseTeachers = {
+            "FAC-001": { name: "Jean de Dieu Tumusime", classAssignment: "P5", contact: "+250 788 222 001" },
+            "FAC-002": { name: "Marie Chantal Mukagasana", classAssignment: "P6", contact: "+250 788 222 002" },
+            "FAC-003": { name: "Emmanuel Ruzindana", classAssignment: "S1", contact: "+250 788 222 003" },
+            "FAC-004": { name: "Alphonsine Umurerwa", classAssignment: "P5", contact: "+250 788 222 004" },
+            "FAC-005": { name: "Charles Niyonsenga", classAssignment: "P6", contact: "+250 788 222 005" },
+            "FAC-006": { name: "Athanase Mutabazi", classAssignment: "S1", contact: "+250 788 222 006" },
+            "FAC-007": { name: "Serafina Mukamurenzi", classAssignment: "P5", contact: "+250 788 222 007" },
+            "FAC-008": { name: "Anastase Ndizeye", classAssignment: "P6", contact: "+250 788 222 008" },
+            "FAC-009": { name: "Evelyne Uwimana", classAssignment: "S1", contact: "+250 788 222 009" },
+            "FAC-010": { name: "Theoneste Hakizimana", classAssignment: "P5", contact: "+250 788 222 010" },
+            "FAC-011": { name: "Claudine Uwamahoro", classAssignment: "P6", contact: "+250 788 222 011" },
+            "FAC-012": { name: "Bosco Nsabimana", classAssignment: "S1", contact: "+250 788 222 012" }
+        };
+
+        // Initialize Dynamic Core Storage Registers
+        let studentsList = JSON.parse(localStorage.getItem('sms_students')) || baseStudents;
+        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers')) || baseTeachers;
+
+        // Base Auth Accounts Registry (Expanded dynamically with loops below)
+        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts')) || {};
+
+        if (Object.keys(accountsDatabase).length === 0) {
+            // Seed 10 Administrator Credentials (admin1 - admin10)
+            for (let i = 1; i <= 10; i++) {
+                accountsDatabase[`admin${i}`] = { password: `admin${i}`, role: "admin", profileRef: `ADM-0${i}` };
+            }
+            // Seed 12 Teacher Credentials (teacher1 - teacher12)
+            for (let i = 1; i <= 12; i++) {
+                let refStr = `FAC-0${i < 10 ? '0' + i : i}`;
+                accountsDatabase[`teacher${i}`] = { password: `teacher${i}`, role: "teacher", profileRef: refStr };
+            }
+            // Seed 30 Parent Isolation Profile Accounts (parent1 - parent30 mapping to REG-001 - REG-030)
+            for (let i = 1; i <= 30; i++) {
+                let refStr = `REG-0${i < 10 ? '0' + i : i}`;
+                accountsDatabase[`parent${i}`] = { password: `parent${i}`, role: "parent", profileRef: refStr };
+            }
+            // Seed 30 matching student accounts for completeness (student1 - student30)
+            for (let i = 1; i <= 30; i++) {
+                let refStr = `REG-0${i < 10 ? '0' + i : i}`;
+                accountsDatabase[`student${i}`] = { password: `student${i}`, role: "student", profileRef: refStr };
+            }
+            localStorage.setItem('sms_accounts', JSON.stringify(accountsDatabase));
+        }
 
         let libraryLedger = JSON.parse(localStorage.getItem('sms_library')) || [
             { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
@@ -822,10 +938,15 @@
         let schoolMetrics = { classesCount: 12 };
         let activePortalRole = ""; 
         let currentViewStudentId = "REG-001"; 
-        let parentLinkedChildId = "REG-001"; // Strict target placeholder pointer string
+        let parentLinkedChildId = "REG-001";
 
         let temporaryAccountData = null; 
         let temporaryUploadedPhotoBase64 = null;
+
+        // Interactive Table Pagination Anchors
+        let studentCurrentPage = 0;
+        let financeCurrentPage = 0;
+        const rowsPerPage = 10;
 
         function commitSystemStateToDisk() {
             localStorage.setItem('sms_accounts', JSON.stringify(accountsDatabase));
@@ -912,7 +1033,6 @@
                 textEl.innerText = "Teacher registration dynamically binds you to data manipulation for your specified class only.";
                 classLabel.innerText = "Authorized Target Class Tracking";
             } else if (selectedRole === 'parent') {
-                // Configures layout specifically for isolated parent tracking profiles
                 textEl.innerText = "Parent registration enforces a permanent target link to your child's specific record file.";
                 classBox.style.display = 'none';
                 photoContainer.style.display = 'none';
@@ -960,18 +1080,17 @@
             let referenceTokenId = "SYS-GEN";
 
             if (uRole === 'student') {
-                referenceTokenId = `REG-00${studentsList.length + 1}`;
+                referenceTokenId = `REG-0${studentsList.length + 1}`;
                 studentsList.push({
                     id: referenceTokenId, name: fullName, class: selectionClass, contact: contactNum,
                     status: "Pending", attendance: "Present", score: 0, linkedUser: uName, photo: temporaryUploadedPhotoBase64
                 });
             } else if (uRole === 'teacher') {
-                referenceTokenId = `FAC-00${Object.keys(teachersDatabase).length + 1}`;
+                referenceTokenId = `FAC-0${Object.keys(teachersDatabase).length + 1}`;
                 teachersDatabase[referenceTokenId] = {
                     name: fullName, classAssignment: selectionClass, contact: contactNum, photo: temporaryUploadedPhotoBase64
                 };
             } else if (uRole === 'parent') {
-                // Pairs parent account exclusively to selected child ID string
                 referenceTokenId = document.getElementById('parentStudentSelect').value;
             }
 
@@ -1004,7 +1123,7 @@
                 
                 if (verifiedRole === 'student') currentViewStudentId = ref;
                 else if (verifiedRole === 'teacher') window.currentTeacherRef = ref;
-                else if (verifiedRole === 'parent') parentLinkedChildId = ref; // Locks session token
+                else if (verifiedRole === 'parent') parentLinkedChildId = ref;
                 
                 launchPortal(verifiedRole);
                 return;
@@ -1018,7 +1137,7 @@
             const guideBox = document.createElement('div');
             guideBox.id = 'creation-guide-box';
             guideBox.style.cssText = `background: #fef2f2; border-left: 4px solid var(--danger-color); padding: 15px; margin-top: 20px; font-size: 0.85rem; color: #991b1b;`;
-            guideBox.innerHTML = `<strong>❌ Verification failure.</strong> Create an account using the registration wizard below to instantiate fresh credentials.`;
+            guideBox.innerHTML = `<strong>❌ Verification failure.</strong> Create an account or verify structural credentials (e.g., admin1, teacher1, parent1).`;
             insertionPoint.appendChild(guideBox);
         }
 
@@ -1058,8 +1177,8 @@
             }
 
             if(tabId === 'dashboard') renderDashboardView();
-            if(tabId === 'finance') renderFinanceTable();
-            if(tabId === 'students') renderStudentsTable();
+            if(tabId === 'finance') { financeCurrentPage = 0; renderFinanceTable(); }
+            if(tabId === 'students') { studentCurrentPage = 0; renderStudentsTable(); }
             if(tabId === 'library') renderLibraryTable();
             if(tabId === 'teacher-attendance') renderTeacherAttendanceTable();
             if(tabId === 'teacher-grades') renderTeacherGradesTable();
@@ -1079,7 +1198,7 @@
 
         function renderTeacherHomeDashboard() {
             const ref = window.currentTeacherRef || "FAC-001";
-            const profile = teachersDatabase[ref] || { name: "P5 Instructor", classAssignment: "P5", photo: null };
+            const profile = teachersDatabase[ref] || { name: "Faculty Instructor", classAssignment: "P5", photo: null };
             
             document.getElementById('teacher-welcome-title').innerText = `Faculty Module: ${profile.name}`;
             document.getElementById('teacher-meta-subtitle').innerText = `Assigned Clearance Domain Zone: Grade ${profile.classAssignment} Student Listings Only`;
@@ -1172,7 +1291,6 @@
 
         // --- PARENT PORTAL SECURE DATA SANDBOX ---
         function renderParentPortalDashboard() {
-            // Locates the linked student record matching the parent's session token lookup reference
             const childFile = studentsList.find(s => s.id === parentLinkedChildId);
             
             if(!childFile) {
@@ -1192,7 +1310,6 @@
             document.getElementById('parent-attendance-status').innerText = childFile.attendance;
             document.getElementById('parent-attendance-card').className = childFile.attendance === 'Present' ? 'card success' : 'card danger';
 
-            // Isolates library data rows for this specific child profile only
             const booksBody = document.getElementById('parent-books-body');
             booksBody.innerHTML = '';
             
@@ -1268,26 +1385,56 @@
         function renderDashboardView() {
             const tbody = document.getElementById('dash-quick-table');
             tbody.innerHTML = '';
-            studentsList.forEach(student => {
+            // Display top 5 recent student index values on primary layout card
+            const quickSlice = studentsList.slice(0, 5);
+            quickSlice.forEach(student => {
                 tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
             });
         }
 
+        // Paginated Student Grid Renderers
         function renderStudentsTable() {
             const tbody = document.querySelector('#student-table tbody');
             tbody.innerHTML = '';
-            studentsList.forEach(student => {
-                tbody.innerHTML += `<tr><td>${student.id}</td><td>${getAvatarMarkup(student.name, student.photo)}</td><td>${student.name}</td><td>Grade ${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
+            
+            const start = studentCurrentPage * rowsPerPage;
+            const end = Math.min(start + rowsPerPage, studentsList.length);
+            const activePageSlice = studentsList.slice(start, end);
+
+            activePageSlice.forEach(student => {
+                tbody.innerHTML += `<tr><td>${student.id}</td><td>${getAvatarMarkup(student.name, student.photo)}</td><td>${student.name}</td><td>Grade ${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
             });
+
+            document.getElementById('student-page-info').innerText = `Showing ${start + 1}-${end} of ${studentsList.length} students`;
         }
 
+        function changeStudentPage(direction) {
+            const maxPage = Math.ceil(studentsList.length / rowsPerPage) - 1;
+            studentCurrentPage = Math.min(maxPage, Math.max(0, studentCurrentPage + direction));
+            renderStudentsTable();
+        }
+
+        // Paginated Ledger Rows Renderers
         function renderFinanceTable() {
             const tbody = document.getElementById('finance-table-body');
             tbody.innerHTML = '';
-            studentsList.forEach(student => {
+
+            const start = financeCurrentPage * rowsPerPage;
+            const end = Math.min(start + rowsPerPage, studentsList.length);
+            const activePageSlice = studentsList.slice(start, end);
+
+            activePageSlice.forEach(student => {
                 const badgeClass = student.status === 'Paid' ? 'paid' : 'pending';
-                tbody.innerHTML += `<tr><td>${student.name}</td><td>Grade ${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>${student.name}</td><td>Grade ${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
             });
+
+            document.getElementById('finance-page-info').innerText = `Showing ${start + 1}-${end} of ${studentsList.length} metrics`;
+        }
+
+        function changeFinancePage(direction) {
+            const maxPage = Math.ceil(studentsList.length / rowsPerPage) - 1;
+            financeCurrentPage = Math.min(maxPage, Math.max(0, financeCurrentPage + direction));
+            renderFinanceTable();
         }
 
         function renderLibraryTable() {
@@ -1338,7 +1485,7 @@
             const className = document.getElementById('studentClass').value;
             const contact = document.getElementById('guardianContact').value;
             
-            studentsList.push({ id: `REG-00${studentsList.length + 1}`, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
+            studentsList.push({ id: `REG-0${studentsList.length + 1}`, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
             commitSystemStateToDisk(); document.getElementById('admission-form').reset();
             switchTab('dashboard');
         }
