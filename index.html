@@ -70,7 +70,7 @@
             padding: 40px;
             border-radius: 12px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             color: #1f2937;
         }
@@ -95,6 +95,11 @@
             font-size: 0.8rem;
             margin-bottom: 20px;
             border-left: 4px solid #3b82f6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- MAIN SYSTEM APP LAYOUT --- */
@@ -220,16 +225,6 @@
             font-weight: bold;
             margin-top: 5px;
             margin-bottom: 10px;
-        }
-
-        .inline-edit-btn {
-            background: none;
-            border: none;
-            color: var(--secondary-color);
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 0;
         }
 
         .dashboard-layout {
@@ -512,7 +507,7 @@
                 </table>
             </section>
 
-            <!-- ================= NEW: TEACHER WORKSPACE PAGES SECTION ================= -->
+            <!-- ================= TEACHER WORKSPACE PAGES SECTION ================= -->
             <section id="teacher-home" class="page-section">
                 <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #10b981); color: white; padding: 25px;">
                     <h2>Welcome to the Faculty Room Dashboard</h2>
@@ -565,7 +560,7 @@
         </main>
     </div>
 
-    <!-- Modals (Admin Edit Student / Book Borrowing Form Popups) -->
+    <!-- Modals -->
     <div class="modal" id="editModal">
         <form id="edit-form" onsubmit="saveStudentEdit(event)">
             <h3 style="margin-bottom: 15px;">Modify Registry Records</h3>
@@ -610,90 +605,12 @@
     </div>
 
     <!-- JavaScript Control Matrix Engine -->
-    <script> 
-    // --- UPDATED AUTHENTICATION LOGIN ENGINE CONTROLLER ---
-function executeSystemLogin(event) {
-    event.preventDefault();
-    const user = document.getElementById('loginUser').value.trim().toLowerCase();
-    const pass = document.getElementById('loginPass').value.trim();
-
-    // Clear any previous step-by-step guides if they exist
-    const existingGuide = document.getElementById('creation-guide-box');
-    if (existingGuide) {
-        existingGuide.remove();
-    }
-
-    // 1. Validate Admin Accounts
-    if (user === 'admin' && pass === 'admin') {
-        launchPortal('admin');
-        return;
-    } 
-    
-    // 2. Validate Teacher Accounts
-    if (user === 'teacher' && pass === 'teacher') {
-        launchPortal('teacher');
-        return;
-    } 
-    
-    // 3. Validate Student Accounts
-    if (user === 'student' && pass === 'student') {
-        let optionsPrompt = "Select Student Profile to simulate portal authentication:\n";
-        studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
-        let choice = prompt(optionsPrompt, "1");
-        let selectedIndex = parseInt(choice) - 1;
-        
-        if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
-            selectedIndex = 0;
-        }
-        currentViewStudentId = studentsList[selectedIndex].id;
-        launchPortal('student');
-        return;
-    }
-
-    // 4. IF USERNAME IS INCORRECT: Render Step-by-Step Creation Guide
-    showAccountCreationGuide(user);
-}
-
-function showAccountCreationGuide(attemptedUsername) {
-    const form = document.getElementById('login-form');
-    
-    // Create the step-by-step guide element
-    const guideBox = document.createElement('div');
-    guideBox.id = 'creation-guide-box';
-    guideBox.style.cssText = `
-        background: #fef2f2;
-        border: 1px solid #fee2e2;
-        border-left: 4px solid var(--danger-color);
-        padding: 15px;
-        border-radius: 6px;
-        margin-top: 20px;
-        font-size: 0.85rem;
-        color: #991b1b;
-        animation: fadeIn 0.3s ease-in-out;
-    `;
-
-    guideBox.innerHTML = `
-        <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
-            ❌ Identity "${attemptedUsername}" not recognized.
-        </strong>
-        <p style="margin-bottom: 10px; color: #7f1d1d;">Accounts must be provisioned by the system. Follow these steps to register:</p>
-        <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
-            <li style="margin-bottom: 5px;"><strong>Verify Credentials:</strong> Double-check your spelling. For testing, use exactly <code>admin</code>, <code>teacher</code>, or <code>student</code>.</li>
-            <li style="margin-bottom: 5px;"><strong>For Students:</strong> Request registration from the Admin panel via the <em>"Admission Form"</em> tab. An official ID (e.g., <code>REG-004</code>) will be auto-generated.</li>
-            <li style="margin-bottom: 5px;"><strong>For Staff/Teachers:</strong> Contact the IT Systems Administrator to map your profile to the academic board matrix.</li>
-            <li><strong>Finalize Passwords:</strong> Once mapped, access the portal using your designated role identifier string.</li>
-        </ol>
-    `;
-
-    // Append right beneath the login form button
-    form.appendChild(guideBox);
-}</script>
     <script>
         // System Master Data Architecture
         let currentSchoolName = "APAPEC-IREBERO";
         let schoolMetrics = { classesCount: 12 };
         let activePortalRole = ""; 
-        let currentViewStudentId = "REG-001"; // Target profile perspective when a student logs in
+        let currentViewStudentId = "REG-001"; 
 
         let studentsList = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88 },
@@ -712,12 +629,26 @@ function showAccountCreationGuide(attemptedUsername) {
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value.trim();
 
+            // Clear any previous step-by-step guides if they exist
+            const existingGuide = document.getElementById('creation-guide-box');
+            if (existingGuide) {
+                existingGuide.remove();
+            }
+
+            // 1. Validate Admin Accounts
             if (user === 'admin' && pass === 'admin') {
                 launchPortal('admin');
-            } else if (user === 'teacher' && pass === 'teacher') {
+                return;
+            } 
+            
+            // 2. Validate Teacher Accounts
+            if (user === 'teacher' && pass === 'teacher') {
                 launchPortal('teacher');
-            } else if (user === 'student' && pass === 'student') {
-                // Interactive simulation: select student identity context to load
+                return;
+            } 
+            
+            // 3. Validate Student Accounts
+            if (user === 'student' && pass === 'student') {
                 let optionsPrompt = "Select Student Profile to simulate portal authentication:\n";
                 studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
                 let choice = prompt(optionsPrompt, "1");
@@ -728,9 +659,45 @@ function showAccountCreationGuide(attemptedUsername) {
                 }
                 currentViewStudentId = studentsList[selectedIndex].id;
                 launchPortal('student');
-            } else {
-                alert("Invalid Gateway Access Credentials. Please reference the guidebox above.");
+                return;
             }
+
+            // 4. IF USERNAME IS INCORRECT: Render Step-by-Step Creation Guide
+            showAccountCreationGuide(user);
+        }
+
+        function showAccountCreationGuide(attemptedUsername) {
+            const form = document.getElementById('login-form');
+            
+            // Create the step-by-step guide element
+            const guideBox = document.createElement('div');
+            guideBox.id = 'creation-guide-box';
+            guideBox.style.cssText = `
+                background: #fef2f2;
+                border: 1px solid #fee2e2;
+                border-left: 4px solid var(--danger-color);
+                padding: 15px;
+                border-radius: 6px;
+                margin-top: 20px;
+                font-size: 0.85rem;
+                color: #991b1b;
+                animation: fadeIn 0.3s ease-in-out;
+            `;
+
+            guideBox.innerHTML = `
+                <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
+                    ❌ Identity "${attemptedUsername}" not recognized.
+                </strong>
+                <p style="margin-bottom: 10px; color: #7f1d1d;">Accounts must be provisioned by the system. Follow these steps to register:</p>
+                <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
+                    <li style="margin-bottom: 5px;"><strong>Verify Credentials:</strong> Double-check your spelling. For testing, use exactly <code>admin</code>, <code>teacher</code>, or <code>student</code>.</li>
+                    <li style="margin-bottom: 5px;"><strong>For Students:</strong> Request registration from the Admin panel via the <em>"Admission Form"</em> tab. An official ID (e.g., <code>REG-004</code>) will be auto-generated.</li>
+                    <li style="margin-bottom: 5px;"><strong>For Staff/Teachers:</strong> Contact the IT Systems Administrator to map your profile to the academic board matrix.</li>
+                    <li><strong>Finalize Passwords:</strong> Once mapped, access the portal using your designated role identifier string.</li>
+                </ol>
+            `;
+
+            form.appendChild(guideBox);
         }
 
         function launchPortal(role) {
@@ -739,12 +706,10 @@ function showAccountCreationGuide(attemptedUsername) {
             document.getElementById('app-container').style.display = 'flex';
             document.getElementById('header-active-role-badge').innerText = role.toUpperCase();
 
-            // Toggle sidebar sub-menus relative to active login token
             document.getElementById('admin-sidebar-menu').style.display = (role === 'admin') ? 'block' : 'none';
             document.getElementById('teacher-sidebar-menu').style.display = (role === 'teacher') ? 'block' : 'none';
             document.getElementById('student-sidebar-menu').style.display = (role === 'student') ? 'block' : 'none';
 
-            // Route initial view tab layouts
             if (role === 'admin') switchTab('dashboard');
             if (role === 'teacher') switchTab('teacher-home');
             if (role === 'student') switchTab('student-home');
@@ -753,6 +718,8 @@ function showAccountCreationGuide(attemptedUsername) {
         function executeLogout() {
             activePortalRole = "";
             document.getElementById('login-form').reset();
+            const existingGuide = document.getElementById('creation-guide-box');
+            if (existingGuide) existingGuide.remove();
             document.getElementById('app-container').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
         }
@@ -767,7 +734,6 @@ function showAccountCreationGuide(attemptedUsername) {
                 event.target.classList.add('active');
             }
 
-            // Render matching context arrays live
             if(tabId === 'dashboard') renderDashboardView();
             if(tabId === 'finance') renderFinanceTable();
             if(tabId === 'students') renderStudentsTable();
@@ -852,17 +818,14 @@ function showAccountCreationGuide(attemptedUsername) {
             document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
             document.getElementById('portal-grade-display').innerText = `${currentStudent.score}%`;
             
-            // Payment card style logic
             const statusEl = document.getElementById('portal-fee-status');
             statusEl.innerText = currentStudent.status;
             document.getElementById('student-fee-card').className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
 
-            // Attendance card style logic
             const attendEl = document.getElementById('portal-attendance-status');
             attendEl.innerText = currentStudent.attendance;
             document.getElementById('portal-attendance-card').className = currentStudent.attendance === 'Present' ? 'card success' : 'card danger';
 
-            // Filter context book loans
             const booksBody = document.getElementById('portal-books-body');
             booksBody.innerHTML = '';
             const records = libraryLedger.filter(item => item.studentId === currentViewStudentId);
