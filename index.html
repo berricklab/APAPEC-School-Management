@@ -49,9 +49,57 @@
         }
 
         body {
-            display: flex;
             background-color: var(--bg-color);
             color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* --- LOGIN GATE SCREEN STYLES --- */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            color: #1f2937;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 5px;
+            color: #1e3a8a;
+        }
+
+        .login-card p.subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .login-help-box {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* --- MAIN SYSTEM APP LAYOUT --- */
+        #app-container {
+            display: none; /* Controlled by auth engine */
         }
 
         /* Sidebar Navigation */
@@ -103,6 +151,7 @@
             margin-left: var(--sidebar-width);
             flex-grow: 1;
             padding: 40px;
+            width: calc(100% - var(--sidebar-width));
         }
 
         header {
@@ -158,6 +207,7 @@
 
         .card.success { border-left-color: var(--accent-color); }
         .card.danger { border-left-color: var(--danger-color); }
+        .card.warning { border-left-color: #f59e0b; }
 
         .card h3 {
             font-size: 0.9rem;
@@ -288,8 +338,8 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        .badge.paid, .badge.returned { background-color: #d1fae5; color: #065f46; }
-        .badge.pending, .badge.borrowed { background-color: #fef3c7; color: #92400e; }
+        .badge.paid, .badge.returned, .badge.present { background-color: #d1fae5; color: #065f46; }
+        .badge.pending, .badge.borrowed, .badge.absent { background-color: #fef3c7; color: #92400e; }
 
         /* Modal Overlays */
         .modal {
@@ -306,212 +356,230 @@
 </head>
 <body>
 
-    <!-- Sidebar Menu Component -->
-    <aside>
-        <div class="brand" id="sidebar-brand">APAPEC-IREBERO</div>
-        
-        <!-- Administrator Navigation Controls -->
-        <div id="admin-sidebar-menu">
-            <button class="menu-btn active" onclick="switchTab('dashboard')">Dashboard</button>
-            <button class="menu-btn" onclick="switchTab('students')">Students Register</button>
-            <button class="menu-btn" onclick="switchTab('add-student')">Admission Form</button>
-            <button class="menu-btn" onclick="switchTab('finance')">Fees Management</button>
-            <button class="menu-btn" onclick="switchTab('library')">Library System</button>
+    <!-- ================= 1. SECURE GATEWAY SCREEN ================= -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2 id="login-brand-title">APAPEC-IREBERO</h2>
+            <p class="subtitle">Unified Portal Authentication Gateway</p>
+            
+            <div class="login-help-box">
+                <strong>Simulated Accounts for Testing:</strong><br>
+                • Admin: username <code>admin</code> / pass <code>admin</code><br>
+                • Teacher: username <code>teacher</code> / pass <code>teacher</code><br>
+                • Student: username <code>student</code> / pass <code>student</code>
+            </div>
+
+            <form id="login-form" onsubmit="executeSystemLogin(event)" style="box-shadow:none; padding:0; max-width:100%;">
+                <div class="form-group">
+                    <label for="loginUser">Username / Registration Identity</label>
+                    <input type="text" id="loginUser" required placeholder="Enter username...">
+                </div>
+                <div class="form-group">
+                    <label for="loginPass">Password</label>
+                    <input type="password" id="loginPass" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;">
+                    Sign In to Portal
+                </button>
+            </form>
         </div>
+    </div>
 
-        <!-- Student Dynamic Portal Sidebar Notification -->
-        <div id="student-sidebar-menu" style="display: none;">
-            <button class="menu-btn active" onclick="switchTab('student-home')">My Student Profile</button>
-            <p style="padding: 15px; font-size: 0.8rem; color: var(--sidebar-text); opacity: 0.7;">
-                Logged in under official secure verification profile token.
-            </p>
-        </div>
-    </aside>
 
-    <!-- Main Workspace -->
-    <main>
-        <header>
-            <h2 id="page-title">Dashboard</h2>
-            <div class="header-controls">
-                <!-- User Role Switching Matrix -->
-                <div>
-                    <label for="portalSwitch"><strong>Portal View:</strong></label>
-                    <select id="portalSwitch" class="control-select" onchange="handlePortalViewChange(this.value)">
-                        <option value="admin">Administrator View</option>
-                        <option value="student">Student Portal View</option>
-                    </select>
-                </div>
-                
-                <!-- Theme Dynamic Config Selector -->
-                <div class="theme-selector">
-                    <select id="themeDropdown" class="control-select" onchange="changeTheme(this.value)">
-                        <option value="classic">Theme: Classic Blue</option>
-                        <option value="light">Theme: Light</option>
-                        <option value="dark">Theme: Dark</option>
-                    </select>
-                </div>
-            </div>
-        </header>
-
-        <!-- ================= ADMIN SECTION EXCLUSIVE PANELS ================= -->
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="page-section active">
-            <div class="dashboard-box" style="border-left: 5px solid var(--primary-color);">
-                <h4 style="margin-bottom: 5px;">Configure School Identity</h4>
-                <div class="school-edit-container">
-                    <input type="text" id="schoolNameInput" value="APAPEC-IREBERO">
-                    <button class="btn btn-primary" onclick="updateSchoolName()">Save Name</button>
-                </div>
+    <!-- ================= 2. MAIN APPLICATION PLATFORM CONTAINER ================= -->
+    <div id="app-container">
+        <!-- Sidebar Navigation -->
+        <aside>
+            <div class="brand" id="sidebar-brand">APAPEC-IREBERO</div>
+            
+            <!-- Admin Menu -->
+            <div id="admin-sidebar-menu" style="display: none;">
+                <button class="menu-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+                <button class="menu-btn" onclick="switchTab('students')">Students Register</button>
+                <button class="menu-btn" onclick="switchTab('add-student')">Admission Form</button>
+                <button class="menu-btn" onclick="switchTab('finance')">Fees Management</button>
+                <button class="menu-btn" onclick="switchTab('library')">Library System</button>
             </div>
 
-            <div class="card-grid">
-                <div class="card">
-                    <h3>Total Students</h3>
-                    <p id="dash-student-count">3</p>
-                </div>
-                <div class="card success">
-                    <h3>Active Classes</h3>
-                    <p id="dash-class-count">12</p>
-                    <button class="inline-edit-btn" onclick="editDashboardMetric('classes')">Update Classes</button>
-                </div>
-                <div class="card">
-                    <h3>Books Checked Out</h3>
-                    <p id="dash-books-count">2</p>
-                </div>
+            <!-- Teacher Menu -->
+            <div id="teacher-sidebar-menu" style="display: none;">
+                <button class="menu-btn active" onclick="switchTab('teacher-home')">Teacher Workspace</button>
+                <button class="menu-btn" onclick="switchTab('teacher-attendance')">Class Attendance</button>
+                <button class="menu-btn" onclick="switchTab('teacher-grades')">Academic Gradebook</button>
             </div>
 
-            <div class="dashboard-layout">
+            <!-- Student Menu -->
+            <div id="student-sidebar-menu" style="display: none;">
+                <button class="menu-btn active" onclick="switchTab('student-home')">My Student Profile</button>
+            </div>
+
+            <!-- Global Sign Out Action Footer Link -->
+            <button class="btn btn-danger btn-sm" onclick="executeLogout()" style="margin-top: auto; width: 100%; padding: 10px;">
+                Secure Exit Sign-Out
+            </button>
+        </aside>
+
+        <!-- Main Workspace Viewport -->
+        <main>
+            <header>
+                <h2 id="page-title">Workspace Dashboard</h2>
+                <div class="header-controls">
+                    <div style="background: var(--primary-color); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">
+                        Current Role: <span id="header-active-role-badge">-</span>
+                    </div>
+                    <div class="theme-selector">
+                        <select id="themeDropdown" class="control-select" onchange="changeTheme(this.value)">
+                            <option value="classic">Theme: Classic Blue</option>
+                            <option value="light">Theme: Light</option>
+                            <option value="dark">Theme: Dark</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ================= ADMIN PAGES SECTION ================= -->
+            <section id="dashboard" class="page-section">
+                <div class="dashboard-box" style="border-left: 5px solid var(--primary-color);">
+                    <h4 style="margin-bottom: 5px;">Configure School Identity</h4>
+                    <div class="school-edit-container">
+                        <input type="text" id="schoolNameInput" value="APAPEC-IREBERO">
+                        <button class="btn btn-primary" onclick="updateSchoolName()">Save Name</button>
+                    </div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card"><h3>Total Students</h3><p id="dash-student-count">3</p></div>
+                    <div class="card success"><h3>Active Classes</h3><p id="dash-class-count">12</p></div>
+                    <div class="card"><h3>Books Checked Out</h3><p id="dash-books-count">2</p></div>
+                </div>
+
+                <div class="dashboard-layout">
+                    <div class="dashboard-box">
+                        <h3 style="margin-bottom: 10px;">Quick Student Status Panel</h3>
+                        <table>
+                            <thead><tr><th>Name</th><th>Class</th><th>Action</th></tr></thead>
+                            <tbody id="dash-quick-table"></tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
+                        <p style="font-size: 0.9rem; line-height: 1.4;">
+                            Login framework active. Administration updates filter context immediately to corresponding teacher rosters and student portal displays.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="students" class="page-section">
+                <h3>Registered Students Database</h3>
+                <table id="student-table">
+                    <thead><tr><th>ID</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <section id="add-student" class="page-section">
+                <h3>New Student Admission</h3><br>
+                <form id="admission-form" onsubmit="registerStudent(event)">
+                    <div class="form-group"><label>Full Name</label><input type="text" id="studentName" required></div>
+                    <div class="form-group">
+                        <label>Assign Class</label>
+                        <select id="studentClass">
+                            <option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Guardian Phone Number</label><input type="tel" id="guardianContact" required></div>
+                    <button type="submit" class="btn btn-success">Register Student</button>
+                </form>
+            </section>
+
+            <section id="finance" class="page-section">
+                <h3>Tuition & Fees Ledger</h3>
+                <table>
+                    <thead><tr><th>Student Name</th><th>Class</th><th>Term Fee</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="finance-table-body"></tbody>
+                </table>
+            </section>
+
+            <section id="library" class="page-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Library Book Borrowing Tracking Registry</h3>
+                    <button class="btn btn-success" onclick="openBorrowModal()">Issue/Borrow Book</button>
+                </div>
+                <table>
+                    <thead><tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="library-table-body"></tbody>
+                </table>
+            </section>
+
+            <!-- ================= NEW: TEACHER WORKSPACE PAGES SECTION ================= -->
+            <section id="teacher-home" class="page-section">
+                <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #10b981); color: white; padding: 25px;">
+                    <h2>Welcome to the Faculty Room Dashboard</h2>
+                    <p style="margin-top: 5px; opacity: 0.9;">Logged in as Senior Class Instructor | APAPEC-IREBERO Academic Board</p>
+                </div>
+                <div class="card-grid" style="margin-top:25px;">
+                    <div class="card success"><h3>Assigned Classes</h3><p>3 Grades</p><span style="font-size:0.8rem; color:#6b7280;">P5, P6, S1 Core</span></div>
+                    <div class="card warning"><h3>Today's Attendance</h3><p id="teacher-dash-attendance">100%</p><span style="font-size:0.8rem; color:#6b7280;">All students accounted</span></div>
+                </div>
+            </section>
+
+            <section id="teacher-attendance" class="page-section">
+                <h3>Daily Attendance Roster Manager</h3>
+                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:15px;">Mark present or absent statuses. Changes dynamically update within student tracking records.</p>
+                <table>
+                    <thead><tr><th>Student ID</th><th>Name</th><th>Class</th><th>Status Attendance</th><th>Action Button</th></tr></thead>
+                    <tbody id="teacher-attendance-body"></tbody>
+                </table>
+            </section>
+
+            <section id="teacher-grades" class="page-section">
+                <h3>Continuous Assessment Gradebook Entry Matrix</h3>
+                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:15px;">Input scores out of 100% for end of term calculation records.</p>
+                <table>
+                    <thead><tr><th>Student Name</th><th>Assigned Class</th><th>Current Recorded Grade Score</th><th>Action</th></tr></thead>
+                    <tbody id="teacher-grades-body"></tbody>
+                </table>
+            </section>
+
+            <!-- ================= STUDENT WORKSPACE PAGE SECTION ================= -->
+            <section id="student-home" class="page-section">
+                <div class="dashboard-box" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 25px;">
+                    <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
+                    <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration Profile Loaded</p>
+                </div>
+                <div class="card-grid" style="margin-top: 25px;">
+                    <div class="card" id="student-fee-card"><h3>My Finance Status</h3><p id="portal-fee-status">-</p></div>
+                    <div class="card success"><h3>Academic Enrollment</h3><p id="portal-class-assignment">-</p></div>
+                    <div class="card warning"><h3>My Classroom Grade Score</h3><p id="portal-grade-display">Not Marked</p></div>
+                    <div class="card" id="portal-attendance-card"><h3>My Attendance Record</h3><p id="portal-attendance-status">Present</p></div>
+                </div>
                 <div class="dashboard-box">
-                    <h3 style="margin-bottom: 10px;">Quick Student Status Panel</h3>
-                    <table>
-                        <thead>
-                            <tr><th>Name</th><th>Class</th><th>Action</th></tr>
-                        </thead>
-                        <tbody id="dash-quick-table"></tbody>
+                    <h3 style="margin-bottom: 15px;">My Borrowed Books Locker</h3>
+                    <table style="box-shadow: none; margin-top: 0;">
+                        <thead><tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
+                        <tbody id="portal-books-body"></tbody>
                     </table>
                 </div>
-                <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
-                    <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
-                    <p style="font-size: 0.9rem; line-height: 1.4;">
-                        Multi-user portal routing is now active. Use the top selection menu to instantly experience what a student sees when they login.
-                    </p>
-                </div>
-            </div>
-        </section>
+            </section>
+        </main>
+    </div>
 
-        <!-- Students List Section -->
-        <section id="students" class="page-section">
-            <h3>Registered Students Database</h3>
-            <table id="student-table">
-                <thead>
-                    <tr><th>ID</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-
-        <!-- Add Student Form Section -->
-        <section id="add-student" class="page-section">
-            <h3>New Student Admission</h3><br>
-            <form id="admission-form" onsubmit="registerStudent(event)">
-                <div class="form-group">
-                    <label for="studentName">Full Name</label>
-                    <input type="text" id="studentName" required placeholder="e.g. Jean Luc Cyusa">
-                </div>
-                <div class="form-group">
-                    <label for="studentClass">Assign Class</label>
-                    <select id="studentClass">
-                        <option value="P1">Primary 1</option><option value="P2">Primary 2</option>
-                        <option value="P3">Primary 3</option><option value="P4">Primary 4</option>
-                        <option value="P5">Primary 5</option><option value="P6">Primary 6</option>
-                        <option value="S1">Senior 1</option><option value="S2">Senior 2</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="guardianContact">Guardian Phone Number</label>
-                    <input type="tel" id="guardianContact" required placeholder="e.g. +250 78X XXX XXX">
-                </div>
-                <button type="submit" class="btn btn-success">Register Student</button>
-            </form>
-        </section>
-
-        <!-- Finance Section -->
-        <section id="finance" class="page-section">
-            <h3>Tuition & Fees Ledger</h3>
-            <table>
-                <thead>
-                    <tr><th>Student Name</th><th>Class</th><th>Term Fee</th><th>Status</th><th>Action</th></tr>
-                </thead>
-                <tbody id="finance-table-body"></tbody>
-            </table>
-        </section>
-
-        <!-- Library System Section -->
-        <section id="library" class="page-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3>Library Book Borrowing Tracking Registry</h3>
-                <button class="btn btn-success" onclick="openBorrowModal()">Issue/Borrow Book</button>
-            </div>
-            <table>
-                <thead>
-                    <tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr>
-                </thead>
-                <tbody id="library-table-body"></tbody>
-            </table>
-        </section>
-
-
-        <!-- ================= NEW: STUDENT EXPERIENTIAL PORTAL HOME ================= -->
-        <section id="student-home" class="page-section">
-            <div class="dashboard-box" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 25px;">
-                <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
-                <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration ID: Fetching Profile...</p>
-            </div>
-
-            <!-- Student Profile Summary Grid Cards -->
-            <div class="card-grid" style="margin-top: 25px;">
-                <div class="card" id="student-fee-card">
-                    <h3>My Finance Status</h3>
-                    <p id="portal-fee-status">Unknown</p>
-                    <span style="font-size: 0.85rem; color:#6b7280;">Current Term Statement: 300,000 RWF</span>
-                </div>
-                <div class="card success">
-                    <h3>Academic Enrollment</h3>
-                    <p id="portal-class-assignment">-</p>
-                    <span style="font-size: 0.85rem; color:#6b7280;">Status: Active Full-time</span>
-                </div>
-            </div>
-
-            <!-- Student Library Sub-ledger Tracker -->
-            <div class="dashboard-box">
-                <h3 style="margin-bottom: 15px;">My Borrowed Books Locker</h3>
-                <table style="box-shadow: none; margin-top: 0;">
-                    <thead>
-                        <tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr>
-                    </thead>
-                    <tbody id="portal-books-body">
-                        <!-- Loaded exclusively relative to student context details -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Global Edit Student Modal Popup -->
+    <!-- Modals (Admin Edit Student / Book Borrowing Form Popups) -->
     <div class="modal" id="editModal">
         <form id="edit-form" onsubmit="saveStudentEdit(event)">
-            <h3 style="margin-bottom: 15px;">Edit Student Details</h3>
+            <h3 style="margin-bottom: 15px;">Modify Registry Records</h3>
             <input type="hidden" id="editStudentId">
-            <div class="form-group"><label for="editStudentName">Full Name</label><input type="text" id="editStudentName" required></div>
+            <div class="form-group"><label>Full Name</label><input type="text" id="editStudentName" required></div>
             <div class="form-group">
-                <label for="editStudentClass">Class</label>
+                <label>Class</label>
                 <select id="editStudentClass">
-                    <option value="P1">Primary 1</option><option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
+                    <option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
                 </select>
             </div>
-            <div class="form-group"><label for="editGuardianContact">Guardian Contact</label><input type="tel" id="editGuardianContact" required></div>
+            <div class="form-group"><label>Guardian Contact</label><input type="text" id="editGuardianContact" required></div>
             <div class="form-group">
-                <label for="editStatus">Payment Status</label>
+                <label>Payment Status</label>
                 <select id="editStatus"><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -521,20 +589,19 @@
         </form>
     </div>
 
-    <!-- Borrow Book Modal Popup -->
     <div class="modal" id="borrowModal">
         <form id="borrow-form" onsubmit="submitBorrowForm(event)">
             <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
-            <div class="form-group"><label for="borrowerSelect">Select Student</label><select id="borrowerSelect" required></select></div>
+            <div class="form-group"><label>Select Student</label><select id="borrowerSelect" required></select></div>
             <div class="form-group">
-                <label for="bookSelect">Textbook Title</label>
+                <label>Textbook Title</label>
                 <select id="bookSelect" required>
                     <option value="Mathematics REB Pupil's Book P5">Mathematics REB Pupil's Book P5</option>
                     <option value="English Skills Secondary S1">English Skills Secondary S1</option>
                     <option value="Science and Technology Primary P6">Science and Technology Primary P6</option>
                 </select>
             </div>
-            <div class="form-group"><label for="borrowDate">Issue Date</label><input type="date" id="borrowDate" required></div>
+            <div class="form-group"><label>Issue Date</label><input type="date" id="borrowDate" required></div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" class="btn btn-danger" onclick="closeModal('borrowModal')">Cancel</button>
                 <button type="submit" class="btn btn-success">Confirm Transaction</button>
@@ -542,18 +609,18 @@
         </form>
     </div>
 
-    <!-- JavaScript Multi-User Environment Engine -->
+    <!-- JavaScript Control Matrix Engine -->
     <script>
-        // System Data Configurations
+        // System Master Data Architecture
         let currentSchoolName = "APAPEC-IREBERO";
         let schoolMetrics = { classesCount: 12 };
-        let activePortalRole = "admin"; // Tracks context: 'admin' or 'student'
-        let currentViewStudentId = "REG-001"; // Default student lookup profile focus 
+        let activePortalRole = ""; 
+        let currentViewStudentId = "REG-001"; // Target profile perspective when a student logs in
 
         let studentsList = [
-            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid" },
-            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending" },
-            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid" }
+            { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88 },
+            { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74 },
+            { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid", attendance: "Absent", score: 91 }
         ];
 
         let libraryLedger = [
@@ -561,116 +628,190 @@
             { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
         ];
 
-        // MULTI-USER ROUTING MANAGER
-        function handlePortalViewChange(selectedRole) {
-            activePortalRole = selectedRole;
-            
-            if (selectedRole === "admin") {
-                document.getElementById('admin-sidebar-menu').style.display = 'block';
-                document.getElementById('student-sidebar-menu').style.display = 'none';
-                switchTab('dashboard');
-            } else {
-                // If switching to Student View, ask which profile to inspect
-                let optionsPrompt = "Select a student profile index to login as:\n";
+        // --- AUTHENTICATION LOGIN ENGINE CONTROLLER ---
+        function executeSystemLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('loginUser').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value.trim();
+
+            if (user === 'admin' && pass === 'admin') {
+                launchPortal('admin');
+            } else if (user === 'teacher' && pass === 'teacher') {
+                launchPortal('teacher');
+            } else if (user === 'student' && pass === 'student') {
+                // Interactive simulation: select student identity context to load
+                let optionsPrompt = "Select Student Profile to simulate portal authentication:\n";
                 studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
-                
                 let choice = prompt(optionsPrompt, "1");
                 let selectedIndex = parseInt(choice) - 1;
                 
                 if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
-                    alert("Invalid choice. Defaulting to first record profile layout.");
                     selectedIndex = 0;
                 }
-                
                 currentViewStudentId = studentsList[selectedIndex].id;
-                document.getElementById('admin-sidebar-menu').style.display = 'none';
-                document.getElementById('student-sidebar-menu').style.display = 'block';
-                switchTab('student-home');
+                launchPortal('student');
+            } else {
+                alert("Invalid Gateway Access Credentials. Please reference the guidebox above.");
             }
         }
 
-        // Student Data View Compiler
+        function launchPortal(role) {
+            activePortalRole = role;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            document.getElementById('header-active-role-badge').innerText = role.toUpperCase();
+
+            // Toggle sidebar sub-menus relative to active login token
+            document.getElementById('admin-sidebar-menu').style.display = (role === 'admin') ? 'block' : 'none';
+            document.getElementById('teacher-sidebar-menu').style.display = (role === 'teacher') ? 'block' : 'none';
+            document.getElementById('student-sidebar-menu').style.display = (role === 'student') ? 'block' : 'none';
+
+            // Route initial view tab layouts
+            if (role === 'admin') switchTab('dashboard');
+            if (role === 'teacher') switchTab('teacher-home');
+            if (role === 'student') switchTab('student-home');
+        }
+
+        function executeLogout() {
+            activePortalRole = "";
+            document.getElementById('login-form').reset();
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+        }
+
+        // --- VIEWPORT ROUTING ENGINE ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            if(event && event.target.classList.contains('menu-btn')) {
+                event.target.classList.add('active');
+            }
+
+            // Render matching context arrays live
+            if(tabId === 'dashboard') renderDashboardView();
+            if(tabId === 'finance') renderFinanceTable();
+            if(tabId === 'students') renderStudentsTable();
+            if(tabId === 'library') renderLibraryTable();
+            if(tabId === 'teacher-attendance') renderTeacherAttendanceTable();
+            if(tabId === 'teacher-grades') renderTeacherGradesTable();
+            if(tabId === 'student-home') renderStudentPortalDashboard();
+            
+            updateDashboardMetrics();
+        }
+
+        // --- TEACHER WORKSPACE ACTIONS ENGINE ---
+        function renderTeacherAttendanceTable() {
+            const tbody = document.getElementById('teacher-attendance-body');
+            tbody.innerHTML = '';
+            studentsList.forEach(student => {
+                const badgeClass = student.attendance === 'Present' ? 'present' : 'absent';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${student.id}</td>
+                        <td><strong>${student.name}</strong></td>
+                        <td>${student.class}</td>
+                        <td><span class="badge ${badgeClass}">${student.attendance}</span></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="toggleAttendance('${student.id}', 'Present')">Present</button>
+                            <button class="btn btn-danger btn-sm" onclick="toggleAttendance('${student.id}', 'Absent')">Absent</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            calculateTeacherMetrics();
+        }
+
+        function toggleAttendance(studentId, status) {
+            const student = studentsList.find(s => s.id === studentId);
+            if(student) {
+                student.attendance = status;
+                renderTeacherAttendanceTable();
+            }
+        }
+
+        function renderTeacherGradesTable() {
+            const tbody = document.getElementById('teacher-grades-body');
+            tbody.innerHTML = '';
+            studentsList.forEach(student => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${student.name}</strong></td>
+                        <td>${student.class}</td>
+                        <td><span style="font-weight:bold; color:var(--secondary-color);">${student.score}%</span></td>
+                        <td><button class="btn btn-primary btn-sm" onclick="inputTeacherGrade('${student.id}')">Input Mark</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function inputTeacherGrade(studentId) {
+            const student = studentsList.find(s => s.id === studentId);
+            if(student) {
+                let currentScore = prompt(`Enter evaluation metric percentage score for ${student.name}:`, student.score);
+                if(currentScore !== null && !isNaN(currentScore) && currentScore.trim() !== "") {
+                    student.score = Math.min(100, Math.max(0, parseInt(currentScore)));
+                    renderTeacherGradesTable();
+                }
+            }
+        }
+
+        function calculateTeacherMetrics() {
+            const presentCount = studentsList.filter(s => s.attendance === 'Present').length;
+            const percent = studentsList.length ? Math.round((presentCount / studentsList.length) * 100) : 100;
+            const metricEl = document.getElementById('teacher-dash-attendance');
+            if(metricEl) metricEl.innerText = `${percent}%`;
+        }
+
+        // --- STUDENT PORTAL COMPILER ---
         function renderStudentPortalDashboard() {
             const currentStudent = studentsList.find(s => s.id === currentViewStudentId);
             if (!currentStudent) return;
 
-            // Render customized header strings
             document.getElementById('portal-welcome-name').innerText = `Welcome Back, ${currentStudent.name}!`;
-            document.getElementById('portal-student-meta').innerText = `Official Student Portal Account ID Token: ${currentStudent.id} | Guardian Core Contact Contact: ${currentStudent.contact}`;
+            document.getElementById('portal-student-meta').innerText = `Profile ID Verification Token: ${currentStudent.id} | Class Placement: ${currentStudent.class}`;
             document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
+            document.getElementById('portal-grade-display').innerText = `${currentStudent.score}%`;
             
-            // Set up finance status panel values safely
+            // Payment card style logic
             const statusEl = document.getElementById('portal-fee-status');
             statusEl.innerText = currentStudent.status;
-            
-            const cardEl = document.getElementById('student-fee-card');
-            cardEl.className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
+            document.getElementById('student-fee-card').className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
 
-            // Generate customized library list matching logged-in account
+            // Attendance card style logic
+            const attendEl = document.getElementById('portal-attendance-status');
+            attendEl.innerText = currentStudent.attendance;
+            document.getElementById('portal-attendance-card').className = currentStudent.attendance === 'Present' ? 'card success' : 'card danger';
+
+            // Filter context book loans
             const booksBody = document.getElementById('portal-books-body');
             booksBody.innerHTML = '';
-            
             const records = libraryLedger.filter(item => item.studentId === currentViewStudentId);
             if (records.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No library books currently issued to your locker file.</td></tr>`;
+                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No library records currently checked out to your locker.</td></tr>`;
             } else {
                 records.forEach(item => {
                     const badgeClass = item.status === 'Borrowed' ? 'borrowed' : 'returned';
-                    booksBody.innerHTML += `
-                        <tr>
-                            <td><strong>${item.bookTitle}</strong></td>
-                            <td>${item.date}</td>
-                            <td><span class="badge ${badgeClass}">${item.status}</span></td>
-                        </tr>
-                    `;
+                    booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge ${badgeClass}">${item.status}</span></td></tr>`;
                 });
             }
         }
 
+        // --- ADMINISTRATIVE UTILITY ENGINES ---
         function updateSchoolName() {
             const inputVal = document.getElementById('schoolNameInput').value.trim();
             if(inputVal !== "") {
                 currentSchoolName = inputVal;
                 document.getElementById('sidebar-brand').innerText = currentSchoolName;
-                document.getElementById('window-title').innerText = `${currentSchoolName} | System Portal`;
+                document.getElementById('login-brand-title').innerText = currentSchoolName;
+                document.getElementById('window-title').innerText = `${currentSchoolName} | Portal Hub`;
             }
         }
 
         function changeTheme(themeName) {
             if (themeName === 'classic') document.documentElement.removeAttribute('data-theme');
             else document.documentElement.setAttribute('data-theme', themeName);
-        }
-
-        // View Tab Routing Core Matrix
-        function switchTab(tabId) {
-            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            
-            // Highlight currently pressed tab manually if triggered by sidebar click handlers
-            if(event && event.target.classList.contains('menu-btn')) {
-                event.target.classList.add('active');
-            }
-
-            document.getElementById('page-title').innerText = (tabId === 'student-home') ? "Student Portal Dashboard" : "Administration Space Hub";
-
-            if(tabId === 'dashboard') renderDashboardView();
-            if(tabId === 'finance') renderFinanceTable();
-            if(tabId === 'students') renderStudentsTable();
-            if(tabId === 'library') renderLibraryTable();
-            if(tabId === 'student-home') renderStudentPortalDashboard();
-            updateDashboardMetrics();
-        }
-
-        function editDashboardMetric(type) {
-            if(type === 'classes') {
-                let newValue = prompt("Enter active classes headcount:", schoolMetrics.classesCount);
-                if (newValue !== null && !isNaN(newValue) && newValue.trim() !== "") {
-                    schoolMetrics.classesCount = parseInt(newValue);
-                }
-            }
-            updateDashboardMetrics();
         }
 
         function updateDashboardMetrics() {
@@ -684,7 +825,7 @@
             const tbody = document.getElementById('dash-quick-table');
             tbody.innerHTML = '';
             studentsList.forEach(student => {
-                tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Quick Modify</button></td></tr>`;
+                tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
             });
         }
 
@@ -701,7 +842,7 @@
             tbody.innerHTML = '';
             studentsList.forEach(student => {
                 const badgeClass = student.status === 'Paid' ? 'paid' : 'pending';
-                tbody.innerHTML += `<tr><td>${student.name}</td><td>${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Modify Status</button></td></tr>`;
+                tbody.innerHTML += `<tr><td>${student.name}</td><td>${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Modify</button></td></tr>`;
             });
         }
 
@@ -754,7 +895,7 @@
             const contact = document.getElementById('guardianContact').value;
             const newId = `REG-00${studentsList.length + 1}`;
 
-            studentsList.push({ id: newId, name: name, class: className, contact: contact, status: 'Pending' });
+            studentsList.push({ id: newId, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0 });
             document.getElementById('admission-form').reset();
             alert(`Registered ${name} successfully.`);
             switchTab('dashboard');
