@@ -588,10 +588,10 @@
                             <tbody id="dash-quick-table"></tbody>
                         </table>
                     </div>
-                    <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
-                        <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
+                    <div class="dashboard-box" style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color);">
+                        <h4 style="color: var(--accent-color); margin-bottom: 10px;">LocalStorage Engine Active</h4>
                         <p style="font-size: 0.9rem; line-height: 1.4;">
-                            Persistent identity engine active. New user registries are permanently saved into the browser's shared database layout structures.
+                            All user registrations and account directories are now saved directly to browser memory. Feel free to refresh the window—your profiles will persist.
                         </p>
                     </div>
                 </div>
@@ -761,39 +761,48 @@
         </form>
     </div>
 
-    <!-- JavaScript Control Matrix Engine -->
+    <!-- JavaScript Persistent Control Matrix Engine -->
     <script>
-        // Master Data Structures
-        let currentSchoolName = "APAPEC-IREBERO";
-        let schoolMetrics = { classesCount: 12 };
-        let activePortalRole = ""; 
-        let currentViewStudentId = "REG-001"; 
-
-        // Account & Profile Staging Memory
-        let temporaryAccountData = null; 
-        let temporaryUploadedPhotoBase64 = null;
-
-        // Permanent Core Accounts Database Map (Saves newly registered user keys dynamically)
-        let accountsDatabase = {
+        // --- MASTER DATA SYNC LAUNCHER ---
+        // These storage buckets maintain all structural shifts forever across refreshes.
+        let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts')) || {
             "admin": { password: "admin", role: "admin", profileRef: "ADM-MAIN" },
             "teacher": { password: "teacher", role: "teacher", profileRef: "FAC-001" },
             "student": { password: "student", role: "student", profileRef: "REG-001" }
         };
 
-        let teachersDatabase = {
+        let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers')) || {
             "FAC-001": { name: "Senior Instructor", classAssignment: "P5, P6, S1 Core", contact: "Internal System", photo: null }
         };
 
-        let studentsList = [
+        let studentsList = JSON.parse(localStorage.getItem('sms_students')) || [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid", attendance: "Present", score: 88, linkedUser: "student", photo: null },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending", attendance: "Present", score: 74, linkedUser: null, photo: null },
             { id: "REG-003", name: "Divine Uwase", class: "S1", contact: "+250 788 555 666", status: "Paid", attendance: "Absent", score: 91, linkedUser: null, photo: null }
         ];
 
-        let libraryLedger = [
+        let libraryLedger = JSON.parse(localStorage.getItem('sms_library')) || [
             { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
             { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
         ];
+
+        let currentSchoolName = localStorage.getItem('sms_school_name') || "APAPEC-IREBERO";
+        let schoolMetrics = { classesCount: 12 };
+        let activePortalRole = ""; 
+        let currentViewStudentId = "REG-001"; 
+
+        // State-bound volatile memory structures
+        let temporaryAccountData = null; 
+        let temporaryUploadedPhotoBase64 = null;
+
+        // Commit engine wrapper mapping runtime alterations straight into LocalStorage memory
+        function commitSystemStateToDisk() {
+            localStorage.setItem('sms_accounts', JSON.stringify(accountsDatabase));
+            localStorage.setItem('sms_teachers', JSON.stringify(teachersDatabase));
+            localStorage.setItem('sms_students', JSON.stringify(studentsList));
+            localStorage.setItem('sms_library', JSON.stringify(libraryLedger));
+            localStorage.setItem('sms_school_name', currentSchoolName);
+        }
 
         // --- HELPER: INITIALS/AVATAR COMPILER ---
         function getAvatarMarkup(name, photoBase64, customStyleClass = "table-avatar") {
@@ -940,14 +949,17 @@
                 };
             }
 
-            // PERMANENT BINDING: Commit to the dictionary map permanently for persistent sign-ins
+            // Bind into dictionary structures securely
             accountsDatabase[uName] = {
                 password: temporaryAccountData.password,
                 role: uRole,
                 profileRef: referenceTokenId
             };
 
-            alert(`Registration Complete! Permanent account for "${uName}" is now active in memory. Proceeding to workspace.`);
+            // PERSIST FOREVER: Flush all newly built records directly down to localStorage
+            commitSystemStateToDisk();
+
+            alert(`Registration Complete! Permanent account for "${uName}" is saved forever to this browser's disk memory.`);
             
             document.getElementById('register-user-form').reset();
             document.getElementById('profile-details-form').reset();
@@ -1006,12 +1018,11 @@
                 <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
                     ❌ Credentials Not Found
                 </strong>
-                <p style="margin-bottom: 10px; color: #7f1d1d;">Create a permanent account with a profile picture now:</p>
+                <p style="margin-bottom: 10px; color: #7f1d1d;">Create an account to keep it forever:</p>
                 <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
-                    <li style="margin-bottom: 5px;">Click on the <strong>"Create one now"</strong> navigation link below.</li>
-                    <li style="margin-bottom: 5px;">Specify your username, password, and clearance role tier.</li>
-                    <li style="margin-bottom: 5px;">Upload a profile photo alongside your details on the configuration screen.</li>
-                    <li>Submit to automatically save the profile permanently and log in.</li>
+                    <li style="margin-bottom: 5px;">Click on <strong>"Create one now"</strong> navigation link below.</li>
+                    <li style="margin-bottom: 5px;">Specify your custom login username, password, and system role.</li>
+                    <li>Complete setup to save your account to the browser disk forever.</li>
                 </ol>
             `;
             insertionPoint.appendChild(guideBox);
@@ -1114,6 +1125,7 @@
             const student = studentsList.find(s => s.id === studentId);
             if(student) {
                 student.attendance = status;
+                commitSystemStateToDisk();
                 renderTeacherAttendanceTable();
             }
         }
@@ -1139,6 +1151,7 @@
                 let currentScore = prompt(`Enter evaluation metric percentage score for ${student.name}:`, student.score);
                 if(currentScore !== null && !isNaN(currentScore) && currentScore.trim() !== "") {
                     student.score = Math.min(100, Math.max(0, parseInt(currentScore)));
+                    commitSystemStateToDisk();
                     renderTeacherGradesTable();
                 }
             }
@@ -1202,6 +1215,7 @@
             const inputVal = document.getElementById('schoolNameInput').value.trim();
             if(inputVal !== "") {
                 currentSchoolName = inputVal;
+                commitSystemStateToDisk();
                 document.getElementById('sidebar-brand').innerText = currentSchoolName;
                 document.getElementById('login-brand-title').innerText = currentSchoolName;
                 document.getElementById('window-title').innerText = `${currentSchoolName} | Portal Hub`;
@@ -1264,6 +1278,7 @@
             const targetRecord = libraryLedger.find(item => item.id === transactionId);
             if(targetRecord) {
                 targetRecord.status = 'Returned';
+                commitSystemStateToDisk();
                 renderLibraryTable();
                 updateDashboardMetrics();
             }
@@ -1277,13 +1292,11 @@
             document.getElementById('borrowDate').value = new Date().toISOString().split('T')[0];
 
             if (activePortalRole === 'student') {
-                // Self-borrow workflow
                 let activeStudent = studentsList.find(s => s.id === currentViewStudentId);
                 selectGroup.style.display = "none";
                 staticDisplayGroup.style.display = "block";
                 document.getElementById('borrowerStaticLabel').value = activeStudent ? activeStudent.name : "Active Student Profile";
             } else {
-                // Admin or Teacher master issuing workflow
                 selectGroup.style.display = "block";
                 staticDisplayGroup.style.display = "none";
                 const selectEl = document.getElementById('borrowerSelect');
@@ -1322,6 +1335,7 @@
                     status: 'Borrowed' 
                 });
                 
+                commitSystemStateToDisk();
                 closeModal('borrowModal');
                 alert(`Success! "${bookTitle}" has been checked out to ${targetStudent.name}.`);
                 
@@ -1342,6 +1356,7 @@
             const newId = `REG-00${studentsList.length + 1}`;
 
             studentsList.push({ id: newId, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
+            commitSystemStateToDisk();
             document.getElementById('admission-form').reset();
             alert(`Registered ${name} successfully.`);
             switchTab('dashboard');
@@ -1374,6 +1389,7 @@
                 
                 libraryLedger.forEach(item => { if(item.studentId === id) item.studentName = newName; });
                 
+                commitSystemStateToDisk();
                 closeModal('editModal');
                 renderDashboardView();
                 renderStudentsTable();
@@ -1382,7 +1398,9 @@
             }
         }
 
-        // Initialize Baseline Renders
+        // Initialize Baseline Renders & Structural Sync
+        document.getElementById('sidebar-brand').innerText = currentSchoolName;
+        document.getElementById('login-brand-title').innerText = currentSchoolName;
         renderDashboardView();
         updateDashboardMetrics();
     </script>
