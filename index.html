@@ -719,9 +719,9 @@
             </section>
 
             <section id="teacher-grades" class="page-section">
-                <h3>Continuous Assessment Entry Matrix (<span class="target-class-display">-</span>)</h3>
+                <h3>Continuous Assessment Entry Matrix (<span class="target-class-display">-</span>) — <span style="color:var(--secondary-color);">Sorted Highest to Lowest Grade</span></h3>
                 <table>
-                    <thead><tr><th>Student Name</th><th>Assigned Class</th><th>Current Recorded Grade Score</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Rank</th><th>Student Name</th><th>Assigned Class</th><th>Current Recorded Grade Score</th><th>Action</th></tr></thead>
                     <tbody id="teacher-grades-body"></tbody>
                 </table>
             </section>
@@ -820,7 +820,8 @@
                 });
 
                 attendanceDB[mockID] = "Present";
-                gradesDB[mockID] = Math.floor(65 + (idx % 35));
+                // Assign variable grades to see the sorting in action clearly
+                gradesDB[mockID] = Math.floor(50 + (idx * 1.5) % 50);
             }
 
             libraryDB = [
@@ -1166,6 +1167,7 @@
             const attPct = classFilteredStudents.length ? Math.round((totalPresent / classFilteredStudents.length) * 100) : 100;
             document.getElementById('teacher-dash-attendance').innerText = `${attPct}%`;
 
+            // Attendance Panel remains in order
             const attBody = document.getElementById('teacher-attendance-body');
             attBody.innerHTML = "";
             classFilteredStudents.forEach(stu => {
@@ -1182,14 +1184,24 @@
                 </tr>`;
             });
 
+            // Academic Gradebook Entry Matrix with descending sorting implemented
             const gradeBody = document.getElementById('teacher-grades-body');
             gradeBody.innerHTML = "";
-            classFilteredStudents.forEach(stu => {
-                const currentScore = gradesDB[stu.id] !== undefined ? gradesDB[stu.id] : "Not Set";
+
+            // Clone, map matching scores, and sort array by grade descending (Highest to Lowest)
+            const sortedGradeList = [...classFilteredStudents].map(stu => {
+                return {
+                    ...stu,
+                    score: gradesDB[stu.id] !== undefined ? gradesDB[stu.id] : 0
+                };
+            }).sort((a, b) => b.score - a.score);
+
+            sortedGradeList.forEach((stu, rankIndex) => {
                 gradeBody.innerHTML += `<tr>
+                    <td><strong>#${rankIndex + 1}</strong></td>
                     <td><strong>${stu.name}</strong></td>
                     <td>${stu.className}</td>
-                    <td><strong style="color:var(--secondary-color); font-size:1.1rem;">${currentScore} / 100 Marks</strong></td>
+                    <td><strong style="color:var(--secondary-color); font-size:1.1rem;">${stu.score} / 100 Marks</strong></td>
                     <td>
                         <button class="btn btn-success btn-sm" onclick="promptAlterGradeScore('${stu.id}')">Change Grade</button>
                     </td>
@@ -1197,6 +1209,7 @@
             });
         }
 
+        // Personal student profile render
         function renderStudentPersonalPortal() {
             const targetStudentId = activeUserSession.linkedStudentId;
             const studentObj = studentsDB.find(s => s.id === targetStudentId);
@@ -1252,6 +1265,7 @@
             }
         }
 
+        // Parent section dashboard loader
         function renderParentSandboxEnvironment() {
             const targetStudentId = activeUserSession.linkedStudentId;
             const parentDashboardSection = document.getElementById('parent-home');
@@ -1375,6 +1389,7 @@
             renderTeacherClassroomLocker();
         }
 
+        // Library data mutations
         function openBorrowModal() {
             const borrower = prompt("Enter full name of structural borrower student profile:");
             if (!borrower) return;
