@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser LocalStorage Manager</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 24px;
+        }
+
+        button {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-save {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-clear {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid var(--border);
+        }
+
+        .btn-clear:hover {
+            background-color: #e2e8f0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .output-box {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 80px;
+        }
+
+        .output-header {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .data-display {
+            font-family: monospace;
+            font-size: 0.95rem;
+            word-break: break-all;
+            color: #0f172a;
+        }
+
+        .empty-state {
+            color: #94a3b8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Local Storage Sandbox</h2>
+        <p class="subtitle">Save keys and values securely inside your browser instance.</p>
+
+        <!-- Input Section -->
+        <div class="form-group">
+            <label for="storageKey">Data Key (Name)</label>
+            <input type="text" id="storageKey" placeholder="e.g., username, custom_theme, user_id">
+        </div>
+
+        <div class="form-group">
+            <label for="storageValue">Data Value (Content)</label>
+            <input type="text" id="storageValue" placeholder="e.g., Alex_99, dark-mode, 40294">
+        </div>
+
+        <div class="button-group">
+            <button class="btn-save" onclick="saveToLocalStorage()">Commit to Disk</button>
+            <button class="btn-clear" onclick="clearLocalStorage()">Wipe All</button>
+        </div>
+
+        <hr>
+
+        <!-- Dynamic Output Display Section -->
+        <div class="output-header">Current Disk Registry Storage Contents</div>
+        <div class="output-box">
+            <div id="storageDisplay" class="data-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Reads data from LocalStorage and compiles it into the view layout
+        function updateStorageDisplay() {
+            const displayEngine = document.getElementById('storageDisplay');
+            
+            // Check if storage holds data strings
+            if (localStorage.length === 0) {
+                displayEngine.innerHTML = '<span class="empty-state">No local data found. Storage is empty.</span>';
+                return;
+            }
+
+            let htmlRegistryOutput = '<ul style="list-style-type: none; padding-left: 0;">';
+            
+            // Loop through all items committed inside browser memory
+            for (let i = 0; i < localStorage.length; i++) {
+                const currentKey = localStorage.key(i);
+                const currentValue = localStorage.getItem(currentKey);
+                
+                htmlRegistryOutput += `
+                    <li style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
+                        <span><strong>${escapeHTML(currentKey)}</strong>: "${escapeHTML(currentValue)}"</span>
+                        <button onclick="removeItem('${escapeHTML(currentKey)}')" style="padding: 2px 6px; font-size: 0.75rem; background: #fee2e2; color: #ef4444; border-radius: 4px; border:none; flex:none; width:auto; cursor:pointer;">Delete</button>
+                    </li>`;
+            }
+            
+            htmlRegistryOutput += '</ul>';
+            displayEngine.innerHTML = htmlRegistryOutput;
+        }
+
+        // Writes a key/value pair straight into browser disk storage
+        function saveToLocalStorage() {
+            const keyInput = document.getElementById('storageKey').value.trim();
+            const valueInput = document.getElementById('storageValue').value.trim();
+
+            if (!keyInput || !valueInput) {
+                alert("Please fill out both the Key and Value input fields before attempting to save.");
+                return;
+            }
+
+            // Central LocalStorage Engine execution command
+            localStorage.setItem(keyInput, valueInput);
+
+            // Reset inputs and refresh view layout
+            document.getElementById('storageKey').value = '';
+            document.getElementById('storageValue').value = '';
+            updateStorageDisplay();
+        }
+
+        // Erases an individual item using its key identification string
+        function removeItem(targetKey) {
+            localStorage.removeItem(targetKey);
+            updateStorageDisplay();
+        }
+
+        // Wipes all data keys completely out of this domain's LocalStorage engine space
+        function clearLocalStorage() {
+            if (localStorage.length === 0) return;
+            
+            if (confirm("Are you sure you want to permanently clear all data keys from storage?")) {
+                localStorage.clear();
+                updateStorageDisplay();
+            }
+        }
+
+        // Basic helper function to keep text output rendering safely formatted
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Initial boot render invocation to parse existing entries
+        updateStorageDisplay();
+    </script>
+</body>
+</html>
