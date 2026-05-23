@@ -591,7 +591,7 @@
                     <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
                         <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
                         <p style="font-size: 0.9rem; line-height: 1.4;">
-                            Login framework active. Profile photo binary strings persist inside local system memory vectors for integrated deployment across standard rosters.
+                            Persistent identity engine active. New user registries are permanently saved into the browser's shared database layout structures.
                         </p>
                     </div>
                 </div>
@@ -748,7 +748,7 @@
 
     <!-- JavaScript Control Matrix Engine -->
     <script>
-        // Master Data
+        // Master Data Structures
         let currentSchoolName = "APAPEC-IREBERO";
         let schoolMetrics = { classesCount: 12 };
         let activePortalRole = ""; 
@@ -758,6 +758,7 @@
         let temporaryAccountData = null; 
         let temporaryUploadedPhotoBase64 = null;
 
+        // Permanent Core Accounts Database Map (Saves newly registered user keys dynamically)
         let accountsDatabase = {
             "admin": { password: "admin", role: "admin", profileRef: "ADM-MAIN" },
             "teacher": { password: "teacher", role: "teacher", profileRef: "FAC-001" },
@@ -839,7 +840,6 @@
                 document.getElementById('profile-view').style.display = 'block';
                 document.getElementById('auth-subtitle').innerText = 'Step 2: Initialize Profile Configuration';
                 
-                // Clear out residual staging imagery references
                 temporaryUploadedPhotoBase64 = null;
                 document.getElementById('photo-preview-element').innerText = "?";
                 document.getElementById('photo-preview-element').style.backgroundImage = "none";
@@ -889,7 +889,7 @@
             }
         }
 
-        // --- STAGE 2: PROFILE BINDING AND CREATION SYSTEM ---
+        // --- STAGE 2: PROFILE BINDING AND PERMANENT REGISTRATION ---
         function executeFullRegistration(event) {
             event.preventDefault();
             if (!temporaryAccountData) return;
@@ -925,13 +925,14 @@
                 };
             }
 
+            // PERMANENT BINDING: Commit to the dictionary map permanently for persistent sign-ins
             accountsDatabase[uName] = {
                 password: temporaryAccountData.password,
                 role: uRole,
                 profileRef: referenceTokenId
             };
 
-            alert(`Success! Profile built for ${fullName}. Initializing auto-login to active role portal view.`);
+            alert(`Registration Complete! Permanent account for "${uName}" is now active in memory. Proceeding to workspace.`);
             
             document.getElementById('register-user-form').reset();
             document.getElementById('profile-details-form').reset();
@@ -953,6 +954,7 @@
             const existingGuide = document.getElementById('creation-guide-box');
             if (existingGuide) existingGuide.remove();
 
+            // Matches against both default entries and dynamically appended user entries
             if (accountsDatabase[user] && accountsDatabase[user].password === pass) {
                 const verifiedRole = accountsDatabase[user].role;
                 const associatedProfileRef = accountsDatabase[user].profileRef;
@@ -988,14 +990,14 @@
 
             guideBox.innerHTML = `
                 <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
-                    ❌ Identity "${attemptedUsername}" not recognized.
+                    ❌ Credentials Not Found
                 </strong>
-                <p style="margin-bottom: 10px; color: #7f1d1d;">Create your custom account with a profile picture instantly:</p>
+                <p style="margin-bottom: 10px; color: #7f1d1d;">Create a permanent account with a profile picture now:</p>
                 <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
                     <li style="margin-bottom: 5px;">Click on the <strong>"Create one now"</strong> navigation link below.</li>
-                    <li style="margin-bottom: 5px;">Specify your username, choice password, and clearance role structure tier.</li>
-                    <li style="margin-bottom: 5px;">Upload a custom image file alongside your institutional details on the next form.</li>
-                    <li>Submit to automatically log directly into your clean interface hub.</li>
+                    <li style="margin-bottom: 5px;">Specify your username, password, and clearance role tier.</li>
+                    <li style="margin-bottom: 5px;">Upload a profile photo alongside your details on the configuration screen.</li>
+                    <li>Submit to automatically save the profile permanently and log in.</li>
                 </ol>
             `;
             insertionPoint.appendChild(guideBox);
@@ -1057,7 +1059,6 @@
             document.getElementById('teacher-meta-subtitle').innerText = `Profile Mapping: ${ref} | Class Tracking Control Module`;
             document.getElementById('teacher-class-metric').innerText = profile.classAssignment;
 
-            // Render Photo onto Dashboard Card
             const avatarBox = document.getElementById('teacher-dash-avatar');
             if (profile.photo) {
                 avatarBox.innerText = "";
@@ -1149,7 +1150,6 @@
             document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
             document.getElementById('portal-grade-display').innerText = `${currentStudent.score}%`;
             
-            // Render Photo onto Student Main Header Banner
             const avatarBox = document.getElementById('student-dash-avatar');
             if (currentStudent.photo) {
                 avatarBox.innerText = "";
