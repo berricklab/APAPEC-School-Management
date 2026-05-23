@@ -610,6 +610,84 @@
     </div>
 
     <!-- JavaScript Control Matrix Engine -->
+    <script> 
+    // --- UPDATED AUTHENTICATION LOGIN ENGINE CONTROLLER ---
+function executeSystemLogin(event) {
+    event.preventDefault();
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value.trim();
+
+    // Clear any previous step-by-step guides if they exist
+    const existingGuide = document.getElementById('creation-guide-box');
+    if (existingGuide) {
+        existingGuide.remove();
+    }
+
+    // 1. Validate Admin Accounts
+    if (user === 'admin' && pass === 'admin') {
+        launchPortal('admin');
+        return;
+    } 
+    
+    // 2. Validate Teacher Accounts
+    if (user === 'teacher' && pass === 'teacher') {
+        launchPortal('teacher');
+        return;
+    } 
+    
+    // 3. Validate Student Accounts
+    if (user === 'student' && pass === 'student') {
+        let optionsPrompt = "Select Student Profile to simulate portal authentication:\n";
+        studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
+        let choice = prompt(optionsPrompt, "1");
+        let selectedIndex = parseInt(choice) - 1;
+        
+        if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
+            selectedIndex = 0;
+        }
+        currentViewStudentId = studentsList[selectedIndex].id;
+        launchPortal('student');
+        return;
+    }
+
+    // 4. IF USERNAME IS INCORRECT: Render Step-by-Step Creation Guide
+    showAccountCreationGuide(user);
+}
+
+function showAccountCreationGuide(attemptedUsername) {
+    const form = document.getElementById('login-form');
+    
+    // Create the step-by-step guide element
+    const guideBox = document.createElement('div');
+    guideBox.id = 'creation-guide-box';
+    guideBox.style.cssText = `
+        background: #fef2f2;
+        border: 1px solid #fee2e2;
+        border-left: 4px solid var(--danger-color);
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: #991b1b;
+        animation: fadeIn 0.3s ease-in-out;
+    `;
+
+    guideBox.innerHTML = `
+        <strong style="font-size: 0.9rem; display: block; margin-bottom: 8px;">
+            ❌ Identity "${attemptedUsername}" not recognized.
+        </strong>
+        <p style="margin-bottom: 10px; color: #7f1d1d;">Accounts must be provisioned by the system. Follow these steps to register:</p>
+        <ol style="margin-left: 18px; line-height: 1.5; color: #7f1d1d;">
+            <li style="margin-bottom: 5px;"><strong>Verify Credentials:</strong> Double-check your spelling. For testing, use exactly <code>admin</code>, <code>teacher</code>, or <code>student</code>.</li>
+            <li style="margin-bottom: 5px;"><strong>For Students:</strong> Request registration from the Admin panel via the <em>"Admission Form"</em> tab. An official ID (e.g., <code>REG-004</code>) will be auto-generated.</li>
+            <li style="margin-bottom: 5px;"><strong>For Staff/Teachers:</strong> Contact the IT Systems Administrator to map your profile to the academic board matrix.</li>
+            <li><strong>Finalize Passwords:</strong> Once mapped, access the portal using your designated role identifier string.</li>
+        </ol>
+    `;
+
+    // Append right beneath the login form button
+    form.appendChild(guideBox);
+}</script>
     <script>
         // System Master Data Architecture
         let currentSchoolName = "APAPEC-IREBERO";
