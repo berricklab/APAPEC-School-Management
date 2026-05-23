@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="window-title">APAPEC-IREBERO | School Management System</title>
+    <title id="window-title">APAPEC-IREBERO | School Management System & Library</title>
     <style>
         /* CSS Theme Definitions */
         :root {
@@ -673,7 +673,7 @@
                     <button class="btn btn-success" onclick="openBorrowModal()">Issue/Borrow Book</button>
                 </div>
                 <table>
-                    <thead><tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr></thead>
+                    <thead><tr><th>Borrower</th><th>Book Code</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr></thead>
                     <tbody id="library-table-body"></tbody>
                 </table>
             </section>
@@ -735,7 +735,7 @@
                 <div class="dashboard-box">
                     <h3>My Borrowed Books Locker</h3>
                     <table>
-                        <thead><tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
+                        <thead><tr><th>Book Code</th><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr></thead>
                         <tbody id="portal-books-body"></tbody>
                     </table>
                 </div>
@@ -769,7 +769,7 @@
                 <div class="dashboard-box">
                     <h3>Child's Borrowed Library Log Directory</h3>
                     <table style="box-shadow: none; margin-top: 15px;">
-                        <thead><tr><th>Book Title</th><th>Checked Out Date</th><th>Status</th></tr></thead>
+                        <thead><tr><th>Book Code</th><th>Book Title</th><th>Checked Out Date</th><th>Status</th></tr></thead>
                         <tbody id="parent-books-body"></tbody>
                     </table>
                 </div>
@@ -804,18 +804,23 @@
     <div class="modal" id="borrowModal">
         <form id="borrow-form" onsubmit="submitBorrowForm(event)">
             <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
-            <div class="form-group" id="borrower-selection-group">
+            <div class="form-group">
                 <label>Select Student Target</label>
                 <select id="borrowerSelect"></select>
             </div>
             <div class="form-group">
-                <label>Textbook Title</label>
-                <select id="bookSelect" required>
-                    <option value="Mathematics REB Pupil's Book P5">Mathematics REB Pupil's Book P5</option>
-                    <option value="English Skills Secondary S1">English Skills Secondary S1</option>
-                    <option value="Science and Technology Primary P6">Science and Technology Primary P6</option>
-                    <option value="Social Studies Kinyarwanda Companion">Social Studies Kinyarwanda Companion</option>
+                <label>Filter by Book Genre Group</label>
+                <select id="genreFilterSelect" onchange="filterModalBooksByGenre(this.value)">
+                    <option value="SCI">Science Fiction & Dystopian (SCI)</option>
+                    <option value="FAN">High Fantasy & Magic (FAN)</option>
+                    <option value="MYS">Mystery, Thriller & Suspense (MYS)</option>
+                    <option value="BUS">Business, Finance & Self-Help (BUS)</option>
+                    <option value="NON">History, Science & Non-Fiction (NON)</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <label>Choose Book Title</label>
+                <select id="bookSelect" required></select>
             </div>
             <div class="form-group"><label>Issue Date</label><input type="date" id="borrowDate" required></div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -827,7 +832,120 @@
 
     <!-- JavaScript Control Matrix Engine -->
     <script>
-        // --- 1. PRE-POPULATED HARDCODED INSTITUTIONAL SYSTEM STORAGE SEEDS ---
+        // --- 1. THE ARCHIVAL METADATA REPOSITORY (200 MASTER TITLES) ---
+        const structuralLibraryCatalog = {
+            SCI: [
+                { id: "SCI-2026-001", title: "Echoes of the Nebula" }, { id: "SCI-2026-002", title: "The Silicon Horizon" },
+                { id: "SCI-2026-003", title: "Quantum Drift" }, { id: "SCI-2026-004", title: "Protocols of Neon" },
+                { id: "SCI-2026-005", title: "Chronos Fractured" }, { id: "SCI-2026-006", title: "The Last Biosphere" },
+                { id: "SCI-2026-007", title: "Singularity’s Wake" }, { id: "SCI-2026-008", title: "Binary Stars, Lonely Moons" },
+                { id: "SCI-2026-009", title: "The Warp Core Paradox" }, { id: "SCI-2026-010", title: "Synthetic Dawn" },
+                { id: "SCI-2026-011", title: "Void Walkers" }, { id: "SCI-2026-012", title: "Terminal Velocity of Souls" },
+                { id: "SCI-2026-013", title: "The Android’s Lullaby" }, { id: "SCI-2026-014", title: "Starlight Imperium" },
+                { id: "SCI-2026-015", title: "Glitch in the Continuum" }, { id: "SCI-2026-016", title: "Cybernetic Whispers" },
+                { id: "SCI-2026-017", title: "The Exo-Planet Grid" }, { id: "SCI-2026-018", title: "Dark Matter Legacy" },
+                { id: "SCI-2026-019", title: "AI Overlord Chronicles" }, { id: "SCI-2026-020", title: "Memories of Earth" },
+                { id: "SCI-2026-021", title: "The Antimatter Engine" }, { id: "SCI-2026-022", title: "Nebula Born" },
+                { id: "SCI-2026-023", title: "Zero Gravity Minds" }, { id: "SCI-2026-024", title: "Vector of Mutation" },
+                { id: "SCI-2026-025", title: "The Cosmic Threshold" }, { id: "SCI-2026-026", title: "Sub-Space Signal" },
+                { id: "SCI-2026-027", title: "Hyper-Drive Dreams" }, { id: "SCI-2026-028", title: "Pulsar Frequency" },
+                { id: "SCI-2026-029", title: "Titan Colony Blueprint" }, { id: "SCI-2026-030", title: "Algorithms of Fate" },
+                { id: "SCI-2026-031", title: "Solar Flares and Steel" }, { id: "SCI-2026-032", title: "Asteroid Mining Blues" },
+                { id: "SCI-2026-033", title: "The Event Horizon Diary" }, { id: "SCI-2026-034", title: "Holographic Tears" },
+                { id: "SCI-2026-035", title: "Nanotech Uprising" }, { id: "SCI-2026-036", title: "The Supernova Archive" },
+                { id: "SCI-2026-037", title: "Deep Space Odyssey" }, { id: "SCI-2026-038", title: "Genesis of the Machines" },
+                { id: "SCI-2026-039", title: "The Ion Storm Protocol" }, { id: "SCI-2026-040", title: "Galaxy of Ash" }
+            ],
+            FAN: [
+                { id: "FAN-2026-041", title: "Chronicles of the Eldritch Tree" }, { id: "FAN-2026-042", title: "The Runebound Shield" },
+                { id: "FAN-2026-043", title: "Shadow over Aethelgard" }, { id: "FAN-2026-044", title: "Whispers of the Dragon Guild" },
+                { id: "FAN-2026-045", title: "The Alchemist’s Betrayal" }, { id: "FAN-2026-046", title: "Blades of the Crescent Moon" },
+                { id: "FAN-2026-047", title: "Sorcery of Silk and Iron" }, { id: "FAN-2026-048", title: "The Lost Heirloom of Eloria" },
+                { id: "FAN-2026-049", title: "Frost and Feather" }, { id: "FAN-2026-050", title: "Kingdom of Shattered Crowns" },
+                { id: "FAN-2026-051", title: "The Mage’s Last Sigil" }, { id: "FAN-2026-052", title: "Griffin Rider’s Oath" },
+                { id: "FAN-2026-053", title: "Spellweaver’s Curse" }, { id: "FAN-2026-054", title: "Citadel of Glass and Bone" },
+                { id: "FAN-2026-055", title: "The Phoenix Prophecy" }, { id: "FAN-2026-056", title: "Twilight Over Valoria" },
+                { id: "FAN-2026-057", title: "Of Blood and Magic" }, { id: "FAN-2026-058", title: "The Whispering Woods" },
+                { id: "FAN-2026-059", title: "Staff of the Eternal Sun" }, { id: "FAN-2026-060", title: "Legends of the Deep Wilds" },
+                { id: "FAN-2026-061", title: "The Obsidian Gate" }, { id: "FAN-2026-062", title: "Serpent and Sapphire" },
+                { id: "FAN-2026-063", title: "Path of the Shadow Monk" }, { id: "FAN-2026-064", title: "The Iron Elves" },
+                { id: "FAN-2026-065", title: "Legacy of the Star-Born" }, { id: "FAN-2026-066", title: "Curse of the Sunken Isles" },
+                { id: "FAN-2026-067", title: "The Weaver’s Loom" }, { id: "FAN-2026-068", title: "Dawn of the Necromancer" },
+                { id: "FAN-2026-069", title: "Enchantment of the Rogue" }, { id: "FAN-2026-070", title: "The Silver-Tongued Bard" },
+                { id: "FAN-2026-071", title: "Realm of Eternal Winter" }, { id: "FAN-2026-072", title: "Tower of the Moon Goddess" },
+                { id: "FAN-2026-073", title: "Ash and Ember" }, { id: "FAN-2026-074", title: "The Nomad Prince" },
+                { id: "FAN-2026-075", title: "Forgotten Spells" }, { id: "FAN-2026-076", title: "Vanguard of Light" },
+                { id: "FAN-2026-077", title: "The Golem’s Heart" }, { id: "FAN-2026-078", title: "Bloodline of the Beast" },
+                { id: "FAN-2026-079", title: "Myth of the First Titan" }, { id: "FAN-2026-080", title: "Secrets of Avarice" }
+            ],
+            MYS: [
+                { id: "MYS-2026-081", title: "The Silent Informant" }, { id: "MYS-2026-082", title: "Alibi in the Rain" },
+                { id: "MYS-2026-083", title: "Midnight on 4th Street" }, { id: "MYS-2026-084", title: "Shadows of Deception" },
+                { id: "MYS-2026-085", title: "Cold Case, Hot Blood" }, { id: "MYS-2026-086", title: "The Ghost of Blackwood Manor" },
+                { id: "MYS-2026-087", title: "Cipher of the Dead" }, { id: "MYS-2026-088", title: "Lies of the Prosecutor" },
+                { id: "MYS-2026-089", title: "Vanished in the Foothills" }, { id: "MYS-2026-090", title: "The Coroner’s Secret" },
+                { id: "MYS-2026-091", title: "Red Herring’s Wake" }, { id: "MYS-2026-092", title: "The Anatomy of a Heist" },
+                { id: "MYS-2026-093", title: "Whispers from the Attic" }, { id: "MYS-2026-094", title: "Smoke and Mirrors in Seattle" },
+                { id: "MYS-2026-095", title: "Fatal Clockwork" }, { id: "MYS-2026-096", title: "The Waterfront Murders" },
+                { id: "MYS-2026-097", title: "Murder in the First Class Lounge" }, { id: "MYS-2026-098", title: "The Profiler’s Nightmare" },
+                { id: "MYS-2026-099", title: "Traitor’s Gambit" }, { id: "MYS-2026-100", title: "Blind Alley" },
+                { id: "MYS-2026-101", title: "The Cryptic Notebook" }, { id: "MYS-2026-102", title: "Behind Sealed Doors" },
+                { id: "MYS-2026-103", title: "Poisoned Chalice" }, { id: "MYS-2026-104", title: "Bloodstains on the Canvas" },
+                { id: "MYS-2026-105", title: "The Double Agent’s Wife" }, { id: "MYS-2026-106", title: "Echoes of a Crime" },
+                { id: "MYS-2026-107", title: "The Missing Witness" }, { id: "MYS-2026-108", title: "Conspiracy at Dawn" },
+                { id: "MYS-2026-109", title: "The Phantom Footsteps" }, { id: "MYS-2026-110", title: "Ticket to Nowhere" },
+                { id: "MYS-2026-111", title: "Dead Men Do Tell Tales" }, { id: "MYS-2026-112", title: "The Last Alchemist Standing" },
+                { id: "MYS-2026-113", title: "Danger in the Fog" }, { id: "MYS-2026-114", title: "Midnight Call Code" },
+                { id: "MYS-2026-115", title: "The Suspicious Butler" }, { id: "MYS-2026-116", title: "Blood Money Chronicles" },
+                { id: "MYS-2026-117", title: "Under the Floorboards" }, { id: "MYS-2026-118", title: "The Scent of Cyanide" },
+                { id: "MYS-2026-119", title: "Game of Shadows" }, { id: "MYS-2026-120", title: "Final Execution" }
+            ],
+            BUS: [
+                { id: "BUS-2026-121", title: "The Scalable Mindset" }, { id: "BUS-2026-122", title: "Digital Real Estate Mastery" },
+                { id: "BUS-2026-123", title: "Capital Habits" }, { id: "BUS-2026-124", title: "The Micro-CEO" },
+                { id: "BUS-2026-125", title: "Zero to Momentum" }, { id: "BUS-2026-126", title: "The Emotionally Agile Leader" },
+                { id: "BUS-2026-127", title: "Unlocking Corporate Synergy" }, { id: "BUS-2026-128", title: "Venture capital Secrets" },
+                { id: "BUS-2026-129", title: "Outperforming the Machine" }, { id: "BUS-2026-130", title: "The Remote Work Revolution" },
+                { id: "BUS-2026-131", title: "Automation over Hustle" }, { id: "BUS-2026-132", title: "Wealth Architecture 101" },
+                { id: "BUS-2026-133", title: "Negotiation Tactics for Mavericks" }, { id: "BUS-2026-134", title: "The Sustainable Enterprise" },
+                { id: "BUS-2026-135", title: "Branding the Invisible" }, { id: "BUS-2026-136", title: "The Focus Economy" },
+                { id: "BUS-2026-137", title: "Fail Fast, Scale Faster" }, { id: "BUS-2026-138", title: "The Crypto Conundrum" },
+                { id: "BUS-2026-139", title: "High-Impact Networking" }, { id: "BUS-2026-140", title: "The Resilient Budget" },
+                { id: "BUS-2026-141", title: "Strategy Beyond the Boardroom" }, { id: "BUS-2026-142", title: "The Mindful Investor" },
+                { id: "BUS-2026-143", title: "Marketing in the Meta-Age" }, { id: "BUS-2026-144", title: "The Side Hustle Blueprint" },
+                { id: "BUS-2026-145", title: "Disrupt or Be Disrupted" }, { id: "BUS-2026-146", title: "The Productivity Equation" },
+                { id: "BUS-2026-147", title: "Financial Freedom Tactics" }, { id: "BUS-2026-148", title: "Leading with Authenticity" },
+                { id: "BUS-2026-149", title: "The Solopreneur Playbook" }, { id: "BUS-2026-150", title: "Cracking the Tech Resume" },
+                { id: "BUS-2026-151", title: "Habits of Millionaires" }, { id: "BUS-2026-152", title: "The Art of Strategic Pivoting" },
+                { id: "BUS-2026-153", title: "Enterprise Scaling Guide" }, { id: "BUS-2026-154", title: "Collaborative Intelligence" },
+                { id: "BUS-2026-155", title: "The Customer Success Blueprint" }, { id: "BUS-2026-156", title: "Valuation Essentials" },
+                { id: "BUS-2026-157", title: "Peak Performance Mechanics" }, { id: "BUS-2026-158", title: "The Ethical Corporation" },
+                { id: "BUS-2026-159", title: "Data-Driven Decision Making" }, { id: "BUS-2026-160", title: "The Psychology of Pricing" }
+            ],
+            NON: [
+                { id: "NON-2026-161", title: "Empires of the Silk Road" }, { id: "NON-2026-162", title: "Anatomy of a Volcano" },
+                { id: "NON-2026-163", title: "The Industrial Renaissance" }, { id: "NON-2026-164", title: "Mapping the Deep Ocean" },
+                { id: "NON-2026-165", title: "Genghis Khan’s Logistics" }, { id: "NON-2026-166", title: "History of the Telegraph" },
+                { id: "NON-2026-167", title: "Understanding Gen Z Mechanics" }, { id: "NON-2026-168", title: "The Evolution of Antibiotics" },
+                { id: "NON-2026-169", title: "Deciphering Mayan Hieroglyphs" }, { id: "NON-2026-170", title: "Secrets of the Human Genome" },
+                { id: "NON-2026-171", title: "The Psychology of Propaganda" }, { id: "NON-2026-172", title: "Medieval Castle Architecture" },
+                { id: "NON-2026-173", title: "The Space Race Retrospective" }, { id: "NON-2026-174", title: "Flora and Fauna of Madagascar" },
+                { id: "NON-2026-175", title: "Forgotten Queens of Europe" }, { id: "NON-2026-176", title: "Philosophy of the Enlightenment" },
+                { id: "NON-2026-177", title: "Rise and Fall of the Ottomans" }, { id: "NON-2026-178", title: "Theoretical Physics for Beginners" },
+                { id: "NON-2026-179", title: "Glaciers and Climate Shifts" }, { id: "NON-2026-180", title: "The Silk Route Rediscovered" },
+                { id: "NON-2026-181", title: "Unsolved Historical Mysteries" }, { id: "NON-2026-182", title: "Neuroscience of Sleep Patterns" },
+                { id: "NON-2026-183", title: "Micro-History of Salt" }, { id: "NON-2026-184", title: "The French Revolution Revisited" },
+                { id: "NON-2026-185", title: "Architecture of Tomorrow" }, { id: "NON-2026-186", title: "Super-Predators of the Miocene" },
+                { id: "NON-2026-187", title: "The Economics of Agriculture" }, { id: "NON-2026-188", title: "Pioneers of Modern Medicine" },
+                { id: "NON-2026-189", title: "Mathematical Paradoxes Explained" }, { id: "NON-2026-190", title: "Language Evolution across Continents" },
+                { id: "NON-2026-191", title: "Ancient Navigation Methods" }, { id: "NON-2026-192", title: "History of Global Currencies" },
+                { id: "NON-2026-193", title: "The Science of Renewable Grids" }, { id: "NON-2026-194", title: "Renaissance Art Masterpieces" },
+                { id: "NON-2026-195", title: "The Great Depression Lessons" }, { id: "NON-2026-196", title: "Behavioral Economics Demystified" },
+                { id: "NON-2026-197", title: "Volcanoes of the Pacific Rim" }, { id: "NON-2026-198", title: "Biography of Nikola Tesla" },
+                { id: "NON-2026-199", title: "Urban Planning in Ancient Rome" }, { id: "NON-2026-200", title: "The Biodiversity Threshold" }
+            ]
+        };
+
         const baseStudents = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 001", status: "Paid", attendance: "Present", score: 88, linkedUser: "student1" },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 111 002", status: "Pending", attendance: "Present", score: 74, linkedUser: "student2" },
@@ -858,85 +976,49 @@
             { id: "REG-027", name: "Josiane Umuhoza", class: "S1", contact: "+250 788 111 027", status: "Pending", attendance: "Present", score: 71, linkedUser: "student27" },
             { id: "REG-028", name: "Pacifique Iradukunda", class: "P5", contact: "+250 788 111 028", status: "Paid", attendance: "Present", score: 87, linkedUser: "student28" },
             { id: "REG-029", name: "Valentine Mukamana", class: "P6", contact: "+250 788 111 029", status: "Paid", attendance: "Present", score: 80, linkedUser: "student29" },
-            { id: "REG-030", name: "Thierry Kamanzi", class: "S1", contact: "+250 788 111 030", status: "Pending", attendance: "Absent", score: 66, linkedUser: "student30" },
-            { id: "REG-031", name: "Marie Claire Nyinawumuntu", class: "P5", contact: "+250 788 111 031", status: "Paid", attendance: "Present", score: 72, linkedUser: null },
-            { id: "REG-032", name: "Justin Niyomugabo", class: "P6", contact: "+250 788 111 032", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
-            { id: "REG-033", name: "Beata Uwimana", class: "S1", contact: "+250 788 111 033", status: "Paid", attendance: "Present", score: 93, linkedUser: null },
-            { id: "REG-034", name: "Gaspard Habimana", class: "P5", contact: "+250 788 111 034", status: "Pending", attendance: "Present", score: 58, linkedUser: null },
-            { id: "REG-035", name: "Emelyne Kaneza", class: "P6", contact: "+250 788 111 035", status: "Paid", attendance: "Present", score: 80, linkedUser: null },
-            { id: "REG-036", name: "Florent Niyonisaba", class: "S1", contact: "+250 788 111 036", status: "Paid", attendance: "Absent", score: 69, linkedUser: null },
-            { id: "REG-037", name: "Honorine Uwiragiye", class: "P5", contact: "+250 788 111 037", status: "Paid", attendance: "Present", score: 75, linkedUser: null },
-            { id: "REG-038", name: "Innocent Mbonigaba", class: "P6", contact: "+250 788 111 038", status: "Pending", attendance: "Present", score: 63, linkedUser: null },
-            { id: "REG-039", name: "Janviere Mukamisha", class: "S1", contact: "+250 788 111 039", status: "Paid", attendance: "Present", score: 84, linkedUser: null },
-            { id: "REG-040", name: "Kennedy Ntwali", class: "P5", contact: "+250 788 111 040", status: "Paid", attendance: "Present", score: 78, linkedUser: null },
-            { id: "REG-041", name: "Leopold Munyaneza", class: "P6", contact: "+250 788 111 041", status: "Paid", attendance: "Present", score: 82, linkedUser: null },
-            { id: "REG-042", name: "Micheline Uwamariya", class: "S1", contact: "+250 788 111 042", status: "Pending", attendance: "Absent", score: 61, linkedUser: null },
-            { id: "REG-043", name: "Norbert Rutaganda", class: "P5", contact: "+250 788 111 043", status: "Paid", attendance: "Present", score: 86, linkedUser: null },
-            { id: "REG-044", name: "Odette Nyiramana", class: "P6", contact: "+250 788 111 044", status: "Paid", attendance: "Present", score: 89, linkedUser: null },
-            { id: "REG-045", name: "Pascal Nsengiyumva", class: "S1", contact: "+250 788 111 045", status: "Pending", attendance: "Present", score: 70, linkedUser: null },
-            { id: "REG-046", name: "Regine Akaliza", class: "P5", contact: "+250 788 111 046", status: "Paid", attendance: "Present", score: 91, linkedUser: null },
-            { id: "REG-047", name: "Sylvestre Murenzi", class: "P6", contact: "+250 788 111 047", status: "Paid", attendance: "Present", score: 67, linkedUser: null },
-            { id: "REG-048", name: "Telesphore Hategekimana", class: "S1", contact: "+250 788 111 048", status: "Pending", attendance: "Absent", score: 54, linkedUser: null },
-            { id: "REG-049", name: "Vestine Nyiransabimana", class: "P5", contact: "+250 788 111 049", status: "Paid", attendance: "Present", score: 83, linkedUser: null },
-            { id: "REG-050", name: "Zacharie Twagirimana", class: "P6", contact: "+250 788 111 050", status: "Paid", attendance: "Present", score: 79, linkedUser: null }
+            { id: "REG-030", name: "Thierry Kamanzi", class: "S1", contact: "+250 788 111 030", status: "Pending", attendance: "Absent", score: 66, linkedUser: "student30" }
         ];
 
         const baseTeachers = {
             "FAC-001": { name: "Jean de Dieu Tumusime", classAssignment: "P5", contact: "+250 788 222 001" },
             "FAC-002": { name: "Marie Chantal Mukagasana", classAssignment: "P6", contact: "+250 788 222 002" },
-            "FAC-003": { name: "Emmanuel Ruzindana", classAssignment: "S1", contact: "+250 788 222 003" },
-            "FAC-004": { name: "Alphonsine Umurerwa", classAssignment: "P5", contact: "+250 788 222 004" },
-            "FAC-005": { name: "Charles Niyonsenga", classAssignment: "P6", contact: "+250 788 222 005" },
-            "FAC-006": { name: "Athanase Mutabazi", classAssignment: "S1", contact: "+250 788 222 006" },
-            "FAC-007": { name: "Serafina Mukamurenzi", classAssignment: "P5", contact: "+250 788 222 007" },
-            "FAC-008": { name: "Anastase Ndizeye", classAssignment: "P6", contact: "+250 788 222 008" },
-            "FAC-009": { name: "Evelyne Uwimana", classAssignment: "S1", contact: "+250 788 222 009" },
-            "FAC-010": { name: "Theoneste Hakizimana", classAssignment: "P5", contact: "+250 788 222 010" },
-            "FAC-011": { name: "Claudine Uwamahoro", classAssignment: "P6", contact: "+250 788 222 011" },
-            "FAC-012": { name: "Bosco Nsabimana", classAssignment: "S1", contact: "+250 788 222 012" }
+            "FAC-003": { name: "Emmanuel Ruzindana", classAssignment: "S1", contact: "+250 788 222 003" }
         };
 
-        // --- 2. FAILSAFE FORCED SEED STORAGE INITIALIZER ---
-        // Overrides any empty or corrupt matrices to guarantee login compliance on load
+        // --- 2. FORCED DATA ENGINE RESEED MANAGER ---
         function initializeDatabaseForceSeed() {
             localStorage.setItem('sms_students', JSON.stringify(baseStudents));
             localStorage.setItem('sms_teachers', JSON.stringify(baseTeachers));
+            localStorage.setItem('sms_master_catalog', JSON.stringify(structuralLibraryCatalog));
 
             let generatedAccounts = {};
-            // Generate Admin Credentials (admin1 - admin10)
             for (let i = 1; i <= 10; i++) {
                 generatedAccounts[`admin${i}`] = { password: `admin${i}`, role: "admin", profileRef: `ADM-0${i}` };
             }
-            // Generate Teacher Credentials (teacher1 - teacher12)
             for (let i = 1; i <= 12; i++) {
                 let refStr = `FAC-0${i < 10 ? '0' + i : i}`;
                 generatedAccounts[`teacher${i}`] = { password: `teacher${i}`, role: "teacher", profileRef: refStr };
             }
-            // Generate Parent Credentials (parent1 - parent30)
             for (let i = 1; i <= 30; i++) {
                 let refStr = `REG-0${i < 10 ? '0' + i : i}`;
                 generatedAccounts[`parent${i}`] = { password: `parent${i}`, role: "parent", profileRef: refStr };
-            }
-            // Generate Student Credentials (student1 - student30)
-            for (let i = 1; i <= 30; i++) {
-                let refStr = `REG-0${i < 10 ? '0' + i : i}`;
                 generatedAccounts[`student${i}`] = { password: `student${i}`, role: "student", profileRef: refStr };
             }
-
             localStorage.setItem('sms_accounts', JSON.stringify(generatedAccounts));
         }
 
-        // Always run the seed guarantee strategy on first render parse
+        // Execute system seed routine
         initializeDatabaseForceSeed();
 
-        // Load active runtime contexts directly from the forced seed values
+        // Load dataset pointers directly into browser engine runtime
         let studentsList = JSON.parse(localStorage.getItem('sms_students'));
         let teachersDatabase = JSON.parse(localStorage.getItem('sms_teachers'));
         let accountsDatabase = JSON.parse(localStorage.getItem('sms_accounts'));
+        let globalCatalog = JSON.parse(localStorage.getItem('sms_master_catalog'));
 
         let libraryLedger = JSON.parse(localStorage.getItem('sms_library')) || [
-            { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookTitle: "Mathematics REB Pupil's Book P5", date: "2026-05-10", status: "Borrowed" },
-            { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
+            { id: 1, studentId: "REG-001", studentName: "Kelia Mugisha", bookCode: "SCI-2026-001", bookTitle: "Echoes of the Nebula", date: "2026-05-10", status: "Borrowed" },
+            { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookCode: "NON-2026-162", bookTitle: "Anatomy of a Volcano", date: "2026-05-18", status: "Borrowed" }
         ];
 
         let currentSchoolName = localStorage.getItem('sms_school_name') || "APAPEC-IREBERO";
@@ -1008,7 +1090,6 @@
             } else if (viewMode === 'profile') {
                 document.getElementById('profile-view').style.display = 'block';
                 document.getElementById('auth-subtitle').innerText = 'Step 2: Initialize Profile Configuration';
-                
                 temporaryUploadedPhotoBase64 = null;
                 document.getElementById('photo-preview-element').innerText = "?";
                 document.getElementById('photo-preview-element').style.backgroundImage = "none";
@@ -1102,7 +1183,6 @@
             commitSystemStateToDisk();
 
             alert(`Profile linked and written to local database registry for user "${uName}".`);
-            
             document.getElementById('register-user-form').reset();
             document.getElementById('profile-details-form').reset();
             
@@ -1227,7 +1307,6 @@
             tbody.innerHTML = '';
             
             const isolatedStudents = studentsList.filter(s => s.class === targetClass);
-            
             isolatedStudents.forEach(student => {
                 const badgeClass = student.attendance === 'Present' ? 'present' : 'absent';
                 tbody.innerHTML += `
@@ -1261,7 +1340,6 @@
             tbody.innerHTML = '';
             
             const isolatedStudents = studentsList.filter(s => s.class === targetClass);
-            
             isolatedStudents.forEach(student => {
                 tbody.innerHTML += `
                     <tr>
@@ -1288,7 +1366,6 @@
         // --- PARENT PORTAL MONITORING HUB ---
         function renderParentPortalDashboard() {
             const childFile = studentsList.find(s => s.id === parentLinkedChildId);
-            
             if(!childFile) {
                 document.getElementById('parent-linked-child-name').innerText = "Unlinked Session Error";
                 return;
@@ -1296,7 +1373,6 @@
 
             document.getElementById('parent-welcome-subtitle').innerText = `Security Boundary Enforcement Token ID: ${childFile.id}`;
             document.getElementById('parent-linked-child-name').innerText = childFile.name;
-            
             document.getElementById('parent-class-assignment').innerText = `Grade ${childFile.class}`;
             document.getElementById('parent-grade-display').innerText = `${childFile.score}%`;
             
@@ -1311,10 +1387,10 @@
             
             const isolatedRecords = libraryLedger.filter(item => item.studentId === childFile.id);
             if (isolatedRecords.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No actively borrowed books recorded on file for this child.</td></tr>`;
+                booksBody.innerHTML = `<tr><td colspan="4" style="color:#6b7280; text-align:center;">No actively borrowed books recorded on file for this child.</td></tr>`;
             } else {
                 isolatedRecords.forEach(item => {
-                    booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
+                    booksBody.innerHTML += `<tr><td><code>${item.bookCode}</code></td><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
                 });
             }
         }
@@ -1347,10 +1423,10 @@
             booksBody.innerHTML = '';
             const records = libraryLedger.filter(item => item.studentId === currentStudent.id);
             if (records.length === 0) {
-                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No library records currently checked out.</td></tr>`;
+                booksBody.innerHTML = `<tr><td colspan="4" style="color:#6b7280; text-align:center;">No library records currently checked out.</td></tr>`;
             } else {
                 records.forEach(item => {
-                    booksBody.innerHTML += `<tr><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
+                    booksBody.innerHTML += `<tr><td><code>${item.bookCode}</code></td><td><strong>${item.bookTitle}</strong></td><td>${item.date}</td><td><span class="badge borrowed">${item.status}</span></td></tr>`;
                 });
             }
         }
@@ -1430,45 +1506,77 @@
             renderFinanceTable();
         }
 
+        // --- MASTER SYSTEM LIBRARY CONTROLLERS ---
         function renderLibraryTable() {
             const tbody = document.getElementById('library-table-body');
             tbody.innerHTML = '';
             libraryLedger.forEach(item => {
                 const badgeClass = item.status === 'Borrowed' ? 'borrowed' : 'returned';
                 const buttonDisplay = item.status === 'Borrowed' ? `<button class="btn btn-success btn-sm" onclick="toggleBookReturn(${item.id})">Mark Returned</button>` : `<span style="color:#6b7280; font-size:0.85rem;">Closed</span>`;
-                tbody.innerHTML += `<tr><td><strong>${item.studentName}</strong></td><td>${item.bookTitle}</td><td>${item.date}</td><td><span class="badge ${badgeClass}">${item.status}</span></td><td>${buttonDisplay}</td></tr>`;
+                tbody.innerHTML += `<tr><td><strong>${item.studentName}</strong></td><td><code>${item.bookCode}</code></td><td>${item.bookTitle}</td><td>${item.date}</td><td><span class="badge ${badgeClass}">${item.status}</span></td><td>${buttonDisplay}</td></tr>`;
             });
         }
 
         function toggleBookReturn(transactionId) {
             const targetRecord = libraryLedger.find(item => item.id === transactionId);
             if(targetRecord) {
-                targetRecord.status = 'Returned'; commitSystemStateToDisk();
-                renderLibraryTable(); updateDashboardMetrics();
+                targetRecord.status = 'Returned'; 
+                commitSystemStateToDisk();
+                renderLibraryTable(); 
+                updateDashboardMetrics();
             }
         }
 
         function openBorrowModal() {
             document.getElementById('borrowDate').value = new Date().toISOString().split('T')[0];
-            const selectEl = document.getElementById('borrowerSelect');
-            selectEl.innerHTML = '';
+            
+            // Populate Student Select Menu Box
+            const selectStudent = document.getElementById('borrowerSelect');
+            selectStudent.innerHTML = '';
             studentsList.forEach(student => { 
-                selectEl.innerHTML += `<option value="${student.id}">${student.name} [Grade ${student.class}]</option>`; 
+                selectStudent.innerHTML += `<option value="${student.id}">${student.name} [Grade ${student.class}]</option>`; 
             });
+
+            // Trigger Book Filter initialization based on initial genre selection logic
+            const initialGenre = document.getElementById('genreFilterSelect').value;
+            filterModalBooksByGenre(initialGenre);
+
             document.getElementById('borrowModal').classList.add('active');
+        }
+
+        function filterModalBooksByGenre(genreKey) {
+            const bookSelectEl = document.getElementById('bookSelect');
+            bookSelectEl.innerHTML = '';
+            
+            const targetGenreArray = globalCatalog[genreKey] || [];
+            targetGenreArray.forEach(book => {
+                bookSelectEl.innerHTML += `<option value="${book.id}">${book.id} - ${book.title}</option>`;
+            });
         }
 
         function submitBorrowForm(event) {
             event.preventDefault();
             const studentId = document.getElementById('borrowerSelect').value;
             const targetStudent = studentsList.find(s => s.id === studentId);
-            const bookTitle = document.getElementById('bookSelect').value;
-            const borrowDate = document.getElementById('borrowDate').value;
+            
+            const bookCode = document.getElementById('bookSelect').value;
+            const genreKey = document.getElementById('genreFilterSelect').value;
+            const matchedBook = globalCatalog[genreKey].find(b => b.id === bookCode);
 
-            if (targetStudent) {
-                libraryLedger.push({ id: libraryLedger.length + 1, studentId: targetStudent.id, studentName: targetStudent.name, bookTitle: bookTitle, date: borrowDate, status: 'Borrowed' });
-                commitSystemStateToDisk(); closeModal('borrowModal');
-                renderLibraryTable(); updateDashboardMetrics();
+            if (targetStudent && matchedBook) {
+                libraryLedger.push({ 
+                    id: libraryLedger.length + 1, 
+                    studentId: targetStudent.id, 
+                    studentName: targetStudent.name, 
+                    bookCode: matchedBook.id,
+                    bookTitle: matchedBook.title, 
+                    date: document.getElementById('borrowDate').value, 
+                    status: 'Borrowed' 
+                });
+                commitSystemStateToDisk(); 
+                closeModal('borrowModal');
+                renderLibraryTable(); 
+                updateDashboardMetrics();
             }
         }
 
@@ -1479,7 +1587,8 @@
             const contact = document.getElementById('guardianContact').value;
             
             studentsList.push({ id: `REG-0${studentsList.length + 1}`, name: name, class: className, contact: contact, status: 'Pending', attendance: 'Present', score: 0, linkedUser: null, photo: null });
-            commitSystemStateToDisk(); document.getElementById('admission-form').reset();
+            commitSystemStateToDisk(); 
+            document.getElementById('admission-form').reset();
             switchTab('dashboard');
         }
 
@@ -1509,7 +1618,8 @@
                 studentsList[index].status = document.getElementById('editStatus').value;
                 
                 libraryLedger.forEach(item => { if(item.studentId === id) item.studentName = newName; });
-                commitSystemStateToDisk(); closeModal('editModal');
+                commitSystemStateToDisk(); 
+                closeModal('editModal');
                 
                 renderDashboardView(); renderStudentsTable(); renderFinanceTable(); updateDashboardMetrics();
             }
@@ -1523,7 +1633,7 @@
             if(metricEl) metricEl.innerText = `${percent}%`;
         }
 
-        // Initialize Renders
+        // Initialize Application Defaults
         document.getElementById('sidebar-brand').innerText = currentSchoolName;
         document.getElementById('login-brand-title').innerText = currentSchoolName;
         renderDashboardView();
