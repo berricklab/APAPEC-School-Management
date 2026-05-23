@@ -119,16 +119,17 @@
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .theme-selector select {
+        select.control-select {
             padding: 6px 12px;
             border-radius: 4px;
             border: 1px solid #ccc;
             background: var(--surface-color);
             color: var(--text-color);
             cursor: pointer;
+            font-weight: 500;
         }
 
         .page-section {
@@ -156,6 +157,7 @@
         }
 
         .card.success { border-left-color: var(--accent-color); }
+        .card.danger { border-left-color: var(--danger-color); }
 
         .card h3 {
             font-size: 0.9rem;
@@ -223,7 +225,6 @@
             color: var(--text-color);
         }
 
-        /* School Profile Editor Box */
         .school-edit-container {
             display: flex;
             gap: 10px;
@@ -305,14 +306,26 @@
 </head>
 <body>
 
-    <!-- Sidebar Menu -->
+    <!-- Sidebar Menu Component -->
     <aside>
         <div class="brand" id="sidebar-brand">APAPEC-IREBERO</div>
-        <button class="menu-btn active" onclick="switchTab('dashboard')">Dashboard</button>
-        <button class="menu-btn" onclick="switchTab('students')">Students Register</button>
-        <button class="menu-btn" onclick="switchTab('add-student')">Admission Form</button>
-        <button class="menu-btn" onclick="switchTab('finance')">Fees Management</button>
-        <button class="menu-btn" onclick="switchTab('library')">Library System</button>
+        
+        <!-- Administrator Navigation Controls -->
+        <div id="admin-sidebar-menu">
+            <button class="menu-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="menu-btn" onclick="switchTab('students')">Students Register</button>
+            <button class="menu-btn" onclick="switchTab('add-student')">Admission Form</button>
+            <button class="menu-btn" onclick="switchTab('finance')">Fees Management</button>
+            <button class="menu-btn" onclick="switchTab('library')">Library System</button>
+        </div>
+
+        <!-- Student Dynamic Portal Sidebar Notification -->
+        <div id="student-sidebar-menu" style="display: none;">
+            <button class="menu-btn active" onclick="switchTab('student-home')">My Student Profile</button>
+            <p style="padding: 15px; font-size: 0.8rem; color: var(--sidebar-text); opacity: 0.7;">
+                Logged in under official secure verification profile token.
+            </p>
+        </div>
     </aside>
 
     <!-- Main Workspace -->
@@ -320,25 +333,33 @@
         <header>
             <h2 id="page-title">Dashboard</h2>
             <div class="header-controls">
-                <div class="theme-selector">
-                    <select id="themeDropdown" onchange="changeTheme(this.value)">
-                        <option value="classic">Theme: Classic Blue</option>
-                        <option value="light">Theme: Light Mode</option>
-                        <option value="dark">Theme: Dark Mode</option>
+                <!-- User Role Switching Matrix -->
+                <div>
+                    <label for="portalSwitch"><strong>Portal View:</strong></label>
+                    <select id="portalSwitch" class="control-select" onchange="handlePortalViewChange(this.value)">
+                        <option value="admin">Administrator View</option>
+                        <option value="student">Student Portal View</option>
                     </select>
                 </div>
-                <div><strong>Role:</strong> Admin</div>
+                
+                <!-- Theme Dynamic Config Selector -->
+                <div class="theme-selector">
+                    <select id="themeDropdown" class="control-select" onchange="changeTheme(this.value)">
+                        <option value="classic">Theme: Classic Blue</option>
+                        <option value="light">Theme: Light</option>
+                        <option value="dark">Theme: Dark</option>
+                    </select>
+                </div>
             </div>
         </header>
 
+        <!-- ================= ADMIN SECTION EXCLUSIVE PANELS ================= -->
         <!-- Dashboard Section -->
         <section id="dashboard" class="page-section active">
-            <!-- Dynamic School Profile Customizer -->
             <div class="dashboard-box" style="border-left: 5px solid var(--primary-color);">
                 <h4 style="margin-bottom: 5px;">Configure School Identity</h4>
-                <p style="font-size: 0.85rem; color:#6b7280; margin-bottom: 10px;">Update the input field below to dynamically rename this entire workspace system instantly.</p>
                 <div class="school-edit-container">
-                    <input type="text" id="schoolNameInput" value="APAPEC-IREBERO" placeholder="Enter school name...">
+                    <input type="text" id="schoolNameInput" value="APAPEC-IREBERO">
                     <button class="btn btn-primary" onclick="updateSchoolName()">Save Name</button>
                 </div>
             </div>
@@ -347,7 +368,6 @@
                 <div class="card">
                     <h3>Total Students</h3>
                     <p id="dash-student-count">3</p>
-                    <span style="font-size: 0.85rem; color: #6b7280;">Managed via admissions</span>
                 </div>
                 <div class="card success">
                     <h3>Active Classes</h3>
@@ -357,31 +377,23 @@
                 <div class="card">
                     <h3>Books Checked Out</h3>
                     <p id="dash-books-count">2</p>
-                    <span style="font-size: 0.85rem; color: #6b7280;">Managed via Library tab</span>
                 </div>
             </div>
 
             <div class="dashboard-layout">
-                <!-- Quick Student Summary Board -->
                 <div class="dashboard-box">
                     <h3 style="margin-bottom: 10px;">Quick Student Status Panel</h3>
-                    <table style="margin-top: 0; box-shadow: none;">
+                    <table>
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Class</th>
-                                <th>Action</th>
-                            </tr>
+                            <tr><th>Name</th><th>Class</th><th>Action</th></tr>
                         </thead>
                         <tbody id="dash-quick-table"></tbody>
                     </table>
                 </div>
-
-                <!-- Info Box -->
                 <div class="dashboard-box" style="background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--secondary-color);">
                     <h4 style="color: var(--secondary-color); margin-bottom: 10px;">Operational Notice</h4>
                     <p style="font-size: 0.9rem; line-height: 1.4;">
-                        This prototype stores mutations dynamically in browser RAM application cache framework layers. Data updates reflect live across all operational matrices automatically.
+                        Multi-user portal routing is now active. Use the top selection menu to instantly experience what a student sees when they login.
                     </p>
                 </div>
             </div>
@@ -389,16 +401,10 @@
 
         <!-- Students List Section -->
         <section id="students" class="page-section">
-            <h3>Registered Students</h3>
+            <h3>Registered Students Database</h3>
             <table id="student-table">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Class/Grade</th>
-                        <th>Guardian Contact</th>
-                        <th>Action</th>
-                    </tr>
+                    <tr><th>ID</th><th>Name</th><th>Class/Grade</th><th>Guardian Contact</th><th>Action</th></tr>
                 </thead>
                 <tbody></tbody>
             </table>
@@ -406,8 +412,7 @@
 
         <!-- Add Student Form Section -->
         <section id="add-student" class="page-section">
-            <h3>New Student Admission</h3>
-            <br>
+            <h3>New Student Admission</h3><br>
             <form id="admission-form" onsubmit="registerStudent(event)">
                 <div class="form-group">
                     <label for="studentName">Full Name</label>
@@ -416,15 +421,10 @@
                 <div class="form-group">
                     <label for="studentClass">Assign Class</label>
                     <select id="studentClass">
-                        <option value="P1">Primary 1</option>
-                        <option value="P2">Primary 2</option>
-                        <option value="P3">Primary 3</option>
-                        <option value="P4">Primary 4</option>
-                        <option value="P5">Primary 5</option>
-                        <option value="P6">Primary 6</option>
-                        <option value="S1">Senior 1</option>
-                        <option value="S2">Senior 2</option>
-                        <option value="S3">Senior 3</option>
+                        <option value="P1">Primary 1</option><option value="P2">Primary 2</option>
+                        <option value="P3">Primary 3</option><option value="P4">Primary 4</option>
+                        <option value="P5">Primary 5</option><option value="P6">Primary 6</option>
+                        <option value="S1">Senior 1</option><option value="S2">Senior 2</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -440,39 +440,60 @@
             <h3>Tuition & Fees Ledger</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Class</th>
-                        <th>Term Fee</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
+                    <tr><th>Student Name</th><th>Class</th><th>Term Fee</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody id="finance-table-body"></tbody>
             </table>
         </section>
 
-        <!-- NEW: Library System Section -->
+        <!-- Library System Section -->
         <section id="library" class="page-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3>Library Book Borrowing Tracking Registry</h3>
                 <button class="btn btn-success" onclick="openBorrowModal()">Issue/Borrow Book</button>
             </div>
-
             <table>
                 <thead>
-                    <tr>
-                        <th>Borrower</th>
-                        <th>Book Title</th>
-                        <th>Issue Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
+                    <tr><th>Borrower</th><th>Book Title</th><th>Issue Date</th><th>Status</th><th>Action</th></tr>
                 </thead>
-                <tbody id="library-table-body">
-                    <!-- Populated dynamically -->
-                </tbody>
+                <tbody id="library-table-body"></tbody>
             </table>
+        </section>
+
+
+        <!-- ================= NEW: STUDENT EXPERIENTIAL PORTAL HOME ================= -->
+        <section id="student-home" class="page-section">
+            <div class="dashboard-box" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 25px;">
+                <h2 id="portal-welcome-name">Welcome Back, Student!</h2>
+                <p id="portal-student-meta" style="margin-top: 5px; opacity: 0.9;">Registration ID: Fetching Profile...</p>
+            </div>
+
+            <!-- Student Profile Summary Grid Cards -->
+            <div class="card-grid" style="margin-top: 25px;">
+                <div class="card" id="student-fee-card">
+                    <h3>My Finance Status</h3>
+                    <p id="portal-fee-status">Unknown</p>
+                    <span style="font-size: 0.85rem; color:#6b7280;">Current Term Statement: 300,000 RWF</span>
+                </div>
+                <div class="card success">
+                    <h3>Academic Enrollment</h3>
+                    <p id="portal-class-assignment">-</p>
+                    <span style="font-size: 0.85rem; color:#6b7280;">Status: Active Full-time</span>
+                </div>
+            </div>
+
+            <!-- Student Library Sub-ledger Tracker -->
+            <div class="dashboard-box">
+                <h3 style="margin-bottom: 15px;">My Borrowed Books Locker</h3>
+                <table style="box-shadow: none; margin-top: 0;">
+                    <thead>
+                        <tr><th>Book Title</th><th>Issued Date</th><th>Locker Status</th></tr>
+                    </thead>
+                    <tbody id="portal-books-body">
+                        <!-- Loaded exclusively relative to student context details -->
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
@@ -481,37 +502,18 @@
         <form id="edit-form" onsubmit="saveStudentEdit(event)">
             <h3 style="margin-bottom: 15px;">Edit Student Details</h3>
             <input type="hidden" id="editStudentId">
-            
-            <div class="form-group">
-                <label for="editStudentName">Full Name</label>
-                <input type="text" id="editStudentName" required>
-            </div>
+            <div class="form-group"><label for="editStudentName">Full Name</label><input type="text" id="editStudentName" required></div>
             <div class="form-group">
                 <label for="editStudentClass">Class</label>
                 <select id="editStudentClass">
-                    <option value="P1">Primary 1</option>
-                    <option value="P2">Primary 2</option>
-                    <option value="P3">Primary 3</option>
-                    <option value="P4">Primary 4</option>
-                    <option value="P5">Primary 5</option>
-                    <option value="P6">Primary 6</option>
-                    <option value="S1">Senior 1</option>
-                    <option value="S2">Senior 2</option>
-                    <option value="S3">Senior 3</option>
+                    <option value="P1">Primary 1</option><option value="P5">Primary 5</option><option value="P6">Primary 6</option><option value="S1">Senior 1</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="editGuardianContact">Guardian Contact</label>
-                <input type="tel" id="editGuardianContact" required>
-            </div>
+            <div class="form-group"><label for="editGuardianContact">Guardian Contact</label><input type="tel" id="editGuardianContact" required></div>
             <div class="form-group">
                 <label for="editStatus">Payment Status</label>
-                <select id="editStatus">
-                    <option value="Paid">Paid</option>
-                    <option value="Pending">Pending</option>
-                </select>
+                <select id="editStatus"><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
             </div>
-            
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" class="btn btn-danger" onclick="closeModal('editModal')">Cancel</button>
                 <button type="submit" class="btn btn-success">Save Changes</button>
@@ -519,47 +521,35 @@
         </form>
     </div>
 
-    <!-- NEW: Borrow Book Modal Popup -->
+    <!-- Borrow Book Modal Popup -->
     <div class="modal" id="borrowModal">
         <form id="borrow-form" onsubmit="submitBorrowForm(event)">
-            <h3 style="margin-bottom: 15px;">Issue/Borrow Library Book Form</h3>
-            
+            <h3 style="margin-bottom: 15px;">Issue Library Book</h3>
+            <div class="form-group"><label for="borrowerSelect">Select Student</label><select id="borrowerSelect" required></select></div>
             <div class="form-group">
-                <label for="borrowerSelect">Select Student</label>
-                <select id="borrowerSelect" required>
-                    <!-- Populated dynamically via JS arrays -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="bookSelect">Select Textbook Title</label>
+                <label for="bookSelect">Textbook Title</label>
                 <select id="bookSelect" required>
                     <option value="Mathematics REB Pupil's Book P5">Mathematics REB Pupil's Book P5</option>
                     <option value="English Skills Secondary S1">English Skills Secondary S1</option>
                     <option value="Science and Technology Primary P6">Science and Technology Primary P6</option>
-                    <option value="History and Citizenship Workbook S2">History and Citizenship Workbook S2</option>
-                    <option value="Geography Exploration Textbook S3">Geography Exploration Textbook S3</option>
                 </select>
             </div>
-
-            <div class="form-group">
-                <label for="borrowDate">Issue Date</label>
-                <input type="date" id="borrowDate" required>
-            </div>
-            
+            <div class="form-group"><label for="borrowDate">Issue Date</label><input type="date" id="borrowDate" required></div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" class="btn btn-danger" onclick="closeModal('borrowModal')">Cancel</button>
-                <button type="submit" class="btn btn-success">Confirm Borrow Transaction</button>
+                <button type="submit" class="btn btn-success">Confirm Transaction</button>
             </div>
         </form>
     </div>
 
-    <!-- JavaScript Control Logic Engine -->
+    <!-- JavaScript Multi-User Environment Engine -->
     <script>
         // System Data Configurations
         let currentSchoolName = "APAPEC-IREBERO";
         let schoolMetrics = { classesCount: 12 };
-        
+        let activePortalRole = "admin"; // Tracks context: 'admin' or 'student'
+        let currentViewStudentId = "REG-001"; // Default student lookup profile focus 
+
         let studentsList = [
             { id: "REG-001", name: "Kelia Mugisha", class: "P5", contact: "+250 788 111 222", status: "Paid" },
             { id: "REG-002", name: "Ethan Manzi", class: "P6", contact: "+250 788 333 444", status: "Pending" },
@@ -571,40 +561,105 @@
             { id: 2, studentId: "REG-002", studentName: "Ethan Manzi", bookTitle: "Science and Technology Primary P6", date: "2026-05-18", status: "Borrowed" }
         ];
 
-        // DYNAMIC PROFILE CONTROLLER: DYNAMIC SCHOOL PROFILE RENAME ENGINE
+        // MULTI-USER ROUTING MANAGER
+        function handlePortalViewChange(selectedRole) {
+            activePortalRole = selectedRole;
+            
+            if (selectedRole === "admin") {
+                document.getElementById('admin-sidebar-menu').style.display = 'block';
+                document.getElementById('student-sidebar-menu').style.display = 'none';
+                switchTab('dashboard');
+            } else {
+                // If switching to Student View, ask which profile to inspect
+                let optionsPrompt = "Select a student profile index to login as:\n";
+                studentsList.forEach((s, idx) => { optionsPrompt += `${idx + 1}. ${s.name} (${s.id})\n`; });
+                
+                let choice = prompt(optionsPrompt, "1");
+                let selectedIndex = parseInt(choice) - 1;
+                
+                if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= studentsList.length) {
+                    alert("Invalid choice. Defaulting to first record profile layout.");
+                    selectedIndex = 0;
+                }
+                
+                currentViewStudentId = studentsList[selectedIndex].id;
+                document.getElementById('admin-sidebar-menu').style.display = 'none';
+                document.getElementById('student-sidebar-menu').style.display = 'block';
+                switchTab('student-home');
+            }
+        }
+
+        // Student Data View Compiler
+        function renderStudentPortalDashboard() {
+            const currentStudent = studentsList.find(s => s.id === currentViewStudentId);
+            if (!currentStudent) return;
+
+            // Render customized header strings
+            document.getElementById('portal-welcome-name').innerText = `Welcome Back, ${currentStudent.name}!`;
+            document.getElementById('portal-student-meta').innerText = `Official Student Portal Account ID Token: ${currentStudent.id} | Guardian Core Contact Contact: ${currentStudent.contact}`;
+            document.getElementById('portal-class-assignment').innerText = `Class ${currentStudent.class}`;
+            
+            // Set up finance status panel values safely
+            const statusEl = document.getElementById('portal-fee-status');
+            statusEl.innerText = currentStudent.status;
+            
+            const cardEl = document.getElementById('student-fee-card');
+            cardEl.className = currentStudent.status === 'Paid' ? 'card success' : 'card danger';
+
+            // Generate customized library list matching logged-in account
+            const booksBody = document.getElementById('portal-books-body');
+            booksBody.innerHTML = '';
+            
+            const records = libraryLedger.filter(item => item.studentId === currentViewStudentId);
+            if (records.length === 0) {
+                booksBody.innerHTML = `<tr><td colspan="3" style="color:#6b7280; text-align:center;">No library books currently issued to your locker file.</td></tr>`;
+            } else {
+                records.forEach(item => {
+                    const badgeClass = item.status === 'Borrowed' ? 'borrowed' : 'returned';
+                    booksBody.innerHTML += `
+                        <tr>
+                            <td><strong>${item.bookTitle}</strong></td>
+                            <td>${item.date}</td>
+                            <td><span class="badge ${badgeClass}">${item.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
         function updateSchoolName() {
             const inputVal = document.getElementById('schoolNameInput').value.trim();
             if(inputVal !== "") {
                 currentSchoolName = inputVal;
                 document.getElementById('sidebar-brand').innerText = currentSchoolName;
-                document.getElementById('window-title').innerText = `${currentSchoolName} | School Management System`;
-                alert(`School identity successfully modified to: "${currentSchoolName}"`);
+                document.getElementById('window-title').innerText = `${currentSchoolName} | System Portal`;
             }
         }
 
-        // Theme Switcher engine
         function changeTheme(themeName) {
-            if (themeName === 'classic') {
-                document.documentElement.removeAttribute('data-theme');
-            } else {
-                document.documentElement.setAttribute('data-theme', themeName);
-            }
+            if (themeName === 'classic') document.documentElement.removeAttribute('data-theme');
+            else document.documentElement.setAttribute('data-theme', themeName);
         }
 
-        // Tab View Routing Matrix
+        // View Tab Routing Core Matrix
         function switchTab(tabId) {
             document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(tabId).classList.add('active');
+            
+            // Highlight currently pressed tab manually if triggered by sidebar click handlers
             if(event && event.target.classList.contains('menu-btn')) {
                 event.target.classList.add('active');
             }
+
+            document.getElementById('page-title').innerText = (tabId === 'student-home') ? "Student Portal Dashboard" : "Administration Space Hub";
 
             if(tabId === 'dashboard') renderDashboardView();
             if(tabId === 'finance') renderFinanceTable();
             if(tabId === 'students') renderStudentsTable();
             if(tabId === 'library') renderLibraryTable();
+            if(tabId === 'student-home') renderStudentPortalDashboard();
             updateDashboardMetrics();
         }
 
@@ -625,18 +680,11 @@
             document.getElementById('dash-books-count').innerText = activeBorrowedCount;
         }
 
-        // Render Functions 
         function renderDashboardView() {
             const tbody = document.getElementById('dash-quick-table');
             tbody.innerHTML = '';
             studentsList.forEach(student => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${student.name}</strong></td>
-                        <td>Grade ${student.class}</td>
-                        <td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Quick Modify</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td><strong>${student.name}</strong></td><td>Grade ${student.class}</td><td><button class="btn btn-primary btn-sm" onclick="openEditModal('${student.id}')">Quick Modify</button></td></tr>`;
             });
         }
 
@@ -644,15 +692,7 @@
             const tbody = document.querySelector('#student-table tbody');
             tbody.innerHTML = '';
             studentsList.forEach(student => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.class}</td>
-                        <td>${student.contact}</td>
-                        <td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Edit</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>${student.id}</td><td>${student.name}</td><td>${student.class}</td><td>${student.contact}</td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Edit</button></td></tr>`;
             });
         }
 
@@ -661,41 +701,20 @@
             tbody.innerHTML = '';
             studentsList.forEach(student => {
                 const badgeClass = student.status === 'Paid' ? 'paid' : 'pending';
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${student.name}</td>
-                        <td>${student.class}</td>
-                        <td>300,000 RWF</td>
-                        <td><span class="badge ${badgeClass}">${student.status}</span></td>
-                        <td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Modify Status</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>${student.name}</td><td>${student.class}</td><td>300,000 RWF</td><td><span class="badge ${badgeClass}">${student.status}</span></td><td><button class="btn btn-primary" onclick="openEditModal('${student.id}')">Modify Status</button></td></tr>`;
             });
         }
 
-        // NEW FEATURE: LIBRARY SYSTEM RENDER ENGINE
         function renderLibraryTable() {
             const tbody = document.getElementById('library-table-body');
             tbody.innerHTML = '';
             libraryLedger.forEach(item => {
                 const badgeClass = item.status === 'Borrowed' ? 'borrowed' : 'returned';
-                const buttonDisplay = item.status === 'Borrowed' 
-                    ? `<button class="btn btn-success btn-sm" onclick="toggleBookReturn(${item.id})">Mark Returned</button>` 
-                    : `<span style="color:#6b7280; font-size:0.85rem;">Transaction Complete</span>`;
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.studentName}</strong></td>
-                        <td>${item.bookTitle}</td>
-                        <td>${item.date}</td>
-                        <td><span class="badge ${badgeClass}">${item.status}</span></td>
-                        <td>${buttonDisplay}</td>
-                    </tr>
-                `;
+                const buttonDisplay = item.status === 'Borrowed' ? `<button class="btn btn-success btn-sm" onclick="toggleBookReturn(${item.id})">Mark Returned</button>` : `<span style="color:#6b7280; font-size:0.85rem;">Closed</span>`;
+                tbody.innerHTML += `<tr><td><strong>${item.studentName}</strong></td><td>${item.bookTitle}</td><td>${item.date}</td><td><span class="badge ${badgeClass}">${item.status}</span></td><td>${buttonDisplay}</td></tr>`;
             });
         }
 
-        // Action: Toggle Borrow Return Matrix Status
         function toggleBookReturn(transactionId) {
             const targetRecord = libraryLedger.find(item => item.id === transactionId);
             if(targetRecord) {
@@ -705,22 +724,14 @@
             }
         }
 
-        // Action: Open Library Assignment Form window modal
         function openBorrowModal() {
             const selectEl = document.getElementById('borrowerSelect');
             selectEl.innerHTML = '';
-            
-            // Generate list matching currently active roster names
-            studentsList.forEach(student => {
-                selectEl.innerHTML += `<option value="${student.id}">${student.name} (${student.class})</option>`;
-            });
-
-            // Set default date picker to today's date placeholder formatting
+            studentsList.forEach(student => { selectEl.innerHTML += `<option value="${student.id}">${student.name}</option>`; });
             document.getElementById('borrowDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('borrowModal').classList.add('active');
         }
 
-        // Action: Process Library checkout form transaction
         function submitBorrowForm(event) {
             event.preventDefault();
             const studentId = document.getElementById('borrowerSelect').value;
@@ -729,19 +740,10 @@
             const borrowDate = document.getElementById('borrowDate').value;
 
             if (targetStudent) {
-                libraryLedger.push({
-                    id: libraryLedger.length + 1,
-                    studentId: targetStudent.id,
-                    studentName: targetStudent.name,
-                    bookTitle: bookTitle,
-                    date: borrowDate,
-                    status: 'Borrowed'
-                });
-
+                libraryLedger.push({ id: libraryLedger.length + 1, studentId: targetStudent.id, studentName: targetStudent.name, bookTitle: bookTitle, date: borrowDate, status: 'Borrowed' });
                 closeModal('borrowModal');
                 renderLibraryTable();
                 updateDashboardMetrics();
-                alert(`Success: "${bookTitle}" checked out to ${targetStudent.name}.`);
             }
         }
 
@@ -758,11 +760,9 @@
             switchTab('dashboard');
         }
 
-        // Modal Management Utilities
         function openEditModal(studentId) {
             const student = studentsList.find(s => s.id === studentId);
             if (!student) return;
-
             document.getElementById('editStudentId').value = student.id;
             document.getElementById('editStudentName').value = student.name;
             document.getElementById('editStudentClass').value = student.class;
@@ -771,9 +771,7 @@
             document.getElementById('editModal').classList.add('active');
         }
 
-        function closeModal(modalId) { 
-            document.getElementById(modalId).classList.remove('active'); 
-        }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
 
         function saveStudentEdit(event) {
             event.preventDefault();
@@ -781,18 +779,13 @@
             const index = studentsList.findIndex(s => s.id === id);
 
             if (index !== -1) {
-                const oldName = studentsList[index].name;
                 const newName = document.getElementById('editStudentName').value;
-                
                 studentsList[index].name = newName;
                 studentsList[index].class = document.getElementById('editStudentClass').value;
                 studentsList[index].contact = document.getElementById('editGuardianContact').value;
                 studentsList[index].status = document.getElementById('editStatus').value;
                 
-                // Keep library records in sync with name changes
-                libraryLedger.forEach(item => {
-                    if(item.studentId === id) item.studentName = newName;
-                });
+                libraryLedger.forEach(item => { if(item.studentId === id) item.studentName = newName; });
                 
                 closeModal('editModal');
                 renderDashboardView();
@@ -802,7 +795,7 @@
             }
         }
 
-        // Structural baseline initiation load code
+        // Initialize Baseline Renders
         renderDashboardView();
         updateDashboardMetrics();
     </script>
