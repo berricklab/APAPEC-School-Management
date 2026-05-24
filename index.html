@@ -575,68 +575,52 @@ main{
 
     <div class="auth-card">
 
-        <div class="auth-header">
-            <h1 id="login-brand-title">
-                School Management System
-            </h1>
-
-            <p>
-                Register your school before creating user accounts
-            </p>
-        </div>
-
-        <!-- ========================================= -->
-        <!-- STEP 1 : SCHOOL REGISTRATION -->
-        <!-- ========================================= -->
-
+        <!-- SCHOOL REGISTRATION -->
         <div id="school-registration-view">
+
+            <div class="auth-header">
+                <h1>Register School</h1>
+                <p>Create school before user account</p>
+            </div>
 
             <form onsubmit="registerSchool(event)">
 
                 <div class="form-group">
                     <label>School Name</label>
-
                     <input
                         type="text"
                         id="schoolRegisterName"
                         class="form-control"
-                        placeholder="Enter school name"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>School Email</label>
-
                     <input
                         type="email"
                         id="schoolRegisterEmail"
                         class="form-control"
-                        placeholder="Enter school email"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>School Phone</label>
-
                     <input
                         type="text"
                         id="schoolRegisterPhone"
                         class="form-control"
-                        placeholder="Enter school phone"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>School Address</label>
-
                     <input
                         type="text"
                         id="schoolRegisterAddress"
                         class="form-control"
-                        placeholder="Enter school address"
                         required
                     >
                 </div>
@@ -650,69 +634,54 @@ main{
 
             </form>
 
-            <br>
-
-            <button
-                class="btn-action"
-                onclick="showLoginView()"
-            >
-                Already Registered? Login
-            </button>
-
         </div>
 
-        <!-- ========================================= -->
-        <!-- STEP 2 : USER REGISTRATION -->
-        <!-- ========================================= -->
-
+        <!-- USER REGISTER -->
         <div id="register-view" style="display:none;">
+
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p id="active-school-label"></p>
+            </div>
 
             <form onsubmit="registerUser(event)">
 
                 <div class="form-group">
                     <label>Full Name</label>
-
                     <input
                         type="text"
                         id="registerFullName"
                         class="form-control"
-                        placeholder="Enter full name"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>Email</label>
-
                     <input
                         type="email"
                         id="registerEmail"
                         class="form-control"
-                        placeholder="Enter email"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>Username</label>
-
                     <input
                         type="text"
                         id="registerUsername"
                         class="form-control"
-                        placeholder="Choose username"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
-
                     <input
                         type="password"
                         id="registerPassword"
                         class="form-control"
-                        placeholder="Create password"
                         required
                     >
                 </div>
@@ -723,7 +692,6 @@ main{
                     <select
                         id="registerRole"
                         class="form-control"
-                        required
                     >
                         <option value="admin">
                             Administrator
@@ -751,31 +719,29 @@ main{
                     type="submit"
                     class="btn-auth"
                 >
-                    Create Permanent Account
+                    Create Account
                 </button>
 
             </form>
 
         </div>
 
-        <!-- ========================================= -->
-        <!-- STEP 3 : LOGIN -->
-        <!-- ========================================= -->
-
+        <!-- LOGIN -->
         <div id="signin-view" style="display:none;">
+
+            <div class="auth-header">
+                <h1>Login</h1>
+            </div>
 
             <form onsubmit="executeSystemLogin(event)">
 
                 <div class="form-group">
-                    <label>
-                        Username or Email
-                    </label>
+                    <label>Username or Email</label>
 
                     <input
                         type="text"
                         id="loginUser"
                         class="form-control"
-                        placeholder="Enter username or email"
                         required
                     >
                 </div>
@@ -787,7 +753,6 @@ main{
                         type="password"
                         id="loginPassword"
                         class="form-control"
-                        placeholder="Enter password"
                         required
                     >
                 </div>
@@ -801,21 +766,11 @@ main{
 
             </form>
 
-            <br>
-
-            <button
-                class="btn-action"
-                onclick="showSchoolRegistration()"
-            >
-                Register New School
-            </button>
-
         </div>
 
     </div>
 
-</div>
-<script>    
+</div><script>    
 /* =========================================
    AUTHENTICATION SYSTEM
 ========================================= */
