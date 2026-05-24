@@ -567,6 +567,7 @@ main{
 
 </style>
 </head>
+<body>   
 <!-- ========================================= -->
 <!-- LOGIN SCREEN -->
 <!-- ========================================= -->
@@ -770,7 +771,91 @@ main{
 
     </div>
 
-</div><script>    
+</div>
+   <!-- ========================================= -->
+<!-- MAIN APPLICATION -->
+<!-- ========================================= -->
+
+<div id="app-container">
+
+    <aside>
+
+        <h2 id="sidebar-school-name">
+            School System
+        </h2>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <button
+                    class="menu-btn active"
+                    onclick="switchTab('dashboard')"
+                >
+                    Dashboard
+                </button>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <header>
+
+        <h2 id="header-school-name">
+            Dashboard
+        </h2>
+
+        <div>
+
+            <span id="header-active-role-badge">
+                User
+            </span>
+
+            <button onclick="logoutSystem()">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <section
+            id="dashboard-section"
+            class="page-section active"
+        >
+
+            <div class="dashboard-grid">
+
+                <div class="stat-card">
+                    <h3>Students</h3>
+                    <p id="students-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Teachers</h3>
+                    <p id="teachers-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Parents</h3>
+                    <p id="parents-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Books</h3>
+                    <p id="books-count">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+<script>    
 /* =========================================
    AUTHENTICATION SYSTEM
 ========================================= */
