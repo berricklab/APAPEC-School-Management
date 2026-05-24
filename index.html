@@ -257,13 +257,7 @@ padding:20px;
 </div>
 
 <div class="form-group">
-<label for="loginRole">Login Role</label>
-<select id="loginRole" class="form-control">
-<option value="admin">Administrator</option>
-<option value="teacher">Teacher</option>
-<option value="student">Student</option>
-<option value="librarian">Librarian</option>
-</select>
+
 </div>
 
 <button type="submit" class="btn-auth">
@@ -929,7 +923,7 @@ alert('Invalid login credentials');
 return;
 }
 
-const selectedRole=matchedUser.role;
+const selectedRole = matchedUser.role;
 currentUserRole=selectedRole;
 
 const permissions=SYSTEM_ACCESS_RIGHTS[selectedRole];
