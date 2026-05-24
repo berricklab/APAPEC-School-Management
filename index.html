@@ -786,14 +786,7 @@ main{
 
         <ul class="sidebar-menu">
 
-            <li>
-                <button
-                    class="menu-btn active"
-                    onclick="switchTab('dashboard')"
-                >
-                    Dashboard
-                </button>
-            </li>
+<li> <button class="menu-btn" onclick="switchTab('dashboard')" > Dashboard </button> </li> <li> <button class="menu-btn" onclick="switchTab('library')" > Library Catalog </button> </li> <li> <button class="menu-btn" onclick="switchTab('fees')" > Fees Management </button> </li> <li> <button class="menu-btn" onclick="switchTab('grades')" > Academic Grade Book </button> </li>
 
         </ul>
 
@@ -821,36 +814,7 @@ main{
 
     <main>
 
-        <section
-            id="dashboard-section"
-            class="page-section active"
-        >
-
-            <div class="dashboard-grid">
-
-                <div class="stat-card">
-                    <h3>Students</h3>
-                    <p id="students-count">0</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Teachers</h3>
-                    <p id="teachers-count">0</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Parents</h3>
-                    <p id="parents-count">0</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Books</h3>
-                    <p id="books-count">0</p>
-                </div>
-
-            </div>
-
-        </section>
+<section id="dashboard-section" class="page-section active" > <div class="dashboard-grid"> <div class="stat-card"> <h3>Books</h3> <p id="books-count">0</p> </div> <div class="stat-card"> <h3>Fees Records</h3> <p id="fees-count">0</p> </div> <div class="stat-card"> <h3>Grades</h3> <p id="grades-count">0</p> </div> </div> </section> <!-- LIBRARY --> <section id="library-section" class="page-section" > <div class="content-panel"> <h2>Library Catalog</h2> <form onsubmit="addBook(event)"> <div class="form-group"> <label>Book Title</label> <input type="text" id="bookTitle" class="form-control" required > </div> <div class="form-group"> <label>Author</label> <input type="text" id="bookAuthor" class="form-control" required > </div> <div class="form-group"> <label>Category</label> <input type="text" id="bookCategory" class="form-control" required > </div> <button type="submit" class="btn-action" > Add Book </button> </form> <table class="table"> <thead> <tr> <th>Title</th> <th>Author</th> <th>Category</th> </tr> </thead> <tbody id="library-table-body"></tbody> </table> </div> </section> <!-- FEES --> <section id="fees-section" class="page-section" > <div class="content-panel"> <h2>Fees Management</h2> <form onsubmit="addFee(event)"> <div class="form-group"> <label>Student Name</label> <input type="text" id="feeStudent" class="form-control" required > </div> <div class="form-group"> <label>Amount</label> <input type="number" id="feeAmount" class="form-control" required > </div> <div class="form-group"> <label>Status</label> <select id="feeStatus" class="form-control" > <option value="Paid"> Paid </option> <option value="Pending"> Pending </option> </select> </div> <button type="submit" class="btn-action" > Save Fee </button> </form> <table class="table"> <thead> <tr> <th>Student</th> <th>Amount</th> <th>Status</th> </tr> </thead> <tbody id="fees-table-body"></tbody> </table> </div> </section> <!-- GRADES --> <section id="grades-section" class="page-section" > <div class="content-panel"> <h2>Academic Grade Book</h2> <form onsubmit="addGrade(event)"> <div class="form-group"> <label>Student Name</label> <input type="text" id="gradeStudent" class="form-control" required > </div> <div class="form-group"> <label>Subject</label> <input type="text" id="gradeSubject" class="form-control" required > </div> <div class="form-group"> <label>Marks</label> <input type="number" id="gradeMarks" class="form-control" required > </div> <button type="submit" class="btn-action" > Save Grade </button> </form> <table class="table"> <thead> <tr> <th>Student</th> <th>Subject</th> <th>Marks</th> <th>Grade</th> </tr> </thead> <tbody id="grades-table-body"></tbody> </table> </div> </section>
 
     </main>
 
