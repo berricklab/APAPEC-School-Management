@@ -777,6 +777,113 @@ main{
 
 const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
 const USERS_KEY = "sms_users";
+   const ACTIVE_SCHOOL_KEY = "sms_active_school";
+
+let currentSchoolName =
+    localStorage.getItem(
+        ACTIVE_SCHOOL_KEY
+    ) || "";
+
+function createEmptySchoolDatabase(schoolName){
+
+    return{
+        schoolName,
+
+        students:[],
+        teachers:[],
+        parents:[],
+        librarians:[],
+        admins:[],
+        books:[],
+        announcements:[],
+        attendance:[],
+        marks:[],
+
+        createdAt:
+            new Date().toISOString()
+    };
+}
+
+function getSchoolIndex(){
+
+    return JSON.parse(
+        localStorage.getItem(
+            "sms_school_index"
+        )
+    ) || {};
+}
+
+function saveSchoolIndex(index){
+
+    localStorage.setItem(
+        "sms_school_index",
+        JSON.stringify(index)
+    );
+}
+
+function loadSchoolData(schoolName){
+
+    const schools =
+        getSchoolIndex();
+
+    if(!schools[schoolName]){
+
+        schools[schoolName] =
+            createEmptySchoolDatabase(
+                schoolName
+            );
+
+        saveSchoolIndex(schools);
+    }
+
+    return schools[schoolName];
+}
+
+function saveSchoolData(
+    schoolName,
+    data
+){
+
+    const schools =
+        getSchoolIndex();
+
+    schools[schoolName] = data;
+
+    saveSchoolIndex(schools);
+}
+
+function executeGlobalSchoolRebrand(
+    schoolName
+){
+
+    document.title =
+        schoolName +
+        " | School Management System";
+
+    const title =
+        document.getElementById(
+            "window-title"
+        );
+
+    if(title){
+        title.textContent =
+            schoolName +
+            " | School Management System";
+    }
+
+    const schoolLabel =
+        document.getElementById(
+            "active-school-label"
+        );
+
+    if(schoolLabel){
+
+        schoolLabel.innerHTML =
+            "Registering for <b>" +
+            schoolName +
+            "</b>";
+    }
+}
 
 /* =========================================
    REGISTER SCHOOL
