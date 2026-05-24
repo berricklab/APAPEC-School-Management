@@ -829,52 +829,24 @@ const USERS_KEY = "sms_users";
 
 function registerSchool(event){
 
-    event.preventDefault();
+    /* GO TO USER REGISTRATION PAGE */
 
-    const schoolName =
-        document.getElementById(
-            "schoolRegisterName"
-        ).value.trim();
+document.getElementById(
+    "school-registration-view"
+).style.display = "none";
 
-    const schoolEmail =
-        document.getElementById(
-            "schoolRegisterEmail"
-        ).value.trim();
+document.getElementById(
+    "signin-view"
+).style.display = "none";
 
-    const schoolPhone =
-        document.getElementById(
-            "schoolRegisterPhone"
-        ).value.trim();
+document.getElementById(
+    "register-view"
+).style.display = "block";
 
-    const schoolAddress =
-        document.getElementById(
-            "schoolRegisterAddress"
-        ).value.trim();
-
-    if(
-        !schoolName ||
-        !schoolEmail ||
-        !schoolPhone ||
-        !schoolAddress
-    ){
-        alert("Fill all school fields");
-        return;
-    }
-
-    let schools =
-        JSON.parse(
-            localStorage.getItem(
-                "sms_registered_schools"
-            )
-        ) || [];
-
-    const existingSchool =
-        schools.find(
-            school =>
-                school.schoolName.toLowerCase()
-                === schoolName.toLowerCase()
-        );
-
+document.getElementById(
+    "active-school-label"
+).textContent =
+    "School: " + currentSchoolName;
     /* RESTORE EXISTING SCHOOL */
     if(existingSchool){
 
