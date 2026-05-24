@@ -241,6 +241,9 @@ padding:20px;
 </div>
 
 <div id="signin-view">
+<div style="margin-bottom:15px;text-align:right;">
+<button class="btn-action" type="button" onclick="toggleRegisterView()">Register Account</button>
+</div>
 <form onsubmit="executeSystemLogin(event)">
 
 <div class="form-group">
@@ -266,6 +269,49 @@ padding:20px;
 <button type="submit" class="btn-auth">
 Login
 </button>
+</form>
+</div>
+
+<div id="register-view" style="display:none;">
+<form onsubmit="registerUser(event)">
+
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="registerFullName" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="registerEmail" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Username</label>
+<input type="text" id="registerUsername" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="registerPassword" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Role</label>
+<select id="registerRole" class="form-control">
+<option value="admin">Administrator</option>
+<option value="teacher">Teacher</option>
+<option value="student">Student</option>
+<option value="librarian">Librarian</option>
+<option value="parent">Parent</option>
+</select>
+</div>
+
+<button type="submit" class="btn-auth">Create Permanent Account</button>
+
+<div style="margin-top:15px;text-align:center;">
+<a href="#" onclick="toggleLoginView()">Already have an account?</a>
+</div>
+
 </form>
 </div>
 </div>
@@ -818,11 +864,72 @@ localStorage.setItem('students',JSON.stringify(students));
 alert('Student deleted successfully');
 }
 
+function toggleRegisterView(){
+document.getElementById('signin-view').style.display='none';
+document.getElementById('register-view').style.display='block';
+}
+
+function toggleLoginView(){
+document.getElementById('signin-view').style.display='block';
+document.getElementById('register-view').style.display='none';
+}
+
+function registerUser(event){
+
+event.preventDefault();
+
+const fullName=document.getElementById('registerFullName').value;
+const email=document.getElementById('registerEmail').value;
+const username=document.getElementById('registerUsername').value;
+const password=document.getElementById('registerPassword').value;
+const role=document.getElementById('registerRole').value;
+
+let users=JSON.parse(localStorage.getItem('sms_users'))||[];
+
+const existingUser=users.find(user=>
+user.username===username || user.email===email
+);
+
+if(existingUser){
+alert('Account already exists');
+return;
+}
+
+users.push({
+fullName,
+email,
+username,
+password,
+role
+});
+
+localStorage.setItem('sms_users',JSON.stringify(users));
+
+alert('Permanent account created successfully');
+
+toggleLoginView();
+}
+
 function executeSystemLogin(event){
 
 event.preventDefault();
 
-const selectedRole=document.getElementById('loginRole').value;
+const username=document.querySelector('#signin-view input[type="text"]').value;
+const password=document.querySelector('#signin-view input[type="password"]').value;
+
+const users=JSON.parse(localStorage.getItem('sms_users'))||[];
+
+const matchedUser=users.find(user=>
+(user.username===username || user.email===username)
+&& user.password===password
+);
+
+if(!matchedUser){
+alert('Invalid login credentials');
+return;
+}
+
+const selectedRole=matchedUser.role;
 currentUserRole=selectedRole;
 
 const permissions=SYSTEM_ACCESS_RIGHTS[selectedRole];
