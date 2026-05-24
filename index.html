@@ -782,34 +782,38 @@ const USERS_KEY = "sms_users";
    REGISTER SCHOOL
 ========================================= */
 
-function registerSchool(event) {
+function registerSchool(event){
 
     event.preventDefault();
 
-    const schoolName = document
-        .getElementById("schoolRegisterName")
-        .value
-        .trim();
+    const schoolName =
+        document.getElementById(
+            "schoolRegisterName"
+        ).value.trim();
 
-    const schoolEmail = document
-        .getElementById("schoolRegisterEmail")
-        .value
-        .trim();
+    const schoolEmail =
+        document.getElementById(
+            "schoolRegisterEmail"
+        ).value.trim();
 
-    const schoolPhone = document
-        .getElementById("schoolRegisterPhone")
-        .value
-        .trim();
+    const schoolPhone =
+        document.getElementById(
+            "schoolRegisterPhone"
+        ).value.trim();
 
-    const schoolAddress = document
-        .getElementById("schoolRegisterAddress")
-        .value
-        .trim();
+    const schoolAddress =
+        document.getElementById(
+            "schoolRegisterAddress"
+        ).value.trim();
 
-    if (!schoolName) {
-        alert("Please enter school name");
+    if(!schoolName){
+        alert("Enter school name");
         return;
     }
+
+    /* =========================
+       LOAD REGISTERED SCHOOLS
+    ========================= */
 
     let schools =
         JSON.parse(
@@ -818,41 +822,43 @@ function registerSchool(event) {
             )
         ) || [];
 
-    const existingSchool = schools.find(
-        school =>
-            school.schoolName.toLowerCase() ===
-            schoolName.toLowerCase()
-    );
+    /* =========================
+       CHECK EXISTING SCHOOL
+    ========================= */
 
-    /* =====================================
-       RESTORE EXISTING SCHOOL
-    ===================================== */
-    if (existingSchool) {
-
-        localStorage.setItem(
-            ACTIVE_SCHOOL_KEY,
-            existingSchool.schoolName
+    const existingSchool =
+        schools.find(
+            school =>
+                school.schoolName.toLowerCase()
+                ===
+                schoolName.toLowerCase()
         );
+
+    /* =========================
+       RESTORE OLD SCHOOL
+    ========================= */
+
+    if(existingSchool){
 
         currentSchoolName =
             existingSchool.schoolName;
 
-        window.currentSchoolDatabase =
-            loadSchoolData(currentSchoolName);
-
-        executeGlobalSchoolRebrand(
+        localStorage.setItem(
+            ACTIVE_SCHOOL_KEY,
             currentSchoolName
         );
 
-        alert(
-            "School restored successfully"
-        );
+        window.currentSchoolDatabase =
+            loadSchoolData(
+                currentSchoolName
+            );
 
-    } else {
+    }else{
 
-        /* =====================================
+        /* =========================
            CREATE NEW SCHOOL
-        ===================================== */
+        ========================= */
+
         const schoolPayload = {
             schoolName,
             schoolEmail,
@@ -862,50 +868,53 @@ function registerSchool(event) {
                 new Date().toISOString()
         };
 
-        schools.push(schoolPayload);
+        schools.push(
+            schoolPayload
+        );
 
         localStorage.setItem(
             SCHOOL_REGISTRY_KEY,
             JSON.stringify(schools)
         );
 
+        currentSchoolName =
+            schoolName;
+
         localStorage.setItem(
             ACTIVE_SCHOOL_KEY,
-            schoolName
+            currentSchoolName
         );
 
-        currentSchoolName = schoolName;
-
-        window.currentSchoolDatabase =
+        const newDatabase =
             createEmptySchoolDatabase(
-                schoolName
+                currentSchoolName
             );
 
         saveSchoolData(
-            schoolName,
-            window.currentSchoolDatabase
+            currentSchoolName,
+            newDatabase
         );
 
-        executeGlobalSchoolRebrand(
-            schoolName
-        );
-
-        alert(
-            "School registered successfully"
-        );
+        window.currentSchoolDatabase =
+            newDatabase;
     }
 
-    /* =====================================
-       DIRECTLY OPEN USER REGISTRATION
-    ===================================== */
+    /* =========================
+       UPDATE SYSTEM BRANDING
+    ========================= */
+
+    executeGlobalSchoolRebrand(
+        currentSchoolName
+    );
+
+    /* =========================
+       DIRECTLY OPEN
+       USER REGISTER PAGE
+    ========================= */
 
     document.getElementById(
         "school-registration-view"
     ).style.display = "none";
-
-    document.getElementById(
-        "login-screen"
-    ).style.display = "flex";
 
     document.getElementById(
         "signin-view"
@@ -915,93 +924,30 @@ function registerSchool(event) {
         "register-view"
     ).style.display = "block";
 
-    /* =====================================
-       CLEAR REGISTER FORM
-    ===================================== */
+    /* =========================
+       SHOW LOGIN SCREEN
+    ========================= */
 
     document.getElementById(
-        "registerFullName"
-    ).value = "";
+        "login-screen"
+    ).style.display = "flex";
 
-    document.getElementById(
-        "registerEmail"
-    ).value = "";
-
-    document.getElementById(
-        "registerUsername"
-    ).value = "";
-
-    document.getElementById(
-        "registerPassword"
-    ).value = "";
-
-    /* =====================================
+    /* =========================
        AUTO FOCUS
-    ===================================== */
+    ========================= */
 
-    document.getElementById(
-        "registerFullName"
-    ).focus();
+    setTimeout(()=>{
+
+        document.getElementById(
+            "registerFullName"
+        ).focus();
+
+    },200);
+
+    alert(
+        "School registered successfully.\nNow create your account."
+    );
 }
-   else{
-
-        const schoolPayload = {
-            schoolName,
-            schoolEmail,
-            schoolPhone,
-            schoolAddress,
-            createdAt:
-                new Date().toISOString()
-        };
-
-        schools.push(schoolPayload);
-
-        localStorage.setItem(
-            SCHOOL_REGISTRY_KEY,
-            JSON.stringify(schools)
-        );
-
-        localStorage.setItem(
-            ACTIVE_SCHOOL_KEY,
-            schoolName
-        );
-
-        currentSchoolName = schoolName;
-
-        window.currentSchoolDatabase =
-            createEmptySchoolDatabase(
-                schoolName
-            );
-
-        saveSchoolData(
-            schoolName,
-            window.currentSchoolDatabase
-        );
-
-        executeGlobalSchoolRebrand(
-            schoolName
-        );
-
-        alert(
-            "School registered successfully."
-        );
-    }
-
-    /* NEXT STEP */
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-
-    document.getElementById(
-        "active-school-label"
-    ).textContent =
-        "School: " + currentSchoolName;
-}
-
 /* =========================================
    REGISTER USER
 ========================================= */
