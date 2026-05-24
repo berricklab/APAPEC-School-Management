@@ -851,15 +851,20 @@ function registerSchool(event){
             "schoolRegisterAddress"
         ).value.trim();
 
-    if(!schoolName){
-        alert("School name required");
+    if(
+        !schoolName ||
+        !schoolEmail ||
+        !schoolPhone ||
+        !schoolAddress
+    ){
+        alert("Fill all school fields");
         return;
     }
 
     let schools =
         JSON.parse(
             localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
+                "sms_registered_schools"
             )
         ) || [];
 
@@ -870,7 +875,92 @@ function registerSchool(event){
                 === schoolName.toLowerCase()
         );
 
-    /* RESTORE SCHOOL */
+    /* RESTORE EXISTING SCHOOL */
+    if(existingSchool){
+
+        currentSchoolName =
+            existingSchool.schoolName;
+
+        localStorage.setItem(
+            "sms_active_school",
+            currentSchoolName
+        );
+
+        window.currentSchoolDatabase =
+            loadSchoolData(
+                currentSchoolName
+            );
+
+        executeGlobalSchoolRebrand(
+            currentSchoolName
+        );
+
+        alert(
+            "School restored successfully"
+        );
+
+    }else{
+
+        const schoolPayload = {
+
+            schoolName,
+            schoolEmail,
+            schoolPhone,
+            schoolAddress,
+
+            createdAt:
+                new Date().toISOString()
+        };
+
+        schools.push(schoolPayload);
+
+        localStorage.setItem(
+            "sms_registered_schools",
+            JSON.stringify(schools)
+        );
+
+        currentSchoolName = schoolName;
+
+        localStorage.setItem(
+            "sms_active_school",
+            currentSchoolName
+        );
+
+        window.currentSchoolDatabase =
+            createEmptySchoolDatabase(
+                currentSchoolName
+            );
+
+        saveSchoolData(
+            currentSchoolName,
+            window.currentSchoolDatabase
+        );
+
+        executeGlobalSchoolRebrand(
+            currentSchoolName
+        );
+
+        alert(
+            "School registered successfully"
+        );
+    }
+
+    /* GO TO ACCOUNT REGISTRATION */
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
+
+    document.getElementById(
+        "active-school-label"
+    ).textContent =
+        "School: " + currentSchoolName;
+}
+   
+   /* RESTORE SCHOOL */
     if(existingSchool){
 
         localStorage.setItem(
