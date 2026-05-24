@@ -279,6 +279,10 @@ Login
 </div>
 
 <ul class="sidebar-menu" id="admin-sidebar-menu">
+<li><button class="menu-btn" onclick="switchTab('student-portal')">Student Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('teacher-portal')">Teacher Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('librarian-portal')">Librarian Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('parent-portal')">Parent Portal</button></li>
 <li>
 <button class="menu-btn active" onclick="switchTab('dashboard')">
 Dashboard
@@ -396,12 +400,12 @@ Logout
 
 <section id="library-catalog" class="page-section">
 <div class="content-panel">
-<h3>Library Catalog</h3>
+<h3>Library Summary</h3>
 
 <div class="dashboard-grid">
 <div class="stat-card">
 <h3>Total Books</h3>
-<p>4,821</p>
+<p id="total-books-count">4,821</p>
 </div>
 
 <div class="stat-card">
@@ -419,30 +423,60 @@ Logout
 <p>32</p>
 </div>
 </div>
+</div>
 
 <div class="content-panel">
-<h3>Library Assets Detailed Information</h3>
+<h3>Add New Book</h3>
+
+<div class="admin-controls-grid">
+<div>
+<div class="form-group">
+<label>Book ID</label>
+<input type="text" id="bookId" class="form-control" placeholder="BK003">
+</div>
+
+<div class="form-group">
+<label>Book Title</label>
+<input type="text" id="bookTitle" class="form-control" placeholder="Book Title">
+</div>
+
+<div class="form-group">
+<label>Author</label>
+<input type="text" id="bookAuthor" class="form-control" placeholder="Author Name">
+</div>
+
+<div class="form-group">
+<label>Category</label>
+<input type="text" id="bookCategory" class="form-control" placeholder="Science">
+</div>
+
+<button class="btn-action" onclick="addBook()">
+Add Book
+</button>
+</div>
+</div>
+</div>
+
+<div class="content-panel">
+<h3>All Library Books</h3>
+
 <table style="width:100%;border-collapse:collapse;">
 <thead>
 <tr style="background:var(--primary-color);color:white;">
 <th style="padding:12px;border:1px solid #ddd;">Book ID</th>
-<th style="padding:12px;border:1px solid #ddd;">Book Title</th>
+<th style="padding:12px;border:1px solid #ddd;">Title</th>
 <th style="padding:12px;border:1px solid #ddd;">Author</th>
 <th style="padding:12px;border:1px solid #ddd;">Category</th>
 <th style="padding:12px;border:1px solid #ddd;">Status</th>
-<th style="padding:12px;border:1px solid #ddd;">Borrower</th>
-<th style="padding:12px;border:1px solid #ddd;">Return Date</th>
 </tr>
 </thead>
-<tbody>
+<tbody id="libraryBooksTable">
 <tr>
 <td style="padding:10px;border:1px solid #ddd;">BK001</td>
 <td style="padding:10px;border:1px solid #ddd;">Advanced Mathematics</td>
 <td style="padding:10px;border:1px solid #ddd;">J. Smith</td>
 <td style="padding:10px;border:1px solid #ddd;">Education</td>
 <td style="padding:10px;border:1px solid #ddd;">Borrowed</td>
-<td style="padding:10px;border:1px solid #ddd;">Bruce Ganza</td>
-<td style="padding:10px;border:1px solid #ddd;">12/06/2026</td>
 </tr>
 
 <tr>
@@ -451,12 +485,9 @@ Logout
 <td style="padding:10px;border:1px solid #ddd;">A. Brown</td>
 <td style="padding:10px;border:1px solid #ddd;">Science</td>
 <td style="padding:10px;border:1px solid #ddd;">Available</td>
-<td style="padding:10px;border:1px solid #ddd;">-</td>
-<td style="padding:10px;border:1px solid #ddd;">-</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </section>
 
@@ -488,7 +519,57 @@ Change School
 </div>
 </section>
 
-</main>
+<section id="student-portal" class="page-section">
+<div class="content-panel">
+<h3>Student Portal</h3>
+<p>Students can view grades, attendance, assignments, exam schedules, fees balance, and announcements.</p>
+
+<div class="dashboard-grid">
+<div class="stat-card">
+<h3>Attendance</h3>
+<p>96%</p>
+</div>
+
+<div class="stat-card accented">
+<h3>Assignments</h3>
+<p>12 Pending</p>
+</div>
+
+<div class="stat-card dangerously-set">
+<h3>Fees Balance</h3>
+<p>45,000 RWF</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="teacher-portal" class="page-section">
+<div class="content-panel">
+<h3>Teacher Portal</h3>
+<p>Teachers can manage marks, attendance, lesson plans, exams, and classroom reports.</p>
+
+<table style="width:100%;border-collapse:collapse;">
+<thead>
+<tr style="background:var(--primary-color);color:white;">
+<th style="padding:12px;border:1px solid #ddd;">Class</th>
+<th style="padding:12px;border:1px solid #ddd;">Students</th>
+<th style="padding:12px;border:1px solid #ddd;">Subject</th>
+<th style="padding:12px;border:1px solid #ddd;">Attendance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding:10px;border:1px solid #ddd;">S3A</td>
+<td style="padding:10px;border:1px solid #ddd;">42</td>
+<td style="padding:10px;border:1px solid #ddd;">Mathematics</td>
+<td style="padding:10px;border:1px solid #ddd;">94%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="
 </div>
 
 <script>
@@ -732,6 +813,38 @@ Settings
 }
 
 switchTab('dashboard');
+}
+
+function addBook(){
+
+const id=document.getElementById('bookId').value;
+const title=document.getElementById('bookTitle').value;
+const author=document.getElementById('bookAuthor').value;
+const category=document.getElementById('bookCategory').value;
+
+if(!id || !title || !author || !category){
+alert('Please fill all fields');
+return;
+}
+
+const table=document.getElementById('libraryBooksTable');
+
+const row=document.createElement('tr');
+
+row.innerHTML=`
+<td style="padding:10px;border:1px solid #ddd;">${id}</td>
+<td style="padding:10px;border:1px solid #ddd;">${title}</td>
+<td style="padding:10px;border:1px solid #ddd;">${author}</td>
+<td style="padding:10px;border:1px solid #ddd;">${category}</td>
+<td style="padding:10px;border:1px solid #ddd;">Available</td>`;
+
+table.appendChild(row);
+
+alert('Book added successfully');
+
+const total=document.getElementById('total-books-count');
+total.textContent=parseInt(total.textContent)+1;
+
 }
 
 function executeLogout(){
