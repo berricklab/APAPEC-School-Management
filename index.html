@@ -1318,6 +1318,109 @@ function executeSystemLogin(event){
 
     refreshEntireSystemUI();
 }
+   /* =========================================
+   SWITCH TAB
+========================================= */
+
+function switchTab(tab){
+
+    document
+        .querySelectorAll(".page-section")
+        .forEach(section=>{
+
+            section.classList.remove("active");
+
+        });
+
+    if(tab === "dashboard"){
+
+        document
+            .getElementById(
+                "dashboard-section"
+            )
+            .classList.add("active");
+    }
+}
+
+/* =========================================
+   REFRESH UI
+========================================= */
+
+function refreshEntireSystemUI(){
+
+    if(!window.currentSchoolDatabase){
+        return;
+    }
+
+    document.getElementById(
+        "students-count"
+    ).textContent =
+        window.currentSchoolDatabase.students.length;
+
+    document.getElementById(
+        "teachers-count"
+    ).textContent =
+        window.currentSchoolDatabase.teachers.length;
+
+    document.getElementById(
+        "parents-count"
+    ).textContent =
+        window.currentSchoolDatabase.parents.length;
+
+    document.getElementById(
+        "books-count"
+    ).textContent =
+        window.currentSchoolDatabase.books.length;
+
+    const sidebarTitle =
+        document.getElementById(
+            "sidebar-school-name"
+        );
+
+    if(sidebarTitle){
+
+        sidebarTitle.textContent =
+            currentSchoolName;
+    }
+
+    const headerTitle =
+        document.getElementById(
+            "header-school-name"
+        );
+
+    if(headerTitle){
+
+        headerTitle.textContent =
+            currentSchoolName;
+    }
+}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logoutSystem(){
+
+    document.getElementById(
+        "app-container"
+    ).style.display = "none";
+
+    document.getElementById(
+        "login-screen"
+    ).style.display = "flex";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+}
     </script>
 </body>
 </html>
