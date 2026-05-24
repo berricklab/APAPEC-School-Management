@@ -1059,6 +1059,280 @@ document.getElementById('login-screen').style.display='flex';
 document.getElementById('app-container').style.display='none';
 }
 </script>
+  <script>
+
+/**
+ * =========================================================
+ * ADVANCED SCHOOL DATA RESET + RESTORE ENGINE
+ * =========================================================
+ */
+
+/* ---------- GLOBAL STORAGE KEYS ---------- */
+const SCHOOL_INDEX_KEY = "sms_school_index";
+const ACTIVE_SCHOOL_KEY = "sms_active_school";
+
+/* ---------- INITIALIZE ACTIVE SCHOOL ---------- */
+let currentSchoolName =
+    localStorage.getItem(ACTIVE_SCHOOL_KEY) ||
+    "APAPEC-IREBERO";
+
+/* ---------- CREATE SCHOOL DATABASE ---------- */
+function createEmptySchoolDatabase(schoolName) {
+    return {
+        schoolName,
+
+        students: [],
+        teachers: [],
+        librarians: [],
+        parents: [],
+        admins: [],
+
+        books: [],
+        fines: [],
+        attendance: [],
+        marks: [],
+        classes: [],
+        announcements: [],
+
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+}
+
+/* ---------- GET COMPLETE SCHOOL INDEX ---------- */
+function getSchoolIndex() {
+    return JSON.parse(
+        localStorage.getItem(SCHOOL_INDEX_KEY)
+    ) || {};
+}
+
+/* ---------- SAVE COMPLETE SCHOOL INDEX ---------- */
+function saveSchoolIndex(index) {
+    localStorage.setItem(
+        SCHOOL_INDEX_KEY,
+        JSON.stringify(index)
+    );
+}
+
+/* ---------- LOAD SCHOOL DATA ---------- */
+function loadSchoolData(schoolName) {
+
+    const schoolIndex = getSchoolIndex();
+
+    if (!schoolIndex[schoolName]) {
+
+        schoolIndex[schoolName] =
+            createEmptySchoolDatabase(schoolName);
+
+        saveSchoolIndex(schoolIndex);
+    }
+
+    return schoolIndex[schoolName];
+}
+
+/* ---------- SAVE SCHOOL DATA ---------- */
+function saveSchoolData(schoolName, data) {
+
+    const schoolIndex = getSchoolIndex();
+
+    schoolIndex[schoolName] = {
+        ...data,
+        updatedAt: new Date().toISOString()
+    };
+
+    saveSchoolIndex(schoolIndex);
+}
+
+/* ---------- RESET CURRENT ACTIVE DATA ---------- */
+function resetCurrentSchoolData() {
+
+    const emptyData =
+        createEmptySchoolDatabase(currentSchoolName);
+
+    saveSchoolData(currentSchoolName, emptyData);
+}
+
+/* ---------- CHANGE SCHOOL NAME ENGINE ---------- */
+function executeGlobalSchoolRebrand(targetedSchoolName) {
+
+    if (
+        !targetedSchoolName ||
+        targetedSchoolName.trim() === ""
+    ) {
+        alert("School name cannot be empty.");
+        return;
+    }
+
+    targetedSchoolName = targetedSchoolName.trim();
+
+    const previousSchool = currentSchoolName;
+
+    /* SAVE OLD SCHOOL DATA BEFORE SWITCH */
+    const currentData =
+        window.currentSchoolDatabase ||
+        createEmptySchoolDatabase(previousSchool);
+
+    saveSchoolData(previousSchool, currentData);
+
+    /* SWITCH ACTIVE SCHOOL */
+    currentSchoolName = targetedSchoolName;
+
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
+
+    /* LOAD OR RESTORE SCHOOL DATA */
+    const restoredData =
+        loadSchoolData(currentSchoolName);
+
+    window.currentSchoolDatabase = restoredData;
+
+    /* UPDATE TITLE */
+    document.title =
+        `${currentSchoolName} | School Management System & Library`;
+
+    /* UPDATE DOM */
+    const brandingTargets = [
+        "window-title",
+        "login-brand-title",
+        "sidebar-brand"
+    ];
+
+    brandingTargets.forEach(id => {
+        const element = document.getElementById(id);
+
+        if (element) {
+            element.textContent = currentSchoolName;
+        }
+    });
+
+    /* UPDATE INPUT */
+    const schoolInput =
+        document.getElementById("schoolNameInput");
+
+    if (schoolInput) {
+        schoolInput.value = currentSchoolName;
+    }
+
+    /* SUCCESS MESSAGE */
+    alert(
+        `School switched successfully.\n\n` +
+        `Previous school archived.\n` +
+        `Data for "${currentSchoolName}" restored automatically.`
+    );
+
+    /* OPTIONAL UI REFRESH */
+    refreshEntireSystemUI();
+}
+
+/* ---------- DELETE SCHOOL ---------- */
+function deleteSchoolData(schoolName) {
+
+    const schoolIndex = getSchoolIndex();
+
+    if (schoolIndex[schoolName]) {
+
+        /* MOVE TO RECYCLE BIN */
+        schoolIndex["_deleted_" + schoolName] =
+            schoolIndex[schoolName];
+
+        delete schoolIndex[schoolName];
+
+        saveSchoolIndex(schoolIndex);
+
+        alert(
+            `"${schoolName}" removed successfully.\n` +
+            `Data archived for future restoration.`
+        );
+    }
+}
+
+/* ---------- RESTORE DELETED SCHOOL ---------- */
+function restoreDeletedSchool(schoolName) {
+
+    const schoolIndex = getSchoolIndex();
+
+    const deletedKey =
+        "_deleted_" + schoolName;
+
+    if (schoolIndex[deletedKey]) {
+
+        schoolIndex[schoolName] =
+            schoolIndex[deletedKey];
+
+        delete schoolIndex[deletedKey];
+
+        saveSchoolIndex(schoolIndex);
+
+        alert(
+            `"${schoolName}" restored successfully.`
+        );
+    }
+}
+
+/* ---------- FULL SYSTEM UI REFRESH ---------- */
+function refreshEntireSystemUI() {
+
+    console.clear();
+
+    console.log(
+        "School Loaded:",
+        currentSchoolName
+    );
+
+    console.log(
+        window.currentSchoolDatabase
+    );
+
+    updateDashboardStatistics?.();
+    renderStudentsTable?.();
+    renderTeachersTable?.();
+    renderBooksTable?.();
+    renderParentsTable?.();
+    renderAnnouncements?.();
+}
+
+/* ---------- UPDATE SCHOOL NAME ---------- */
+function updateSchoolName() {
+
+    const selectorInput =
+        document.getElementById("schoolNameInput");
+
+    if (
+        selectorInput &&
+        selectorInput.value.trim() !== ""
+    ) {
+        executeGlobalSchoolRebrand(
+            selectorInput.value
+        );
+    } else {
+        alert(
+            "School name cannot be empty."
+        );
+    }
+}
+
+/* ---------- AUTO INITIALIZATION ---------- */
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        currentSchoolName =
+            localStorage.getItem(
+                ACTIVE_SCHOOL_KEY
+            ) || "APAPEC-IREBERO";
+
+        window.currentSchoolDatabase =
+            loadSchoolData(currentSchoolName);
+
+        executeGlobalSchoolRebrand(
+            currentSchoolName
+        );
+    }
+);
+
+</script>
 
 </body>
 </html>
