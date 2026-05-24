@@ -632,6 +632,21 @@ main{
                 >
                     Register School
                 </button>
+               <button
+    type="button"
+    class="btn-auth"
+    onclick="openExistingSchoolRegistration()"
+    style="
+        margin-top:15px;
+        background:linear-gradient(
+            135deg,
+            #10b981,
+            #059669
+        );
+    "
+>
+    Already Registered School?
+</button>
 
             </form>
 
@@ -1281,6 +1296,98 @@ function executeSystemLogin(event){
     switchTab("dashboard");
 
     refreshEntireSystemUI();
+}
+   /* =========================================
+   OPEN USER REGISTRATION
+   FOR EXISTING SCHOOL
+========================================= */
+
+function openExistingSchoolRegistration(){
+
+    let schools =
+        JSON.parse(
+            localStorage.getItem(
+                SCHOOL_REGISTRY_KEY
+            )
+        ) || [];
+
+    if(schools.length === 0){
+
+        alert(
+            "No registered schools found."
+        );
+
+        return;
+    }
+
+    const schoolNames =
+        schools.map(
+            school => school.schoolName
+        ).join("\n");
+
+    const selectedSchool =
+        prompt(
+            "Enter your registered school name:\n\n" +
+            schoolNames
+        );
+
+    if(!selectedSchool){
+        return;
+    }
+
+    const matchedSchool =
+        schools.find(
+            school =>
+                school.schoolName.toLowerCase()
+                ===
+                selectedSchool.toLowerCase()
+        );
+
+    if(!matchedSchool){
+
+        alert(
+            "School not found."
+        );
+
+        return;
+    }
+
+    currentSchoolName =
+        matchedSchool.schoolName;
+
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
+
+    window.currentSchoolDatabase =
+        loadSchoolData(
+            currentSchoolName
+        );
+
+    executeGlobalSchoolRebrand(
+        currentSchoolName
+    );
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
+
+    setTimeout(()=>{
+
+        document.getElementById(
+            "registerFullName"
+        ).focus();
+
+    },200);
 }
    /* =========================================
    SWITCH TAB
