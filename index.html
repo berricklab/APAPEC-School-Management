@@ -1,1112 +1,154 @@
-# Full Combined HTML School Management System
+# Full Combined School Management System HTML
+
+Replace your existing authentication and script sections with the following integrated version.
 
 ```html
-<!DOCTYPE html>
-<html lang="en" data-theme="classic">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="window-title">APAPEC-IREBERO | School Management System</title>
+<!-- SCHOOL REGISTRATION VIEW -->
+<div id="school-registration-view" style="display:none;">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Register Your School</h1>
+            <p>Create your school before creating accounts</p>
+        </div>
 
-<style>
-:root{
---primary-color:#1e3a8a;
---secondary-color:#3b82f6;
---accent-color:#10b981;
---danger-color:#ef4444;
---bg-color:#f3f4f6;
---surface-color:#ffffff;
---text-color:#1f2937;
---sidebar-text:#cbd5e1;
---transition-speed:.25s;
-}
+        <form onsubmit="registerSchool(event)">
+            <div class="form-group">
+                <label>School Name</label>
+                <input type="text" id="schoolRegisterName" class="form-control" required>
+            </div>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
-}
+            <div class="form-group">
+                <label>School Email</label>
+                <input type="email" id="schoolRegisterEmail" class="form-control" required>
+            </div>
 
-body{
-background:var(--bg-color);
-color:var(--text-color);
-overflow-x:hidden;
-}
+            <div class="form-group">
+                <label>School Phone</label>
+                <input type="text" id="schoolRegisterPhone" class="form-control" required>
+            </div>
 
-#login-screen{
-position:fixed;
-inset:0;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
-background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
-z-index:9999;
-}
+            <div class="form-group">
+                <label>School Address</label>
+                <input type="text" id="schoolRegisterAddress" class="form-control" required>
+            </div>
 
-.auth-card{
-width:100%;
-max-width:450px;
-background:#fff;
-padding:35px;
-border-radius:14px;
-box-shadow:0 10px 30px rgba(0,0,0,.2);
-}
-
-.auth-header{
-text-align:center;
-margin-bottom:20px;
-}
-
-.auth-header h1{
-color:var(--primary-color);
-margin-bottom:8px;
-}
-
-.form-group{
-margin-bottom:18px;
-}
-
-.form-group label{
-display:block;
-margin-bottom:6px;
-font-weight:600;
-}
-
-.form-control,
-.select-input{
-width:100%;
-padding:12px;
-border:1px solid #d1d5db;
-border-radius:8px;
-outline:none;
-}
-
-.btn-auth,
-.btn-action,
-.btn-logout{
-border:none;
-cursor:pointer;
-font-weight:700;
-}
-
-.btn-auth,
-.btn-action{
-background:var(--primary-color);
-color:#fff;
-padding:12px;
-border-radius:8px;
-width:100%;
-}
-
-#app-container{
-display:none;
-}
-
-aside{
-position:fixed;
-left:0;
-top:0;
-bottom:0;
-width:260px;
-background:var(--primary-color);
-color:#fff;
-}
-
-.sidebar-brand-wrapper{
-height:70px;
-display:flex;
-align-items:center;
-padding:0 20px;
-border-bottom:1px solid rgba(255,255,255,.1);
-}
-
-.sidebar-menu{
-list-style:none;
-padding:20px;
-}
-
-.menu-btn{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:none;
-background:transparent;
-color:#fff;
-border-radius:8px;
-text-align:left;
-cursor:pointer;
-}
-
-.menu-btn.active,
-.menu-btn:hover{
-background:rgba(255,255,255,.15);
-}
-
-header{
-position:fixed;
-left:260px;
-right:0;
-top:0;
-height:70px;
-background:var(--surface-color);
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 30px;
-border-bottom:1px solid rgba(0,0,0,.08);
-}
-
-main{
-margin-left:260px;
-padding:100px 30px 30px;
-}
-
-.dashboard-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:20px;
-}
-
-.stat-card,
-.content-panel{
-background:var(--surface-color);
-padding:25px;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,.05);
-}
-
-.stat-card{
-border-left:5px solid var(--secondary-color);
-}
-
-.page-section{
-display:none;
-}
-
-.page-section.active{
-display:block;
-}
-
-.admin-controls-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:20px;
-}
-
-.role-badge{
-padding:8px 14px;
-border-radius:20px;
-background:rgba(59,130,246,.15);
-color:var(--secondary-color);
-font-weight:700;
-}
-
-.btn-logout{
-padding:10px 14px;
-background:var(--danger-color);
-color:#fff;
-border-radius:8px;
-}
-
-@media(max-width:900px){
-aside{
-width:100%;
-height:auto;
-position:relative;
-}
-
-header{
-left:0;
-top:auto;
-position:relative;
-}
-
-main{
-margin-left:0;
-padding:20px;
-}
-}
-</style>
-</head>
-<body>
-
-<div id="login-screen">
-<div class="auth-card">
-<div class="auth-header">
-<h1 id="login-brand-title">APAPEC-IREBERO</h1>
-<p id="auth-subtitle">Unified Portal Authentication Gateway</p>
+            <button type="submit" class="btn-auth">
+                Register School
+            </button>
+        </form>
+    </div>
 </div>
 
+<!-- LOGIN VIEW -->
 <div id="signin-view">
-<div style="margin-bottom:15px;text-align:right;">
-<button class="btn-action" type="button" onclick="toggleRegisterView()">Register Account</button>
+
+    <div style="margin-bottom:15px;text-align:right;">
+        <button class="btn-action" type="button" onclick="toggleRegisterView()">
+            Register Account
+        </button>
+    </div>
+
+    <form onsubmit="executeSystemLogin(event)">
+
+        <div class="form-group">
+            <label>Username or Email</label>
+            <input type="text" id="loginUser" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn-auth">
+            Login
+        </button>
+    </form>
 </div>
-<form onsubmit="executeSystemLogin(event)">
 
-<div class="form-group">
-<label>Username or Email</label>
-<input type="text" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Password</label>
-<input type="password" class="form-control" required>
-</div>
-
-<div class="form-group">
-
-</div>
-
-<button type="submit" class="btn-auth">
-Login
-</button>
-</form>
-</div>
-
+<!-- REGISTER USER VIEW -->
 <div id="register-view" style="display:none;">
-<form onsubmit="registerUser(event)">
 
-<div class="form-group">
-<label>Full Name</label>
-<input type="text" id="registerFullName" class="form-control" required>
-</div>
+    <form onsubmit="registerUser(event)">
 
-<div class="form-group">
-<label>Email</label>
-<input type="email" id="registerEmail" class="form-control" required>
-</div>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="registerFullName" class="form-control" required>
+        </div>
 
-<div class="form-group">
-<label>Username</label>
-<input type="text" id="registerUsername" class="form-control" required>
-</div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="registerEmail" class="form-control" required>
+        </div>
 
-<div class="form-group">
-<label>Password</label>
-<input type="password" id="registerPassword" class="form-control" required>
-</div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="registerUsername" class="form-control" required>
+        </div>
 
-<div class="form-group">
-<label>Role</label>
-<select id="registerRole" class="form-control">
-<option value="admin">Administrator</option>
-<option value="teacher">Teacher</option>
-<option value="student">Student</option>
-<option value="librarian">Librarian</option>
-<option value="parent">Parent</option>
-</select>
-</div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPassword" class="form-control" required>
+        </div>
 
-<button type="submit" class="btn-auth">Create Permanent Account</button>
+        <div class="form-group">
+            <label>Role</label>
+            <select id="registerRole" class="form-control">
+                <option value="admin">Administrator</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+                <option value="librarian">Librarian</option>
+                <option value="parent">Parent</option>
+            </select>
+        </div>
 
-<div style="margin-top:15px;text-align:center;">
-<a href="#" onclick="toggleLoginView()">Already have an account?</a>
-</div>
+        <button type="submit" class="btn-auth">
+            Create Permanent Account
+        </button>
 
-</form>
-</div>
-</div>
-</div>
-
-<div id="app-container">
-
-<aside>
-<div class="sidebar-brand-wrapper">
-<h1 id="sidebar-brand">APAPEC-IREBERO</h1>
-</div>
-
-<ul class="sidebar-menu" id="admin-sidebar-menu">
-<li><button class="menu-btn" onclick="switchTab('student-portal')">Student Portal</button></li>
-<li><button class="menu-btn" onclick="switchTab('teacher-portal')">Teacher Portal</button></li>
-<li><button class="menu-btn" onclick="switchTab('librarian-portal')">Librarian Portal</button></li>
-<li><button class="menu-btn" onclick="switchTab('parent-portal')">Parent Portal</button></li>
-<li>
-<button class="menu-btn active" onclick="switchTab('dashboard')">
-Dashboard
-</button>
-</li>
-</ul>
-</aside>
-
-<header>
-<h2 id="page-title">Dashboard Console</h2>
-<div style="display:flex;gap:15px;align-items:center;">
-<span class="role-badge" id="header-active-role-badge">
-Administrator
-</span>
-
-<button class="btn-logout" onclick="executeLogout()">
-Logout
-</button>
-</div>
-</header>
-
-<main>
-
-<section id="dashboard" class="page-section active">
-<div class="dashboard-grid">
-
-<div class="stat-card">
-<h3>Students</h3>
-<p>1,248</p>
-</div>
-
-<div class="stat-card">
-<h3>Teachers</h3>
-<p>86</p>
-</div>
-
-<div class="stat-card">
-<h3>Books</h3>
-<p>4,821</p>
-</div>
-
-</div>
-
-<div class="content-panel">
-<h3>System Overview</h3>
-<p>Welcome to the School Management System.</p>
-</div>
-</section>
-
-<section id="students-registry" class="page-section">
-<div class="content-panel">
-<h3>Students Registry</h3>
-
-<div class="dashboard-grid">
-<div class="stat-card">
-<h3>Total Students</h3>
-<p>1,248</p>
-</div>
-
-<div class="stat-card">
-<h3>Boys</h3>
-<p>620</p>
-</div>
-
-<div class="stat-card">
-<h3>Girls</h3>
-<p>628</p>
-</div>
-
-<div class="stat-card">
-<h3>Active Classes</h3>
-<p>24</p>
-</div>
-</div>
-
-<div class="content-panel">
-<h3>Student Detailed Information</h3>
-<table style="width:100%;border-collapse:collapse;">
-<thead>
-<tr style="background:var(--primary-color);color:white;">
-<th style="padding:12px;border:1px solid #ddd;">Student ID</th>
-<th style="padding:12px;border:1px solid #ddd;">Full Name</th>
-<th style="padding:12px;border:1px solid #ddd;">Class</th>
-<th style="padding:12px;border:1px solid #ddd;">Attendance</th>
-<th style="padding:12px;border:1px solid #ddd;">Fees</th>
-<th style="padding:12px;border:1px solid #ddd;">Performance</th>
-<th style="padding:12px;border:1px solid #ddd;">Parent Contact</th>
-</tr>
-</thead>
-<tbody id="studentsTableBody">
-<tr data-class="S3A">
-<td style="padding:10px;border:1px solid #ddd;">STD001</td>
-<td style="padding:10px;border:1px solid #ddd;">Bruce Ganza</td>
-<td style="padding:10px;border:1px solid #ddd;">S3A</td>
-<td style="padding:10px;border:1px solid #ddd;">96%</td>
-<td style="padding:10px;border:1px solid #ddd;">Paid</td>
-<td style="padding:10px;border:1px solid #ddd;">Excellent</td>
-<td style="padding:10px;border:1px solid #ddd;">+250780000000</td>
-</tr>
-
-<tr data-class="S4B">
-<td style="padding:10px;border:1px solid #ddd;">STD002</td>
-<td style="padding:10px;border:1px solid #ddd;">Alice Uwase</td>
-<td style="padding:10px;border:1px solid #ddd;">S4B</td>
-<td style="padding:10px;border:1px solid #ddd;">91%</td>
-<td style="padding:10px;border:1px solid #ddd;">Pending</td>
-<td style="padding:10px;border:1px solid #ddd;">Very Good</td>
-<td style="padding:10px;border:1px solid #ddd;">+250781111111</td>
-</tr>
-
-<tr data-class="S3A">
-<td style="padding:10px;border:1px solid #ddd;">STD003</td>
-<td style="padding:10px;border:1px solid #ddd;">Kevin Irakoze</td>
-<td style="padding:10px;border:1px solid #ddd;">S3A</td>
-<td style="padding:10px;border:1px solid #ddd;">89%</td>
-<td style="padding:10px;border:1px solid #ddd;">Paid</td>
-<td style="padding:10px;border:1px solid #ddd;">Good</td>
-<td style="padding:10px;border:1px solid #ddd;">+250782222222</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section id="library-catalog" class="page-section">
-<div class="content-panel">
-<h3>Library Summary</h3>
-
-<div class="dashboard-grid">
-<div class="stat-card">
-<h3>Total Books</h3>
-<p id="total-books-count">4,821</p>
-</div>
-
-<div class="stat-card">
-<h3>Borrowed Books</h3>
-<p>1,210</p>
-</div>
-
-<div class="stat-card">
-<h3>Available Books</h3>
-<p>3,611</p>
-</div>
-
-<div class="stat-card">
-<h3>Late Returns</h3>
-<p>32</p>
-</div>
-</div>
-</div>
-
-<div class="content-panel">
-<h3>Add New Book</h3>
-
-<div class="admin-controls-grid">
-<div>
-<div class="form-group">
-<label>Book ID</label>
-<input type="text" id="bookId" class="form-control" placeholder="BK003">
-</div>
-
-<div class="form-group">
-<label>Book Title</label>
-<input type="text" id="bookTitle" class="form-control" placeholder="Book Title">
-</div>
-
-<div class="form-group">
-<label>Author</label>
-<input type="text" id="bookAuthor" class="form-control" placeholder="Author Name">
-</div>
-
-<div class="form-group">
-<label>Category</label>
-<input type="text" id="bookCategory" class="form-control" placeholder="Science">
-</div>
-
-<button class="btn-action" onclick="addBook()">
-Add Book
-</button>
-</div>
-</div>
-</div>
-
-<div class="content-panel">
-<h3>All Library Books</h3>
-
-<table style="width:100%;border-collapse:collapse;">
-<thead>
-<tr style="background:var(--primary-color);color:white;">
-<th style="padding:12px;border:1px solid #ddd;">Book ID</th>
-<th style="padding:12px;border:1px solid #ddd;">Title</th>
-<th style="padding:12px;border:1px solid #ddd;">Author</th>
-<th style="padding:12px;border:1px solid #ddd;">Category</th>
-<th style="padding:12px;border:1px solid #ddd;">Status</th>
-</tr>
-</thead>
-<tbody id="libraryBooksTable">
-<tr>
-<td style="padding:10px;border:1px solid #ddd;">BK001</td>
-<td style="padding:10px;border:1px solid #ddd;">Advanced Mathematics</td>
-<td style="padding:10px;border:1px solid #ddd;">J. Smith</td>
-<td style="padding:10px;border:1px solid #ddd;">Education</td>
-<td style="padding:10px;border:1px solid #ddd;">Borrowed</td>
-</tr>
-
-<tr>
-<td style="padding:10px;border:1px solid #ddd;">BK002</td>
-<td style="padding:10px;border:1px solid #ddd;">Physics Essentials</td>
-<td style="padding:10px;border:1px solid #ddd;">A. Brown</td>
-<td style="padding:10px;border:1px solid #ddd;">Science</td>
-<td style="padding:10px;border:1px solid #ddd;">Available</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<section id="admin-settings" class="page-section">
-<div class="content-panel">
-<h3>School Settings</h3>
-
-<div class="admin-controls-grid">
-
-<div>
-<div class="form-group">
-<label>School Name</label>
-<input type="text" id="schoolNameInput" class="form-control">
-</div>
-
-<button class="btn-action" onclick="updateSchoolName()">
-Change School
-</button>
-</div>
-
-<div>
-<div class="form-group">
-<label>Theme</label>
-<select id="themeDropdown" class="select-input" onchange="changeTheme(this.value)"></select>
-</div>
-</div>
-
-</div>
-</div>
-</section>
-
-<section id="student-portal" class="page-section">
-<div class="content-panel">
-<h3>Student Portal</h3>
-<p>Students can view grades, attendance, assignments, exam schedules, fees balance, and announcements.</p>
-
-<div class="dashboard-grid">
-<div class="stat-card">
-<h3>Attendance</h3>
-<p>96%</p>
-</div>
-
-<div class="stat-card accented">
-<h3>Assignments</h3>
-<p>12 Pending</p>
-</div>
-
-<div class="stat-card dangerously-set">
-<h3>Fees Balance</h3>
-<p>45,000 RWF</p>
-</div>
-</div>
-</div>
-</section>
-
-<section id="teacher-portal" class="page-section">
-<div class="content-panel">
-<h3>Teacher Portal</h3>
-<p>Teachers can manage marks, attendance, lesson plans, exams, and classroom reports.</p>
-
-<table style="width:100%;border-collapse:collapse;">
-<thead>
-<tr style="background:var(--primary-color);color:white;">
-<th style="padding:12px;border:1px solid #ddd;">Class</th>
-<th style="padding:12px;border:1px solid #ddd;">Students</th>
-<th style="padding:12px;border:1px solid #ddd;">Subject</th>
-<th style="padding:12px;border:1px solid #ddd;">Attendance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="padding:10px;border:1px solid #ddd;">S3A</td>
-<td style="padding:10px;border:1px solid #ddd;">42</td>
-<td style="padding:10px;border:1px solid #ddd;">Mathematics</td>
-<td style="padding:10px;border:1px solid #ddd;">94%</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<section id="librarian-portal" class="page-section">
-<div class="content-panel">
-<h3>Librarian Portal</h3>
-<p>Librarians can issue books, receive returned books, monitor fines, and manage all library assets.</p>
-
-<div class="dashboard-grid">
-<div class="stat-card">
-<h3>Issued Books</h3>
-<p>1,210</p>
-</div>
-
-<div class="stat-card">
-<h3>Returned Today</h3>
-<p>23</p>
-</div>
-
-<div class="stat-card dangerously-set">
-<h3>Late Returns</h3>
-<p>32</p>
-</div>
-</div>
-</div>
-</section>
-
-<section id="parent-portal" class="page-section">
-<div class="content-panel">
-<h3>Parent Portal</h3>
-<p>Parents can monitor student performance, attendance, fee payments, and school announcements.</p>
-
-<table style="width:100%;border-collapse:collapse;">
-<thead>
-<tr style="background:var(--primary-color);color:white;">
-<th style="padding:12px;border:1px solid #ddd;">Student</th>
-<th style="padding:12px;border:1px solid #ddd;">Class</th>
-<th style="padding:12px;border:1px solid #ddd;">Performance</th>
-<th style="padding:12px;border:1px solid #ddd;">Attendance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="padding:10px;border:1px solid #ddd;">Bruce Ganza</td>
-<td style="padding:10px;border:1px solid #ddd;">S3A</td>
-<td style="padding:10px;border:1px solid #ddd;">Excellent</td>
-<td style="padding:10px;border:1px solid #ddd;">96%</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-
-</main>
+        <div style="margin-top:15px;text-align:center;">
+            <a href="#" onclick="toggleLoginView()">
+                Already have an account?
+            </a>
+        </div>
+    </form>
 </div>
 
 <script>
-let currentSchoolName = localStorage.getItem('sms_school_name') || 'APAPEC-IREBERO';
-let currentTheme = localStorage.getItem('sms_system_theme') || 'classic';
-let currentUserRole = 'admin';
 
-const SYSTEM_THEME_REPOSITORY = {
-classic:{name:'Classic Blue',primary:'#1e3a8a',secondary:'#3b82f6',accent:'#10b981',danger:'#ef4444',bg:'#f3f4f6',surface:'#ffffff',text:'#1f2937',sidebarText:'#cbd5e1'},
-light:{name:'Light',primary:'#0f172a',secondary:'#2563eb',accent:'#16a34a',danger:'#dc2626',bg:'#ffffff',surface:'#ffffff',text:'#111827',sidebarText:'#94a3b8'},
-dark:{name:'Dark',primary:'#0f172a',secondary:'#3b82f6',accent:'#34d399',danger:'#f87171',bg:'#020617',surface:'#1e293b',text:'#f8fafc',sidebarText:'#94a3b8'},
-oxford:{name:'Oxford',primary:'#002147',secondary:'#1d4ed8',accent:'#d97706',danger:'#991b1b',bg:'#f1f5f9',surface:'#ffffff',text:'#0f172a',sidebarText:'#cbd5e1'},
-cambridge:{name:'Cambridge',primary:'#004040',secondary:'#0d9488',accent:'#f59e0b',danger:'#be123c',bg:'#f2f9f9',surface:'#ffffff',text:'#111827',sidebarText:'#ccfbf1'}
-};
-
-const ENFORCED_THEME_SELECTION = ['classic','light','dark','oxford','cambridge'];
-
-const SYSTEM_ACCESS_RIGHTS = {
-admin:{dashboard:true,students:true,library:true,settings:true,fullAccess:true},
-teacher:{dashboard:true,students:true,library:false,settings:false,fullAccess:false,assignedLevel:'S3A'},
-student:{dashboard:true,students:false,library:true,settings:false,fullAccess:false},
-librarian:{dashboard:true,students:false,library:true,settings:false,fullAccess:false}
-};
-
-document.addEventListener('DOMContentLoaded',()=>{
-populateThemeSelectorDropdown();
-executeGlobalSchoolRebrand(currentSchoolName);
-changeTheme(currentTheme);
-});
-
-function populateThemeSelectorDropdown(){
-const dropdown=document.getElementById('themeDropdown');
-dropdown.innerHTML='';
-ENFORCED_THEME_SELECTION.forEach(key=>{
-const option=document.createElement('option');
-option.value=key;
-option.textContent=SYSTEM_THEME_REPOSITORY[key].name;
-if(key===currentTheme) option.selected=true;
-dropdown.appendChild(option);
-});
-}
-
-function executeGlobalSchoolRebrand(name){
-currentSchoolName=name;
-localStorage.setItem('sms_school_name',name);
-document.getElementById('window-title').textContent=`${name} | School Management System`;
-document.getElementById('login-brand-title').textContent=name;
-document.getElementById('sidebar-brand').textContent=name;
-document.getElementById('schoolNameInput').value=name;
-}
-
-function updateSchoolName(){
-
-const selectorInput=document.getElementById('schoolNameInput');
-
-if(selectorInput && selectorInput.value.trim()!==''){
-
-const newSchoolName=selectorInput.value.trim();
-
-if(newSchoolName===currentSchoolName){
-alert('School name is already active.');
-return;
-}
-
-const allSchoolBackups=
-JSON.parse(localStorage.getItem('sms_school_backups'))||{};
-
-allSchoolBackups[currentSchoolName]={
-students:JSON.parse(localStorage.getItem('students'))||[],
-teachers:JSON.parse(localStorage.getItem('teachers'))||[],
-library_books:JSON.parse(localStorage.getItem('library_books'))||[],
-attendance:JSON.parse(localStorage.getItem('attendance'))||[],
-fees:JSON.parse(localStorage.getItem('fees'))||[],
-results:JSON.parse(localStorage.getItem('results'))||[],
-admins:JSON.parse(localStorage.getItem('admins'))||[],
-subjects:JSON.parse(localStorage.getItem('subjects'))||[],
-classes:JSON.parse(localStorage.getItem('classes'))||[],
-events:JSON.parse(localStorage.getItem('events'))||[],
-theme:localStorage.getItem('sms_system_theme')||'classic'
-};
-
-localStorage.setItem(
-'sms_school_backups',
-JSON.stringify(allSchoolBackups)
-);
-
-if(allSchoolBackups[newSchoolName]){
-
-const restoredData=allSchoolBackups[newSchoolName];
-
-localStorage.setItem('students',JSON.stringify(restoredData.students));
-localStorage.setItem('teachers',JSON.stringify(restoredData.teachers));
-localStorage.setItem('library_books',JSON.stringify(restoredData.library_books));
-localStorage.setItem('attendance',JSON.stringify(restoredData.attendance));
-localStorage.setItem('fees',JSON.stringify(restoredData.fees));
-localStorage.setItem('results',JSON.stringify(restoredData.results));
-localStorage.setItem('admins',JSON.stringify(restoredData.admins));
-localStorage.setItem('subjects',JSON.stringify(restoredData.subjects));
-localStorage.setItem('classes',JSON.stringify(restoredData.classes));
-localStorage.setItem('events',JSON.stringify(restoredData.events));
-localStorage.setItem('sms_system_theme',restoredData.theme);
-
-alert(`Previous school data restored for "${newSchoolName}"`);
-
-}else{
-
-localStorage.setItem('students',JSON.stringify([]));
-localStorage.setItem('teachers',JSON.stringify([]));
-localStorage.setItem('library_books',JSON.stringify([]));
-localStorage.setItem('attendance',JSON.stringify([]));
-localStorage.setItem('fees',JSON.stringify([]));
-localStorage.setItem('results',JSON.stringify([]));
-localStorage.setItem('admins',JSON.stringify([]));
-localStorage.setItem('subjects',JSON.stringify([]));
-localStorage.setItem('classes',JSON.stringify([]));
-localStorage.setItem('events',JSON.stringify([]));
-localStorage.setItem('sms_system_theme','classic');
-
-alert(`New school workspace created for "${newSchoolName}"`);
-}
-
-localStorage.setItem('sms_school_name',newSchoolName);
-currentSchoolName=newSchoolName;
-executeGlobalSchoolRebrand(newSchoolName);
-location.reload();
-
-}else{
-alert('School name cannot be empty.');
-}
-}
-
-function changeTheme(theme){
-if(!SYSTEM_THEME_REPOSITORY[theme]) return;
-
-currentTheme=theme;
-localStorage.setItem('sms_system_theme',theme);
-
-const metrics=SYSTEM_THEME_REPOSITORY[theme];
-const root=document.documentElement;
-
-root.style.setProperty('--primary-color',metrics.primary);
-root.style.setProperty('--secondary-color',metrics.secondary);
-root.style.setProperty('--accent-color',metrics.accent);
-root.style.setProperty('--danger-color',metrics.danger);
-root.style.setProperty('--bg-color',metrics.bg);
-root.style.setProperty('--surface-color',metrics.surface);
-root.style.setProperty('--text-color',metrics.text);
-root.style.setProperty('--sidebar-text',metrics.sidebarText);
-}
-
-function switchTab(id){
-document.querySelectorAll('.page-section').forEach(section=>{
-section.classList.remove('active');
-});
-
-document.querySelectorAll('.menu-btn').forEach(btn=>{
-btn.classList.remove('active');
-});
-
-const active=document.getElementById(id);
-if(active) active.classList.add('active');
-
-event.target.classList.add('active');
-}
-
-function isAdmin(){
-return currentUserRole==='admin';
-}
-
-function verifyAdminAccess(){
-if(!isAdmin()){
-alert('ACCESS DENIED');
-return false;
-}
-return true;
-}
-
-function deleteStudent(studentId){
-if(!verifyAdminAccess()) return;
-
-let students=JSON.parse(localStorage.getItem('students'))||[];
-students=students.filter(student=>student.id!==studentId);
-
-localStorage.setItem('students',JSON.stringify(students));
-
-alert('Student deleted successfully');
-}
-
-function toggleRegisterView(){
-document.getElementById('signin-view').style.display='none';
-document.getElementById('register-view').style.display='block';
-}
-
-function toggleLoginView(){
-document.getElementById('signin-view').style.display='block';
-document.getElementById('register-view').style.display='none';
-}
-
-function registerUser(event){
-
-event.preventDefault();
-
-const fullName=document.getElementById('registerFullName').value;
-const email=document.getElementById('registerEmail').value;
-const username=document.getElementById('registerUsername').value;
-const password=document.getElementById('registerPassword').value;
-const role=document.getElementById('registerRole').value;
-
-let users=JSON.parse(localStorage.getItem('sms_users'))||[];
-
-const existingUser=users.find(user=>
-user.username===username || user.email===email
-);
-
-if(existingUser){
-alert('Account already exists');
-return;
-}
-
-users.push({
-fullName,
-email,
-username,
-password,
-role
-});
-
-localStorage.setItem('sms_users',JSON.stringify(users));
-
-alert('Permanent account created successfully');
-
-toggleLoginView();
-}
-
-function executeSystemLogin(event){
-
-event.preventDefault();
-
-const username=document.querySelector('#signin-view input[type="text"]').value;
-const password=document.querySelector('#signin-view input[type="password"]').value;
-
-const users=JSON.parse(localStorage.getItem('sms_users'))||[];
-
-const matchedUser=users.find(user=>
-(user.username===username || user.email===username)
-&& user.password===password
-);
-
-if(!matchedUser){
-alert('Invalid login credentials');
-return;
-}
-
-const selectedRole = matchedUser.role;
-currentUserRole=selectedRole;
-
-const permissions=SYSTEM_ACCESS_RIGHTS[selectedRole];
-
-document.getElementById('login-screen').style.display='none';
-document.getElementById('app-container').style.display='block';
-
-document.getElementById('header-active-role-badge').textContent=
-selectedRole.toUpperCase();
-
-const sidebar=document.getElementById('admin-sidebar-menu');
-sidebar.innerHTML='';
-
-if(permissions.dashboard){
-sidebar.innerHTML+=`
-<li>
-<button class="menu-btn active" onclick="switchTab('dashboard')">
-Dashboard
-</button>
-</li>`;
-}
-
-if(permissions.students){
-sidebar.innerHTML+=`
-<li>
-<button class="menu-btn" onclick="switchTab('students-registry')">
-Students
-</button>
-</li>`;
-}
-
-if(permissions.library){
-sidebar.innerHTML+=`
-<li>
-<button class="menu-btn" onclick="switchTab('library-catalog')">
-Library
-</button>
-</li>`;
-}
-
-if(permissions.settings){
-sidebar.innerHTML+=`
-<li>
-<button class="menu-btn" onclick="switchTab('admin-settings')">
-Settings
-</button>
-</li>`;
-}
-
-if(selectedRole==='teacher'){
-applyTeacherLevelAccess(permissions.assignedLevel);
-}
-
-switchTab('dashboard');
-}
-
-function applyTeacherLevelAccess(level){
-
-const rows=document.querySelectorAll('#studentsTableBody tr');
-
-rows.forEach(row=>{
-const studentClass=row.getAttribute('data-class');
-
-if(studentClass!==level){
-row.style.display='none';
-}else{
-row.style.display='table-row';
-}
-});
-
-const teacherPortal=document.getElementById('teacher-portal');
-
-if(teacherPortal){
-teacherPortal.innerHTML=`
-<div class="content-panel">
-<h3>Teacher Portal</h3>
-<p>You are assigned to class ${level}. You can only access students and records for this level.</p>
-
-<table style="width:100%;border-collapse:collapse;">
-<thead>
-<tr style="background:var(--primary-color);color:white;">
-<th style="padding:12px;border:1px solid #ddd;">Assigned Level</th>
-<th style="padding:12px;border:1px solid #ddd;">Subject</th>
-<th style="padding:12px;border:1px solid #ddd;">Access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="padding:10px;border:1px solid #ddd;">${level}</td>
-<td style="padding:10px;border:1px solid #ddd;">Mathematics</td>
-<td style="padding:10px;border:1px solid #ddd;">Allowed</td>
-</tr>
-</tbody>
-</table>
-</div>`;
-}
-}
-
-function addBook(){
-
-const id=document.getElementById('bookId').value;
-const title=document.getElementById('bookTitle').value;
-const author=document.getElementById('bookAuthor').value;
-const category=document.getElementById('bookCategory').value;
-
-if(!id || !title || !author || !category){
-alert('Please fill all fields');
-return;
-}
-
-const table=document.getElementById('libraryBooksTable');
-
-const row=document.createElement('tr');
-
-row.innerHTML=`
-<td style="padding:10px;border:1px solid #ddd;">${id}</td>
-<td style="padding:10px;border:1px solid #ddd;">${title}</td>
-<td style="padding:10px;border:1px solid #ddd;">${author}</td>
-<td style="padding:10px;border:1px solid #ddd;">${category}</td>
-<td style="padding:10px;border:1px solid #ddd;">Available</td>`;
-
-table.appendChild(row);
-
-alert('Book added successfully');
-
-const total=document.getElementById('total-books-count');
-total.textContent=parseInt(total.textContent)+1;
-
-}
-
-function executeLogout(){
-document.getElementById('login-screen').style.display='flex';
-document.getElementById('app-container').style.display='none';
-}
-</script>
-  <script>
-
-/**
- * =========================================================
- * ADVANCED SCHOOL DATA RESET + RESTORE ENGINE
- * =========================================================
- */
-
-/* ---------- GLOBAL STORAGE KEYS ---------- */
 const SCHOOL_INDEX_KEY = "sms_school_index";
 const ACTIVE_SCHOOL_KEY = "sms_active_school";
+const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
 
-/* ---------- INITIALIZE ACTIVE SCHOOL ---------- */
 let currentSchoolName =
     localStorage.getItem(ACTIVE_SCHOOL_KEY) ||
     "APAPEC-IREBERO";
 
-/* ---------- CREATE SCHOOL DATABASE ---------- */
 function createEmptySchoolDatabase(schoolName) {
     return {
         schoolName,
-
         students: [],
         teachers: [],
         librarians: [],
         parents: [],
         admins: [],
-
         books: [],
         fines: [],
         attendance: [],
         marks: [],
         classes: [],
         announcements: [],
-
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     };
 }
 
-/* ---------- GET COMPLETE SCHOOL INDEX ---------- */
 function getSchoolIndex() {
     return JSON.parse(
         localStorage.getItem(SCHOOL_INDEX_KEY)
     ) || {};
 }
 
-/* ---------- SAVE COMPLETE SCHOOL INDEX ---------- */
 function saveSchoolIndex(index) {
     localStorage.setItem(
         SCHOOL_INDEX_KEY,
@@ -1114,7 +156,6 @@ function saveSchoolIndex(index) {
     );
 }
 
-/* ---------- LOAD SCHOOL DATA ---------- */
 function loadSchoolData(schoolName) {
 
     const schoolIndex = getSchoolIndex();
@@ -1130,7 +171,6 @@ function loadSchoolData(schoolName) {
     return schoolIndex[schoolName];
 }
 
-/* ---------- SAVE SCHOOL DATA ---------- */
 function saveSchoolData(schoolName, data) {
 
     const schoolIndex = getSchoolIndex();
@@ -1143,22 +183,9 @@ function saveSchoolData(schoolName, data) {
     saveSchoolIndex(schoolIndex);
 }
 
-/* ---------- RESET CURRENT ACTIVE DATA ---------- */
-function resetCurrentSchoolData() {
-
-    const emptyData =
-        createEmptySchoolDatabase(currentSchoolName);
-
-    saveSchoolData(currentSchoolName, emptyData);
-}
-
-/* ---------- CHANGE SCHOOL NAME ENGINE ---------- */
 function executeGlobalSchoolRebrand(targetedSchoolName) {
 
-    if (
-        !targetedSchoolName ||
-        targetedSchoolName.trim() === ""
-    ) {
+    if (!targetedSchoolName || targetedSchoolName.trim() === "") {
         alert("School name cannot be empty.");
         return;
     }
@@ -1167,14 +194,12 @@ function executeGlobalSchoolRebrand(targetedSchoolName) {
 
     const previousSchool = currentSchoolName;
 
-    /* SAVE OLD SCHOOL DATA BEFORE SWITCH */
     const currentData =
         window.currentSchoolDatabase ||
         createEmptySchoolDatabase(previousSchool);
 
     saveSchoolData(previousSchool, currentData);
 
-    /* SWITCH ACTIVE SCHOOL */
     currentSchoolName = targetedSchoolName;
 
     localStorage.setItem(
@@ -1182,17 +207,14 @@ function executeGlobalSchoolRebrand(targetedSchoolName) {
         currentSchoolName
     );
 
-    /* LOAD OR RESTORE SCHOOL DATA */
     const restoredData =
         loadSchoolData(currentSchoolName);
 
     window.currentSchoolDatabase = restoredData;
 
-    /* UPDATE TITLE */
     document.title =
         `${currentSchoolName} | School Management System & Library`;
 
-    /* UPDATE DOM */
     const brandingTargets = [
         "window-title",
         "login-brand-title",
@@ -1207,7 +229,6 @@ function executeGlobalSchoolRebrand(targetedSchoolName) {
         }
     });
 
-    /* UPDATE INPUT */
     const schoolInput =
         document.getElementById("schoolNameInput");
 
@@ -1215,75 +236,206 @@ function executeGlobalSchoolRebrand(targetedSchoolName) {
         schoolInput.value = currentSchoolName;
     }
 
-    /* SUCCESS MESSAGE */
-    alert(
-        `School switched successfully.\n\n` +
-        `Previous school archived.\n` +
-        `Data for "${currentSchoolName}" restored automatically.`
-    );
-
-    /* OPTIONAL UI REFRESH */
     refreshEntireSystemUI();
 }
 
-/* ---------- DELETE SCHOOL ---------- */
-function deleteSchoolData(schoolName) {
+function registerSchool(event) {
 
-    const schoolIndex = getSchoolIndex();
+    event.preventDefault();
 
-    if (schoolIndex[schoolName]) {
+    const schoolName =
+        document.getElementById("schoolRegisterName")
+        .value.trim();
 
-        /* MOVE TO RECYCLE BIN */
-        schoolIndex["_deleted_" + schoolName] =
-            schoolIndex[schoolName];
+    const schoolEmail =
+        document.getElementById("schoolRegisterEmail")
+        .value.trim();
 
-        delete schoolIndex[schoolName];
+    const schoolPhone =
+        document.getElementById("schoolRegisterPhone")
+        .value.trim();
 
-        saveSchoolIndex(schoolIndex);
+    const schoolAddress =
+        document.getElementById("schoolRegisterAddress")
+        .value.trim();
 
-        alert(
-            `"${schoolName}" removed successfully.\n` +
-            `Data archived for future restoration.`
+    let schools = JSON.parse(
+        localStorage.getItem(SCHOOL_REGISTRY_KEY)
+    ) || [];
+
+    const existingSchool = schools.find(
+        school =>
+            school.schoolName.toLowerCase() ===
+            schoolName.toLowerCase()
+    );
+
+    if (!existingSchool) {
+
+        schools.push({
+            schoolName,
+            schoolEmail,
+            schoolPhone,
+            schoolAddress,
+            createdAt: new Date().toISOString()
+        });
+
+        localStorage.setItem(
+            SCHOOL_REGISTRY_KEY,
+            JSON.stringify(schools)
         );
     }
+
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        schoolName
+    );
+
+    executeGlobalSchoolRebrand(schoolName);
+
+    alert("School registered successfully.");
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
 }
 
-/* ---------- RESTORE DELETED SCHOOL ---------- */
-function restoreDeletedSchool(schoolName) {
+function toggleRegisterView() {
 
-    const schoolIndex = getSchoolIndex();
+    const activeSchool =
+        localStorage.getItem(ACTIVE_SCHOOL_KEY);
 
-    const deletedKey =
-        "_deleted_" + schoolName;
+    if (!activeSchool) {
 
-    if (schoolIndex[deletedKey]) {
+        document.getElementById(
+            "signin-view"
+        ).style.display = "none";
 
-        schoolIndex[schoolName] =
-            schoolIndex[deletedKey];
+        document.getElementById(
+            "school-registration-view"
+        ).style.display = "block";
 
-        delete schoolIndex[deletedKey];
-
-        saveSchoolIndex(schoolIndex);
-
-        alert(
-            `"${schoolName}" restored successfully.`
-        );
+        return;
     }
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
 }
 
-/* ---------- FULL SYSTEM UI REFRESH ---------- */
+function toggleLoginView() {
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+}
+
+function registerUser(event) {
+
+    event.preventDefault();
+
+    const fullName =
+        document.getElementById("registerFullName").value;
+
+    const email =
+        document.getElementById("registerEmail").value;
+
+    const username =
+        document.getElementById("registerUsername").value;
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const role =
+        document.getElementById("registerRole").value;
+
+    let users = JSON.parse(
+        localStorage.getItem("sms_users")
+    ) || [];
+
+    const existingUser = users.find(user =>
+        user.username === username ||
+        user.email === email
+    );
+
+    if (existingUser) {
+        alert("Account already exists");
+        return;
+    }
+
+    users.push({
+        fullName,
+        email,
+        username,
+        password,
+        role,
+        school: currentSchoolName
+    });
+
+    localStorage.setItem(
+        "sms_users",
+        JSON.stringify(users)
+    );
+
+    alert("Permanent account created successfully");
+
+    toggleLoginView();
+}
+
+function executeSystemLogin(event) {
+
+    event.preventDefault();
+
+    const username =
+        document.getElementById("loginUser").value;
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const users = JSON.parse(
+        localStorage.getItem("sms_users")
+    ) || [];
+
+    const matchedUser = users.find(user =>
+        (
+            user.username === username ||
+            user.email === username
+        ) &&
+        user.password === password
+    );
+
+    if (!matchedUser) {
+        alert("Invalid login credentials");
+        return;
+    }
+
+    document.getElementById(
+        "login-screen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "app-container"
+    ).style.display = "block";
+
+    document.getElementById(
+        "header-active-role-badge"
+    ).textContent = matchedUser.role;
+
+    switchTab("dashboard");
+}
+
 function refreshEntireSystemUI() {
-
-    console.clear();
-
-    console.log(
-        "School Loaded:",
-        currentSchoolName
-    );
-
-    console.log(
-        window.currentSchoolDatabase
-    );
 
     updateDashboardStatistics?.();
     renderStudentsTable?.();
@@ -1293,47 +445,20 @@ function refreshEntireSystemUI() {
     renderAnnouncements?.();
 }
 
-/* ---------- UPDATE SCHOOL NAME ---------- */
-function updateSchoolName() {
-
-    const selectorInput =
-        document.getElementById("schoolNameInput");
-
-    if (
-        selectorInput &&
-        selectorInput.value.trim() !== ""
-    ) {
-        executeGlobalSchoolRebrand(
-            selectorInput.value
-        );
-    } else {
-        alert(
-            "School name cannot be empty."
-        );
-    }
-}
-
-/* ---------- AUTO INITIALIZATION ---------- */
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
         currentSchoolName =
-            localStorage.getItem(
-                ACTIVE_SCHOOL_KEY
-            ) || "APAPEC-IREBERO";
+            localStorage.getItem(ACTIVE_SCHOOL_KEY) ||
+            "APAPEC-IREBERO";
 
         window.currentSchoolDatabase =
             loadSchoolData(currentSchoolName);
 
-        executeGlobalSchoolRebrand(
-            currentSchoolName
-        );
+        executeGlobalSchoolRebrand(currentSchoolName);
     }
 );
 
 </script>
-
-</body>
-</html>
 ```
