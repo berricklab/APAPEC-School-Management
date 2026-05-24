@@ -647,6 +647,24 @@ main{
 >
     Already Registered School?
 </button>
+               <!-- ADD THIS BELOW THE 
+     "Already Registered School?" BUTTON -->
+
+<button
+    type="button"
+    class="btn-auth"
+    onclick="openLoginPage()"
+    style="
+        margin-top:15px;
+        background:linear-gradient(
+            135deg,
+            #f59e0b,
+            #d97706
+        );
+    "
+>
+    Already Have An Account?
+</button>
 
             </form>
 
@@ -1491,6 +1509,48 @@ function logoutSystem(){
     document.getElementById(
         "school-registration-view"
     ).style.display = "none";
+}
+   /* =========================================
+   OPEN LOGIN PAGE
+========================================= */
+
+function openLoginPage(){
+
+    const users =
+        JSON.parse(
+            localStorage.getItem(
+                USERS_KEY
+            )
+        ) || [];
+
+    if(users.length === 0){
+
+        alert(
+            "No registered accounts found."
+        );
+
+        return;
+    }
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
+
+    setTimeout(()=>{
+
+        document.getElementById(
+            "loginUser"
+        ).focus();
+
+    },200);
 }
     </script>
 </body>
