@@ -1,117 +1,446 @@
-# Full Combined School Management System HTML
-
-Replace your existing authentication and script sections with the following integrated version.
+# Complete Single HTML School Management System
 
 ```html
-<!-- SCHOOL REGISTRATION VIEW -->
-<div id="school-registration-view" style="display:none;">
-    <div class="auth-card">
-        <div class="auth-header">
-            <h1>Register Your School</h1>
-            <p>Create your school before creating accounts</p>
-        </div>
+<!DOCTYPE html>
+<html lang="en" data-theme="classic">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="window-title">APAPEC-IREBERO | School Management System</title>
 
-        <form onsubmit="registerSchool(event)">
-            <div class="form-group">
-                <label>School Name</label>
-                <input type="text" id="schoolRegisterName" class="form-control" required>
-            </div>
+<style>
+:root {
+    --primary-color:#1e3a8a;
+    --secondary-color:#3b82f6;
+    --accent-color:#10b981;
+    --danger-color:#ef4444;
+    --bg-color:#f3f4f6;
+    --surface-color:#ffffff;
+    --text-color:#1f2937;
+    --sidebar-text:#cbd5e1;
+}
 
-            <div class="form-group">
-                <label>School Email</label>
-                <input type="email" id="schoolRegisterEmail" class="form-control" required>
-            </div>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
 
-            <div class="form-group">
-                <label>School Phone</label>
-                <input type="text" id="schoolRegisterPhone" class="form-control" required>
-            </div>
+body{
+    background:var(--bg-color);
+    color:var(--text-color);
+}
 
-            <div class="form-group">
-                <label>School Address</label>
-                <input type="text" id="schoolRegisterAddress" class="form-control" required>
-            </div>
+#login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+    padding:20px;
+}
 
-            <button type="submit" class="btn-auth">
-                Register School
-            </button>
-        </form>
-    </div>
+.auth-card{
+    width:100%;
+    max-width:500px;
+    background:#fff;
+    border-radius:12px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+.auth-header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:600;
+}
+
+.form-control{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+.btn-auth,
+.btn-action{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:var(--primary-color);
+    color:#fff;
+    cursor:pointer;
+    font-weight:700;
+}
+
+#app-container{
+    display:none;
+}
+
+aside{
+    width:260px;
+    background:var(--primary-color);
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    padding:20px;
+    color:#fff;
+}
+
+.sidebar-menu{
+    list-style:none;
+    margin-top:20px;
+}
+
+.menu-btn{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:8px;
+    background:rgba(255,255,255,.1);
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+}
+
+header{
+    position:fixed;
+    top:0;
+    left:260px;
+    right:0;
+    height:70px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:1px solid #ddd;
+}
+
+main{
+    margin-left:260px;
+    margin-top:70px;
+    padding:30px;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.stat-card,
+.content-panel{
+    background:#fff;
+    border-radius:12px;
+    padding:25px;
+    box-shadow:0 4px 8px rgba(0,0,0,.05);
+}
+
+.page-section{
+    display:none;
+}
+
+.page-section.active{
+    display:block;
+}
+
+.table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.table th,
+.table td{
+    border:1px solid #ddd;
+    padding:10px;
+}
+
+@media(max-width:768px){
+
+aside{
+    position:relative;
+    width:100%;
+}
+
+header{
+    left:0;
+}
+
+main{
+    margin-left:0;
+}
+}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+
+<div class="auth-card">
+
+<div class="auth-header">
+<h1 id="login-brand-title">APAPEC-IREBERO</h1>
+<p>School Management Authentication</p>
 </div>
 
-<!-- LOGIN VIEW -->
+<div id="school-registration-view" style="display:none;">
+<form onsubmit="registerSchool(event)">
+
+<div class="form-group">
+<label>School Name</label>
+<input type="text" id="schoolRegisterName" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>School Email</label>
+<input type="email" id="schoolRegisterEmail" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>School Phone</label>
+<input type="text" id="schoolRegisterPhone" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>School Address</label>
+<input type="text" id="schoolRegisterAddress" class="form-control" required>
+</div>
+
+<button class="btn-auth">Register School</button>
+
+</form>
+</div>
+
 <div id="signin-view">
 
-    <div style="margin-bottom:15px;text-align:right;">
-        <button class="btn-action" type="button" onclick="toggleRegisterView()">
-            Register Account
-        </button>
-    </div>
+<button class="btn-action" onclick="toggleRegisterView()" type="button">
+Register Account
+</button>
 
-    <form onsubmit="executeSystemLogin(event)">
+<br><br>
 
-        <div class="form-group">
-            <label>Username or Email</label>
-            <input type="text" id="loginUser" class="form-control" required>
-        </div>
+<form onsubmit="executeSystemLogin(event)">
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="loginPassword" class="form-control" required>
-        </div>
-
-        <button type="submit" class="btn-auth">
-            Login
-        </button>
-    </form>
+<div class="form-group">
+<label>Username or Email</label>
+<input type="text" id="loginUser" class="form-control" required>
 </div>
 
-<!-- REGISTER USER VIEW -->
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="loginPassword" class="form-control" required>
+</div>
+
+<button type="submit" class="btn-auth">Login</button>
+
+</form>
+</div>
+
 <div id="register-view" style="display:none;">
+<form onsubmit="registerUser(event)">
 
-    <form onsubmit="registerUser(event)">
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="registerFullName" class="form-control" required>
+</div>
 
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="registerFullName" class="form-control" required>
-        </div>
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="registerEmail" class="form-control" required>
+</div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="registerEmail" class="form-control" required>
-        </div>
+<div class="form-group">
+<label>Username</label>
+<input type="text" id="registerUsername" class="form-control" required>
+</div>
 
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" id="registerUsername" class="form-control" required>
-        </div>
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="registerPassword" class="form-control" required>
+</div>
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="registerPassword" class="form-control" required>
-        </div>
+<div class="form-group">
+<label>Role</label>
+<select id="registerRole" class="form-control">
+<option value="admin">Administrator</option>
+<option value="teacher">Teacher</option>
+<option value="student">Student</option>
+<option value="librarian">Librarian</option>
+<option value="parent">Parent</option>
+</select>
+</div>
 
-        <div class="form-group">
-            <label>Role</label>
-            <select id="registerRole" class="form-control">
-                <option value="admin">Administrator</option>
-                <option value="teacher">Teacher</option>
-                <option value="student">Student</option>
-                <option value="librarian">Librarian</option>
-                <option value="parent">Parent</option>
-            </select>
-        </div>
+<button type="submit" class="btn-auth">
+Create Permanent Account
+</button>
 
-        <button type="submit" class="btn-auth">
-            Create Permanent Account
-        </button>
+</form>
+</div>
 
-        <div style="margin-top:15px;text-align:center;">
-            <a href="#" onclick="toggleLoginView()">
-                Already have an account?
-            </a>
-        </div>
-    </form>
+</div>
+</div>
+
+<div id="app-container">
+
+<aside>
+<h2 id="sidebar-brand">APAPEC-IREBERO</h2>
+
+<ul class="sidebar-menu">
+<li><button class="menu-btn" onclick="switchTab('dashboard')">Dashboard</button></li>
+<li><button class="menu-btn" onclick="switchTab('students')">Students</button></li>
+<li><button class="menu-btn" onclick="switchTab('teachers')">Teachers</button></li>
+<li><button class="menu-btn" onclick="switchTab('library')">Library</button></li>
+<li><button class="menu-btn" onclick="switchTab('student-portal')">Student Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('teacher-portal')">Teacher Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('librarian-portal')">Librarian Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('parent-portal')">Parent Portal</button></li>
+<li><button class="menu-btn" onclick="switchTab('settings')">Settings</button></li>
+</ul>
+</aside>
+
+<header>
+<h2 id="page-title">Dashboard</h2>
+<div>
+<span id="header-active-role-badge">Administrator</span>
+<button onclick="executeLogout()">Logout</button>
+</div>
+</header>
+
+<main>
+
+<section id="dashboard" class="page-section active">
+<div class="dashboard-grid">
+<div class="stat-card">
+<h3>Total Students</h3>
+<p id="student-count">0</p>
+</div>
+
+<div class="stat-card">
+<h3>Total Teachers</h3>
+<p id="teacher-count">0</p>
+</div>
+
+<div class="stat-card">
+<h3>Total Books</h3>
+<p id="book-count">0</p>
+</div>
+</div>
+</section>
+
+<section id="students" class="page-section">
+<div class="content-panel">
+<h2>Student Operations</h2>
+<table class="table" id="students-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Class</th>
+<th>Parent</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</section>
+
+<section id="teachers" class="page-section">
+<div class="content-panel">
+<h2>Teacher Operations</h2>
+<table class="table" id="teachers-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Level</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</section>
+
+<section id="library" class="page-section">
+<div class="content-panel">
+<h2>Library Assets</h2>
+
+<div class="form-group">
+<input type="text" id="bookName" class="form-control" placeholder="Book Name">
+</div>
+
+<button class="btn-auth" onclick="addBook()">
+Add Book
+</button>
+
+<table class="table" id="books-table">
+<thead>
+<tr>
+<th>Book</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</section>
+
+<section id="student-portal" class="page-section">
+<div class="content-panel">
+<h2>Student Portal</h2>
+<p>Students can view marks, attendance and announcements.</p>
+</div>
+</section>
+
+<section id="teacher-portal" class="page-section">
+<div class="content-panel">
+<h2>Teacher Portal</h2>
+<p>Teachers only access the levels they teach.</p>
+</div>
+</section>
+
+<section id="librarian-portal" class="page-section">
+<div class="content-panel">
+<h2>Librarian Portal</h2>
+<p>Librarians can manage all books.</p>
+</div>
+</section>
+
+<section id="parent-portal" class="page-section">
+<div class="content-panel">
+<h2>Parent Portal</h2>
+<p>Parents can monitor students.</p>
+</div>
+</section>
+
+<section id="settings" class="page-section">
+<div class="content-panel">
+<h2>Settings</h2>
+
+<div class="form-group">
+<label>School Name</label>
+<input type="text" id="schoolNameInput" class="form-control">
+</div>
+
+<button class="btn-auth" onclick="updateSchoolName()">
+Update School Name
+</button>
+</div>
+</section>
+
+</main>
 </div>
 
 <script>
@@ -120,345 +449,259 @@ const SCHOOL_INDEX_KEY = "sms_school_index";
 const ACTIVE_SCHOOL_KEY = "sms_active_school";
 const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
 
-let currentSchoolName =
-    localStorage.getItem(ACTIVE_SCHOOL_KEY) ||
-    "APAPEC-IREBERO";
+let currentSchoolName = localStorage.getItem(ACTIVE_SCHOOL_KEY) || "APAPEC-IREBERO";
 
-function createEmptySchoolDatabase(schoolName) {
-    return {
-        schoolName,
-        students: [],
-        teachers: [],
-        librarians: [],
-        parents: [],
-        admins: [],
-        books: [],
-        fines: [],
-        attendance: [],
-        marks: [],
-        classes: [],
-        announcements: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
+function createEmptySchoolDatabase(schoolName){
+return {
+schoolName,
+students:[],
+teachers:[],
+books:[],
+parents:[],
+announcements:[]
+};
 }
 
-function getSchoolIndex() {
-    return JSON.parse(
-        localStorage.getItem(SCHOOL_INDEX_KEY)
-    ) || {};
+function getSchoolIndex(){
+return JSON.parse(localStorage.getItem(SCHOOL_INDEX_KEY)) || {};
 }
 
-function saveSchoolIndex(index) {
-    localStorage.setItem(
-        SCHOOL_INDEX_KEY,
-        JSON.stringify(index)
-    );
+function saveSchoolIndex(index){
+localStorage.setItem(SCHOOL_INDEX_KEY,JSON.stringify(index));
 }
 
-function loadSchoolData(schoolName) {
+function loadSchoolData(schoolName){
+const schoolIndex=getSchoolIndex();
 
-    const schoolIndex = getSchoolIndex();
-
-    if (!schoolIndex[schoolName]) {
-
-        schoolIndex[schoolName] =
-            createEmptySchoolDatabase(schoolName);
-
-        saveSchoolIndex(schoolIndex);
-    }
-
-    return schoolIndex[schoolName];
+if(!schoolIndex[schoolName]){
+schoolIndex[schoolName]=createEmptySchoolDatabase(schoolName);
+saveSchoolIndex(schoolIndex);
 }
 
-function saveSchoolData(schoolName, data) {
-
-    const schoolIndex = getSchoolIndex();
-
-    schoolIndex[schoolName] = {
-        ...data,
-        updatedAt: new Date().toISOString()
-    };
-
-    saveSchoolIndex(schoolIndex);
+return schoolIndex[schoolName];
 }
 
-function executeGlobalSchoolRebrand(targetedSchoolName) {
-
-    if (!targetedSchoolName || targetedSchoolName.trim() === "") {
-        alert("School name cannot be empty.");
-        return;
-    }
-
-    targetedSchoolName = targetedSchoolName.trim();
-
-    const previousSchool = currentSchoolName;
-
-    const currentData =
-        window.currentSchoolDatabase ||
-        createEmptySchoolDatabase(previousSchool);
-
-    saveSchoolData(previousSchool, currentData);
-
-    currentSchoolName = targetedSchoolName;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
-    const restoredData =
-        loadSchoolData(currentSchoolName);
-
-    window.currentSchoolDatabase = restoredData;
-
-    document.title =
-        `${currentSchoolName} | School Management System & Library`;
-
-    const brandingTargets = [
-        "window-title",
-        "login-brand-title",
-        "sidebar-brand"
-    ];
-
-    brandingTargets.forEach(id => {
-        const element = document.getElementById(id);
-
-        if (element) {
-            element.textContent = currentSchoolName;
-        }
-    });
-
-    const schoolInput =
-        document.getElementById("schoolNameInput");
-
-    if (schoolInput) {
-        schoolInput.value = currentSchoolName;
-    }
-
-    refreshEntireSystemUI();
+function saveSchoolData(schoolName,data){
+const schoolIndex=getSchoolIndex();
+schoolIndex[schoolName]=data;
+saveSchoolIndex(schoolIndex);
 }
 
-function registerSchool(event) {
+window.currentSchoolDatabase=loadSchoolData(currentSchoolName);
 
-    event.preventDefault();
+function executeGlobalSchoolRebrand(targetedSchoolName){
 
-    const schoolName =
-        document.getElementById("schoolRegisterName")
-        .value.trim();
+if(!targetedSchoolName.trim()) return;
 
-    const schoolEmail =
-        document.getElementById("schoolRegisterEmail")
-        .value.trim();
+saveSchoolData(currentSchoolName,window.currentSchoolDatabase);
 
-    const schoolPhone =
-        document.getElementById("schoolRegisterPhone")
-        .value.trim();
+currentSchoolName=targetedSchoolName;
 
-    const schoolAddress =
-        document.getElementById("schoolRegisterAddress")
-        .value.trim();
+localStorage.setItem(ACTIVE_SCHOOL_KEY,currentSchoolName);
 
-    let schools = JSON.parse(
-        localStorage.getItem(SCHOOL_REGISTRY_KEY)
-    ) || [];
+window.currentSchoolDatabase=loadSchoolData(currentSchoolName);
 
-    const existingSchool = schools.find(
-        school =>
-            school.schoolName.toLowerCase() ===
-            schoolName.toLowerCase()
-    );
+const brandingTargets=[
+'window-title',
+'login-brand-title',
+'sidebar-brand'
+];
 
-    if (!existingSchool) {
+brandingTargets.forEach(id=>{
+const element=document.getElementById(id);
+if(element){
+element.textContent=currentSchoolName;
+}
+});
 
-        schools.push({
-            schoolName,
-            schoolEmail,
-            schoolPhone,
-            schoolAddress,
-            createdAt: new Date().toISOString()
-        });
-
-        localStorage.setItem(
-            SCHOOL_REGISTRY_KEY,
-            JSON.stringify(schools)
-        );
-    }
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        schoolName
-    );
-
-    executeGlobalSchoolRebrand(schoolName);
-
-    alert("School registered successfully.");
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
+refreshEntireSystemUI();
 }
 
-function toggleRegisterView() {
+function registerSchool(event){
+event.preventDefault();
 
-    const activeSchool =
-        localStorage.getItem(ACTIVE_SCHOOL_KEY);
+const schoolName=document.getElementById('schoolRegisterName').value;
+const schoolEmail=document.getElementById('schoolRegisterEmail').value;
+const schoolPhone=document.getElementById('schoolRegisterPhone').value;
+const schoolAddress=document.getElementById('schoolRegisterAddress').value;
 
-    if (!activeSchool) {
+let schools=JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
 
-        document.getElementById(
-            "signin-view"
-        ).style.display = "none";
+const exists=schools.find(s=>s.schoolName===schoolName);
 
-        document.getElementById(
-            "school-registration-view"
-        ).style.display = "block";
-
-        return;
-    }
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
+if(!exists){
+schools.push({schoolName,schoolEmail,schoolPhone,schoolAddress});
+localStorage.setItem(SCHOOL_REGISTRY_KEY,JSON.stringify(schools));
 }
 
-function toggleLoginView() {
+localStorage.setItem(ACTIVE_SCHOOL_KEY,schoolName);
+executeGlobalSchoolRebrand(schoolName);
 
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
+alert('School registered successfully');
 
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
+document.getElementById('school-registration-view').style.display='none';
+document.getElementById('register-view').style.display='block';
 }
 
-function registerUser(event) {
+function toggleRegisterView(){
 
-    event.preventDefault();
+const activeSchool=localStorage.getItem(ACTIVE_SCHOOL_KEY);
 
-    const fullName =
-        document.getElementById("registerFullName").value;
-
-    const email =
-        document.getElementById("registerEmail").value;
-
-    const username =
-        document.getElementById("registerUsername").value;
-
-    const password =
-        document.getElementById("registerPassword").value;
-
-    const role =
-        document.getElementById("registerRole").value;
-
-    let users = JSON.parse(
-        localStorage.getItem("sms_users")
-    ) || [];
-
-    const existingUser = users.find(user =>
-        user.username === username ||
-        user.email === email
-    );
-
-    if (existingUser) {
-        alert("Account already exists");
-        return;
-    }
-
-    users.push({
-        fullName,
-        email,
-        username,
-        password,
-        role,
-        school: currentSchoolName
-    });
-
-    localStorage.setItem(
-        "sms_users",
-        JSON.stringify(users)
-    );
-
-    alert("Permanent account created successfully");
-
-    toggleLoginView();
+if(!activeSchool){
+document.getElementById('signin-view').style.display='none';
+document.getElementById('school-registration-view').style.display='block';
+return;
 }
 
-function executeSystemLogin(event) {
-
-    event.preventDefault();
-
-    const username =
-        document.getElementById("loginUser").value;
-
-    const password =
-        document.getElementById("loginPassword").value;
-
-    const users = JSON.parse(
-        localStorage.getItem("sms_users")
-    ) || [];
-
-    const matchedUser = users.find(user =>
-        (
-            user.username === username ||
-            user.email === username
-        ) &&
-        user.password === password
-    );
-
-    if (!matchedUser) {
-        alert("Invalid login credentials");
-        return;
-    }
-
-    document.getElementById(
-        "login-screen"
-    ).style.display = "none";
-
-    document.getElementById(
-        "app-container"
-    ).style.display = "block";
-
-    document.getElementById(
-        "header-active-role-badge"
-    ).textContent = matchedUser.role;
-
-    switchTab("dashboard");
+document.getElementById('signin-view').style.display='none';
+document.getElementById('register-view').style.display='block';
 }
 
-function refreshEntireSystemUI() {
+function registerUser(event){
+event.preventDefault();
 
-    updateDashboardStatistics?.();
-    renderStudentsTable?.();
-    renderTeachersTable?.();
-    renderBooksTable?.();
-    renderParentsTable?.();
-    renderAnnouncements?.();
-}
+const fullName=document.getElementById('registerFullName').value;
+const email=document.getElementById('registerEmail').value;
+const username=document.getElementById('registerUsername').value;
+const password=document.getElementById('registerPassword').value;
+const role=document.getElementById('registerRole').value;
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+let users=JSON.parse(localStorage.getItem('sms_users')) || [];
 
-        currentSchoolName =
-            localStorage.getItem(ACTIVE_SCHOOL_KEY) ||
-            "APAPEC-IREBERO";
-
-        window.currentSchoolDatabase =
-            loadSchoolData(currentSchoolName);
-
-        executeGlobalSchoolRebrand(currentSchoolName);
-    }
+const existingUser=users.find(user=>
+user.username===username || user.email===email
 );
 
+if(existingUser){
+alert('Account already exists');
+return;
+}
+
+users.push({
+fullName,
+email,
+username,
+password,
+role,
+school:currentSchoolName
+});
+
+localStorage.setItem('sms_users',JSON.stringify(users));
+
+alert('Permanent account created successfully');
+
+location.reload();
+}
+
+function executeSystemLogin(event){
+event.preventDefault();
+
+const username=document.getElementById('loginUser').value;
+const password=document.getElementById('loginPassword').value;
+
+const users=JSON.parse(localStorage.getItem('sms_users')) || [];
+
+const matchedUser=users.find(user=>
+(user.username===username || user.email===username)
+&& user.password===password
+);
+
+if(!matchedUser){
+alert('Invalid credentials');
+return;
+}
+
+document.getElementById('login-screen').style.display='none';
+document.getElementById('app-container').style.display='block';
+
+document.getElementById('header-active-role-badge').textContent=matchedUser.role;
+
+switchTab('dashboard');
+}
+
+function switchTab(sectionId){
+
+document.querySelectorAll('.page-section').forEach(section=>{
+section.classList.remove('active');
+});
+
+const active=document.getElementById(sectionId);
+if(active){
+active.classList.add('active');
+}
+
+const pageTitle=document.getElementById('page-title');
+pageTitle.textContent=sectionId;
+}
+
+function executeLogout(){
+location.reload();
+}
+
+function updateSchoolName(){
+const newName=document.getElementById('schoolNameInput').value;
+executeGlobalSchoolRebrand(newName);
+}
+
+function addBook(){
+const bookName=document.getElementById('bookName').value;
+
+if(!bookName) return;
+
+window.currentSchoolDatabase.books.push({
+name:bookName
+});
+
+saveSchoolData(currentSchoolName,window.currentSchoolDatabase);
+
+renderBooksTable();
+
+alert('Book added successfully');
+}
+
+function renderBooksTable(){
+const tbody=document.querySelector('#books-table tbody');
+if(!tbody) return;
+
+tbody.innerHTML='';
+
+window.currentSchoolDatabase.books.forEach(book=>{
+const row=`<tr><td>${book.name}</td></tr>`;
+tbody.innerHTML+=row;
+});
+
+const count=document.getElementById('book-count');
+if(count){
+count.textContent=window.currentSchoolDatabase.books.length;
+}
+}
+
+function renderStudentsTable(){
+const count=document.getElementById('student-count');
+if(count){
+count.textContent=window.currentSchoolDatabase.students.length;
+}
+}
+
+function renderTeachersTable(){
+const count=document.getElementById('teacher-count');
+if(count){
+count.textContent=window.currentSchoolDatabase.teachers.length;
+}
+}
+
+function refreshEntireSystemUI(){
+renderStudentsTable();
+renderTeachersTable();
+renderBooksTable();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+executeGlobalSchoolRebrand(currentSchoolName);
+});
+
 </script>
+
+</body>
+</html>
 ```
