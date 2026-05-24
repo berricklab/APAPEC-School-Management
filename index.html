@@ -824,9 +824,9 @@ function registerSchool(event) {
             schoolName.toLowerCase()
     );
 
-    /* ================================
+    /* =====================================
        RESTORE EXISTING SCHOOL
-    ================================= */
+    ===================================== */
     if (existingSchool) {
 
         localStorage.setItem(
@@ -850,9 +850,9 @@ function registerSchool(event) {
 
     } else {
 
-        /* ================================
+        /* =====================================
            CREATE NEW SCHOOL
-        ================================= */
+        ===================================== */
         const schoolPayload = {
             schoolName,
             schoolEmail,
@@ -895,13 +895,17 @@ function registerSchool(event) {
         );
     }
 
-    /* ================================
-       DIRECT REDIRECT TO REGISTER PAGE
-    ================================= */
+    /* =====================================
+       DIRECTLY OPEN USER REGISTRATION
+    ===================================== */
 
     document.getElementById(
         "school-registration-view"
     ).style.display = "none";
+
+    document.getElementById(
+        "login-screen"
+    ).style.display = "flex";
 
     document.getElementById(
         "signin-view"
@@ -911,18 +915,33 @@ function registerSchool(event) {
         "register-view"
     ).style.display = "block";
 
-    /* ================================
-       OPTIONAL AUTO FILL
-    ================================= */
+    /* =====================================
+       CLEAR REGISTER FORM
+    ===================================== */
 
-    const usernameInput =
-        document.getElementById(
-            "registerUsername"
-        );
+    document.getElementById(
+        "registerFullName"
+    ).value = "";
 
-    if (usernameInput) {
-        usernameInput.focus();
-    }
+    document.getElementById(
+        "registerEmail"
+    ).value = "";
+
+    document.getElementById(
+        "registerUsername"
+    ).value = "";
+
+    document.getElementById(
+        "registerPassword"
+    ).value = "";
+
+    /* =====================================
+       AUTO FOCUS
+    ===================================== */
+
+    document.getElementById(
+        "registerFullName"
+    ).focus();
 }
    else{
 
