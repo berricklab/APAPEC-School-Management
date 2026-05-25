@@ -745,56 +745,279 @@ Save Fee
 
 <!-- GRADES -->
 
+<!-- ========================================= -->
+<!-- GRADES -->
+<!-- ========================================= -->
+
 <section id="grades-section" class="page-section">
 
-<div class="content-panel">
+    <div class="content-panel">
 
-<h2>Academic Grade Book</h2>
+        <h2>Academic Grade Book</h2>
 
-<form onsubmit="addGrade(event)">
+        <form onsubmit="addGrade(event)">
 
-<div class="form-group">
-<label>Student Name</label>
-<input type="text" id="gradeStudent" class="form-control" required>
-</div>
+            <div class="form-group">
 
-<div class="form-group">
-<label>Subject</label>
-<input type="text" id="gradeSubject" class="form-control" required>
-</div>
+                <label>Student Name</label>
 
-<div class="form-group">
-<label>Marks</label>
-<input type="number" id="gradeMarks" class="form-control" required>
-</div>
+                <input
+                    type="text"
+                    id="gradeStudent"
+                    class="form-control"
+                    required
+                >
 
-<button type="submit" class="btn-action">
-Save Grade
-</button>
+            </div>
 
-</form>
+            <div class="form-group">
 
-<table class="table">
+                <label>Subject</label>
 
-<thead>
+                <select
+                    id="gradeSubject"
+                    class="form-control"
+                    required
+                >
 
-<tr>
-<th>Student</th>
-<th>Subject</th>
-<th>Marks</th>
-<th>Grade</th>
-</tr>
+                    <option value="">
+                        Select Subject
+                    </option>
 
-</thead>
+                    <option value="SET">
+                        SET
+                    </option>
 
-<tbody id="grades-table-body"></tbody>
+                    <option value="SRS">
+                        SRS
+                    </option>
 
-</table>
+                    <option value="Mathematics">
+                        Mathematics
+                    </option>
 
-</div>
+                    <option value="Kinyarwanda">
+                        Kinyarwanda
+                    </option>
+
+                    <option value="English">
+                        English
+                    </option>
+
+                    <option value="French">
+                        French
+                    </option>
+
+                    <option value="Creative Arts">
+                        Creative Arts
+                    </option>
+
+                    <option value="PES">
+                        PES
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Marks</label>
+
+                <input
+                    type="number"
+                    id="gradeMarks"
+                    class="form-control"
+                    min="0"
+                    max="100"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn-action"
+            >
+                Save Grade
+            </button>
+
+        </form>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+                    <th>Student</th>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="grades-table-body"></tbody>
+
+        </table>
+
+    </div>
 
 </section>
 
+<script>
+
+/* =========================================
+   ADD GRADE
+========================================= */
+
+function addGrade(event){
+
+    event.preventDefault();
+
+    if(!window.currentSchoolDatabase){
+
+        alert(
+            "No active school database."
+        );
+
+        return;
+    }
+
+    const student =
+        document.getElementById(
+            "gradeStudent"
+        ).value.trim();
+
+    const subject =
+        document.getElementById(
+            "gradeSubject"
+        ).value;
+
+    const marks =
+        parseInt(
+            document.getElementById(
+                "gradeMarks"
+            ).value
+        );
+
+    if(
+        !student ||
+        !subject ||
+        isNaN(marks)
+    ){
+
+        alert(
+            "Fill all fields correctly."
+        );
+
+        return;
+    }
+
+    let grade = "F";
+
+    if(marks >= 80){
+
+        grade = "A";
+
+    }else if(marks >= 70){
+
+        grade = "B";
+
+    }else if(marks >= 60){
+
+        grade = "C";
+
+    }else if(marks >= 50){
+
+        grade = "D";
+    }
+
+    const gradePayload = {
+
+        student,
+        subject,
+        marks,
+        grade,
+
+        createdAt:
+            new Date().toISOString()
+    };
+
+    if(
+        !window.currentSchoolDatabase.grades
+    ){
+
+        window.currentSchoolDatabase.grades = [];
+    }
+
+    window.currentSchoolDatabase.grades.push(
+        gradePayload
+    );
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderGradesTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert(
+        "Grade saved successfully."
+    );
+}
+
+/* =========================================
+   RENDER GRADES
+========================================= */
+
+function renderGradesTable(){
+
+    const table =
+        document.getElementById(
+            "grades-table-body"
+        );
+
+    if(!table){
+        return;
+    }
+
+    table.innerHTML = "";
+
+    const grades =
+        window.currentSchoolDatabase.grades || [];
+
+    grades.forEach(record=>{
+
+        table.innerHTML += `
+
+<tr>
+    <td>${record.student}</td>
+    <td>${record.subject}</td>
+    <td>${record.marks}</td>
+    <td>${record.grade}</td>
+</tr>
+
+        `;
+    });
+
+    const gradesCount =
+        document.getElementById(
+            "grades-count"
+        );
+
+    if(gradesCount){
+
+        gradesCount.textContent =
+            grades.length;
+    }
+}
+
+</script>
 </main>
 
 </div>
