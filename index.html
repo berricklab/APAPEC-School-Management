@@ -1600,6 +1600,15 @@ function addGrade(event){
 
     event.preventDefault();
 
+    if(!window.currentSchoolDatabase){
+
+        alert(
+            "No active school database."
+        );
+
+        return;
+    }
+
     const student =
         document.getElementById(
             "gradeStudent"
@@ -1608,7 +1617,7 @@ function addGrade(event){
     const subject =
         document.getElementById(
             "gradeSubject"
-        ).value.trim();
+        ).value;
 
     const marks =
         parseInt(
@@ -1617,18 +1626,35 @@ function addGrade(event){
             ).value
         );
 
+    if(
+        !student ||
+        !subject ||
+        isNaN(marks)
+    ){
+
+        alert(
+            "Fill all fields correctly."
+        );
+
+        return;
+    }
+
     let grade = "F";
 
     if(marks >= 80){
+
         grade = "A";
-    }
-    else if(marks >= 70){
+
+    }else if(marks >= 70){
+
         grade = "B";
-    }
-    else if(marks >= 60){
+
+    }else if(marks >= 60){
+
         grade = "C";
-    }
-    else if(marks >= 50){
+
+    }else if(marks >= 50){
+
         grade = "D";
     }
 
@@ -1637,8 +1663,18 @@ function addGrade(event){
         student,
         subject,
         marks,
-        grade
+        grade,
+
+        createdAt:
+            new Date().toISOString()
     };
+
+    if(
+        !window.currentSchoolDatabase.grades
+    ){
+
+        window.currentSchoolDatabase.grades = [];
+    }
 
     window.currentSchoolDatabase.grades.push(
         gradePayload
@@ -1655,7 +1691,55 @@ function addGrade(event){
 
     event.target.reset();
 
-    alert("Grade saved successfully.");
+    alert(
+        "Grade saved successfully."
+    );
+}
+
+/* =========================================
+   RENDER GRADES
+========================================= */
+
+function renderGradesTable(){
+
+    const table =
+        document.getElementById(
+            "grades-table-body"
+        );
+
+    if(!table){
+        return;
+    }
+
+    table.innerHTML = "";
+
+    const grades =
+        window.currentSchoolDatabase.grades || [];
+
+    grades.forEach(record=>{
+
+        table.innerHTML += `
+
+<tr>
+    <td>${record.student}</td>
+    <td>${record.subject}</td>
+    <td>${record.marks}</td>
+    <td>${record.grade}</td>
+</tr>
+
+        `;
+    });
+
+    const gradesCount =
+        document.getElementById(
+            "grades-count"
+        );
+
+    if(gradesCount){
+
+        gradesCount.textContent =
+            grades.length;
+    }
 }
 
 /* =========================================
