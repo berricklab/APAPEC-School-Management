@@ -1,15 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="classic">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="window-title">APAPEC-IREBERO | School Management System</title>
+
+<title id="window-title">
+APAPEC-IREBERO | School Management System
+</title>
 
 <style>
 
 /* ===============================
-   ADVANCED ANIMATED SCHOOL SYSTEM
+   ROOT
 ================================== */
 
 :root{
@@ -22,7 +24,6 @@
     --surface:#ffffff;
     --text:#1f2937;
     --shadow:0 10px 30px rgba(0,0,0,.12);
-    --radius:18px;
 }
 
 /* ===============================
@@ -36,75 +37,87 @@
     font-family:Segoe UI,sans-serif;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
 body{
-    background:linear-gradient(135deg,#eff6ff,#f8fafc);
+    background:#f8fafc;
     color:var(--text);
-    overflow-x:hidden;
 }
 
-/* ===============================
-   ANIMATIONS
-================================== */
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+.page-section{
+    display:none;
 }
 
-@keyframes slideLeft{
-    from{
-        transform:translateX(-40px);
-        opacity:0;
-    }
-    to{
-        transform:translateX(0);
-        opacity:1;
-    }
+.page-section.active{
+    display:block;
 }
 
-@keyframes pop{
-    0%{
-        transform:scale(.8);
-        opacity:0;
-    }
-    100%{
-        transform:scale(1);
-        opacity:1;
-    }
+.form-group{
+    margin-bottom:15px;
 }
 
-@keyframes pulse{
-    0%{
-        box-shadow:0 0 0 rgba(37,99,235,.4);
-    }
-    70%{
-        box-shadow:0 0 0 20px rgba(37,99,235,0);
-    }
-    100%{
-        box-shadow:0 0 0 rgba(37,99,235,0);
-    }
+.form-control{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #dbeafe;
 }
 
-@keyframes float{
-    0%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-8px);
-    }
-    100%{
-        transform:translateY(0);
-    }
+.btn-auth,
+.btn-action{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+.table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.table th{
+    background:var(--primary);
+    color:#fff;
+    padding:12px;
+}
+
+.table td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+
+.content-panel{
+    background:#fff;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.stat-card{
+    background:#fff;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:var(--shadow);
+}
+
+.stat-card p{
+    font-size:2rem;
+    font-weight:bold;
 }
 
 /* ===============================
@@ -114,51 +127,23 @@ body{
 #login-screen{
     min-height:100vh;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     background:
-    linear-gradient(rgba(15,23,42,.75),rgba(15,23,42,.75)),
-    linear-gradient(135deg,var(--primary),var(--secondary));
-    padding:30px;
-    position:relative;
-    overflow:hidden;
-}
-
-#login-screen::before{
-    content:"";
-    width:500px;
-    height:500px;
-    background:rgba(255,255,255,.08);
-    border-radius:50%;
-    position:absolute;
-    top:-200px;
-    right:-150px;
-    animation:float 6s infinite ease-in-out;
-}
-
-#login-screen::after{
-    content:"";
-    width:400px;
-    height:400px;
-    background:rgba(255,255,255,.05);
-    border-radius:50%;
-    position:absolute;
-    bottom:-180px;
-    left:-120px;
-    animation:float 8s infinite ease-in-out;
+    linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+    padding:20px;
 }
 
 .auth-card{
     width:100%;
-    max-width:520px;
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(10px);
-    border-radius:30px;
-    padding:40px;
-    box-shadow:var(--shadow);
-    position:relative;
-    z-index:5;
-    animation:pop .7s ease;
+    max-width:500px;
+    background:#fff;
+    padding:35px;
+    border-radius:25px;
 }
 
 .auth-header{
@@ -167,134 +152,26 @@ body{
 }
 
 .auth-header h1{
-    font-size:2rem;
     color:var(--primary);
-    margin-bottom:10px;
-}
-
-.auth-header p{
-    color:#64748b;
 }
 
 /* ===============================
-   FORMS
-================================== */
-
-.form-group{
-    margin-bottom:18px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:600;
-    color:#334155;
-}
-
-.form-control{
-    width:100%;
-    padding:14px;
-    border-radius:14px;
-    border:2px solid #e2e8f0;
-    transition:.3s;
-    font-size:15px;
-    background:#fff;
-}
-
-.form-control:focus{
-    border-color:var(--secondary);
-    outline:none;
-    box-shadow:0 0 0 5px rgba(37,99,235,.15);
-    transform:translateY(-2px);
-}
-
-/* ===============================
-   BUTTONS
-================================== */
-
-.btn-auth,
-.btn-action{
-    width:100%;
-    border:none;
-    padding:14px;
-    border-radius:14px;
-    cursor:pointer;
-    font-weight:700;
-    font-size:15px;
-    transition:.3s;
-    color:#fff;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
-    position:relative;
-    overflow:hidden;
-}
-
-.btn-auth:hover,
-.btn-action:hover{
-    transform:translateY(-3px);
-    box-shadow:0 12px 24px rgba(37,99,235,.25);
-}
-
-.btn-auth:active,
-.btn-action:active{
-    transform:scale(.98);
-}
-
-.btn-auth::before,
-.btn-action::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:-100%;
-    width:100%;
-    height:100%;
-    background:rgba(255,255,255,.25);
-    transition:.5s;
-}
-
-.btn-auth:hover::before,
-.btn-action:hover::before{
-    left:100%;
-}
-
-/* ===============================
-   APP CONTAINER
+   APP
 ================================== */
 
 #app-container{
     display:none;
-    animation:fadeIn .6s ease;
 }
 
-/* ===============================
-   SIDEBAR
-================================== */
-
 aside{
-    width:270px;
+    width:260px;
     position:fixed;
     top:0;
     bottom:0;
     left:0;
-    background:linear-gradient(
-        180deg,
-        var(--dark),
-        var(--primary)
-    );
+    background:var(--dark);
     color:#fff;
-    padding:25px;
-    overflow-y:auto;
-    animation:slideLeft .6s ease;
-    box-shadow:5px 0 20px rgba(0,0,0,.1);
-}
-
-aside h2{
-    text-align:center;
-    margin-bottom:30px;
-    font-size:1.7rem;
+    padding:20px;
 }
 
 .sidebar-menu{
@@ -306,268 +183,57 @@ aside h2{
     padding:14px;
     margin-bottom:12px;
     border:none;
-    border-radius:14px;
-    background:rgba(255,255,255,.08);
+    border-radius:12px;
+    background:rgba(255,255,255,.1);
     color:#fff;
     cursor:pointer;
-    text-align:left;
-    font-weight:600;
-    transition:.3s;
-    position:relative;
-}
-
-.menu-btn:hover{
-    background:rgba(255,255,255,.18);
-    transform:translateX(8px);
 }
 
 .menu-btn.active{
-    background:linear-gradient(
-        135deg,
-        var(--secondary),
-        var(--accent)
-    );
-    animation:pulse 2s infinite;
+    background:var(--secondary);
 }
-
-/* ===============================
-   HEADER
-================================== */
 
 header{
     position:fixed;
     top:0;
-    left:270px;
+    left:260px;
     right:0;
     height:80px;
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid #e2e8f0;
+    background:#fff;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 30px;
-    z-index:100;
+    padding:0 25px;
+    box-shadow:var(--shadow);
 }
 
-header h2{
-    color:var(--primary);
-    font-size:1.5rem;
+main{
+    margin-left:260px;
+    margin-top:90px;
+    padding:30px;
+}
+
+#header-active-role-badge{
+    padding:8px 14px;
+    border-radius:20px;
+    background:var(--accent);
+    color:#fff;
+    margin-right:10px;
 }
 
 header button{
-    padding:10px 20px;
+    padding:10px 16px;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
     background:var(--danger);
     color:#fff;
     cursor:pointer;
-    transition:.3s;
-}
-
-header button:hover{
-    transform:translateY(-2px);
-}
-
-/* ===============================
-   MAIN
-================================== */
-
-main{
-    margin-left:270px;
-    margin-top:80px;
-    padding:35px;
-}
-
-/* ===============================
-   DASHBOARD
-================================== */
-
-.dashboard-grid{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-    gap:25px;
-}
-
-.stat-card{
-    background:var(--surface);
-    border-radius:25px;
-    padding:30px;
-    box-shadow:var(--shadow);
-    animation:fadeIn .6s ease;
-    transition:.4s;
-    position:relative;
-    overflow:hidden;
-}
-
-.stat-card::before{
-    content:"";
-    width:120px;
-    height:120px;
-    background:rgba(37,99,235,.08);
-    border-radius:50%;
-    position:absolute;
-    top:-40px;
-    right:-30px;
-}
-
-.stat-card:hover{
-    transform:translateY(-10px);
-}
-
-.stat-card h3{
-    margin-bottom:15px;
-    color:var(--primary);
-}
-
-.stat-card p{
-    font-size:2rem;
-    font-weight:800;
-}
-
-/* ===============================
-   PANELS
-================================== */
-
-.content-panel{
-    background:#fff;
-    border-radius:25px;
-    padding:30px;
-    box-shadow:var(--shadow);
-    animation:fadeIn .5s ease;
-}
-
-.content-panel h2{
-    margin-bottom:20px;
-    color:var(--primary);
-}
-
-/* ===============================
-   TABLES
-================================== */
-
-.table{
-    width:100%;
-    border-collapse:collapse;
-    overflow:hidden;
-    border-radius:16px;
-    margin-top:20px;
-}
-
-.table th{
-    background:var(--primary);
-    color:#fff;
-    padding:15px;
-    text-align:left;
-}
-
-.table td{
-    padding:14px;
-    border-bottom:1px solid #e5e7eb;
-}
-
-.table tr{
-    transition:.3s;
-}
-
-.table tr:hover{
-    background:#eff6ff;
-    transform:scale(1.01);
-}
-
-/* ===============================
-   PAGE SECTIONS
-================================== */
-
-.page-section{
-    display:none;
-    animation:fadeIn .5s ease;
-}
-
-.page-section.active{
-    display:block;
-}
-
-/* ===============================
-   BADGES
-================================== */
-
-#header-active-role-badge{
-    padding:8px 16px;
-    background:linear-gradient(
-        135deg,
-        var(--accent),
-        #34d399
-    );
-    border-radius:30px;
-    color:#fff;
-    margin-right:15px;
-    font-weight:700;
-}
-
-/* ===============================
-   SCROLLBAR
-================================== */
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-::-webkit-scrollbar-thumb{
-    background:var(--secondary);
-    border-radius:10px;
-}
-
-/* ===============================
-   RESPONSIVE
-================================== */
-
-@media(max-width:900px){
-
-aside{
-    width:100%;
-    position:relative;
-    height:auto;
-}
-
-header{
-    left:0;
-}
-
-main{
-    margin-left:0;
-}
-
-.dashboard-grid{
-    grid-template-columns:1fr;
-}
-
-}
-
-@media(max-width:600px){
-
-.auth-card{
-    padding:25px;
-}
-
-header{
-    padding:0 15px;
-}
-
-main{
-    padding:20px;
-}
-
-.stat-card{
-    padding:20px;
-}
-
 }
 
 </style>
 </head>
-<body>   
+<body>
+
 <!-- ========================================= -->
 <!-- LOGIN SCREEN -->
 <!-- ========================================= -->
@@ -576,52 +242,56 @@ main{
 
     <div class="auth-card">
 
-        <!-- SCHOOL REGISTRATION -->
+        <!-- SCHOOL REGISTER -->
+
         <div id="school-registration-view">
 
             <div class="auth-header">
-                <h1>Register School</h1>
-                <p>Create school before user account</p>
+
+                <h1>
+                    Register School
+                </h1>
+
             </div>
 
             <form onsubmit="registerSchool(event)">
 
                 <div class="form-group">
-                    <label>School Name</label>
                     <input
                         type="text"
                         id="schoolRegisterName"
                         class="form-control"
+                        placeholder="School Name"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>School Email</label>
                     <input
                         type="email"
                         id="schoolRegisterEmail"
                         class="form-control"
+                        placeholder="School Email"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>School Phone</label>
                     <input
                         type="text"
                         id="schoolRegisterPhone"
                         class="form-control"
+                        placeholder="School Phone"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>School Address</label>
                     <input
                         type="text"
                         id="schoolRegisterAddress"
                         class="form-control"
+                        placeholder="School Address"
                         required
                     >
                 </div>
@@ -632,101 +302,101 @@ main{
                 >
                     Register School
                 </button>
-               <button
-    type="button"
-    class="btn-auth"
-    onclick="openExistingSchoolRegistration()"
-    style="
-        margin-top:15px;
-        background:linear-gradient(
-            135deg,
-            #10b981,
-            #059669
-        );
-    "
->
-    Already Registered School?
-</button>
-               <!-- ADD THIS BELOW THE 
-     "Already Registered School?" BUTTON -->
 
-<button
-    type="button"
-    class="btn-auth"
-    onclick="openLoginPage()"
-    style="
-        margin-top:15px;
-        background:linear-gradient(
-            135deg,
-            #f59e0b,
-            #d97706
-        );
-    "
->
-    Already Have An Account?
-</button>
+                <button
+                    type="button"
+                    class="btn-auth"
+                    onclick="openExistingSchoolRegistration()"
+                    style="
+                        margin-top:15px;
+                        background:#10b981;
+                    "
+                >
+                    Already Registered School?
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-auth"
+                    onclick="openLoginPage()"
+                    style="
+                        margin-top:15px;
+                        background:#f59e0b;
+                    "
+                >
+                    Already Have Account?
+                </button>
 
             </form>
 
         </div>
 
         <!-- USER REGISTER -->
-        <div id="register-view" style="display:none;">
+
+        <div
+            id="register-view"
+            style="display:none;"
+        >
 
             <div class="auth-header">
-                <h1>Create Account</h1>
+
+                <h1>
+                    Create Account
+                </h1>
+
                 <p id="active-school-label"></p>
+
             </div>
 
             <form onsubmit="registerUser(event)">
 
                 <div class="form-group">
-                    <label>Full Name</label>
                     <input
                         type="text"
                         id="registerFullName"
                         class="form-control"
+                        placeholder="Full Name"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>Email</label>
                     <input
                         type="email"
                         id="registerEmail"
                         class="form-control"
+                        placeholder="Email"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>Username</label>
                     <input
                         type="text"
                         id="registerUsername"
                         class="form-control"
+                        placeholder="Username"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
                     <input
                         type="password"
                         id="registerPassword"
                         class="form-control"
+                        placeholder="Password"
                         required
                     >
                 </div>
 
                 <div class="form-group">
-                    <label>Role</label>
 
                     <select
                         id="registerRole"
                         class="form-control"
                     >
+
                         <option value="admin">
                             Administrator
                         </option>
@@ -743,10 +413,8 @@ main{
                             Librarian
                         </option>
 
-                        <option value="parent">
-                            Parent
-                        </option>
                     </select>
+
                 </div>
 
                 <button
@@ -761,34 +429,44 @@ main{
         </div>
 
         <!-- LOGIN -->
-        <div id="signin-view" style="display:none;">
+
+        <div
+            id="signin-view"
+            style="display:none;"
+        >
 
             <div class="auth-header">
-                <h1>Login</h1>
+
+                <h1>
+                    Login
+                </h1>
+
             </div>
 
             <form onsubmit="executeSystemLogin(event)">
 
                 <div class="form-group">
-                    <label>Username or Email</label>
 
                     <input
                         type="text"
                         id="loginUser"
                         class="form-control"
+                        placeholder="Username or Email"
                         required
                     >
+
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
 
                     <input
                         type="password"
                         id="loginPassword"
                         class="form-control"
+                        placeholder="Password"
                         required
                     >
+
                 </div>
 
                 <button
@@ -805,8 +483,9 @@ main{
     </div>
 
 </div>
-   <!-- ========================================= -->
-<!-- MAIN APPLICATION -->
+
+<!-- ========================================= -->
+<!-- APP -->
 <!-- ========================================= -->
 
 <div id="app-container">
@@ -819,7 +498,50 @@ main{
 
         <ul class="sidebar-menu">
 
-<li> <button class="menu-btn" onclick="switchTab('dashboard')" > Dashboard </button> </li> <li> <button class="menu-btn" onclick="switchTab('library')" > Library Catalog </button> </li> <li> <button class="menu-btn" onclick="switchTab('fees')" > Fees Management </button> </li> <li> <button class="menu-btn" onclick="switchTab('grades')" > Academic Grade Book </button> </li>
+            <li>
+                <button
+                    class="menu-btn active"
+                    onclick="switchTab('dashboard')"
+                >
+                    Dashboard
+                </button>
+            </li>
+
+            <li>
+                <button
+                    class="menu-btn"
+                    onclick="switchTab('students')"
+                >
+                    Students
+                </button>
+            </li>
+
+            <li>
+                <button
+                    class="menu-btn"
+                    onclick="switchTab('library')"
+                >
+                    Library
+                </button>
+            </li>
+
+            <li>
+                <button
+                    class="menu-btn"
+                    onclick="switchTab('fees')"
+                >
+                    Fees
+                </button>
+            </li>
+
+            <li>
+                <button
+                    class="menu-btn"
+                    onclick="switchTab('grades')"
+                >
+                    Grade Book
+                </button>
+            </li>
 
         </ul>
 
@@ -847,146 +569,468 @@ main{
 
     <main>
 
-<section id="dashboard-section" class="page-section active" > <div class="dashboard-grid"> <div class="stat-card"> <h3>Books</h3> <p id="books-count">0</p> </div> <div class="stat-card"> <h3>Fees Records</h3> <p id="fees-count">0</p> </div> <div class="stat-card"> <h3>Grades</h3> <p id="grades-count">0</p> </div> </div> </section> <!-- LIBRARY --> <section id="library-section" class="page-section" > <div class="content-panel"> <h2>Library Catalog</h2> <form onsubmit="addBook(event)"> <div class="form-group"> <label>Book Title</label> <input type="text" id="bookTitle" class="form-control" required > </div> <div class="form-group"> <label>Author</label> <input type="text" id="bookAuthor" class="form-control" required > </div> <div class="form-group"> <label>Category</label> <input type="text" id="bookCategory" class="form-control" required > </div> <button type="submit" class="btn-action" > Add Book </button> </form> <table class="table"> <thead> <tr> <th>Title</th> <th>Author</th> <th>Category</th> </tr> </thead> <tbody id="library-table-body"></tbody> </table> </div> </section> <!-- FEES --> <section id="fees-section" class="page-section" > <div class="content-panel"> <h2>Fees Management</h2> <form onsubmit="addFee(event)"> <div class="form-group"> <label>Student Name</label> <input type="text" id="feeStudent" class="form-control" required > </div> <div class="form-group"> <label>Amount</label> <input type="number" id="feeAmount" class="form-control" required > </div> <div class="form-group"> <label>Status</label> <select id="feeStatus" class="form-control" > <option value="Paid"> Paid </option> <option value="Pending"> Pending </option> </select> </div> <button type="submit" class="btn-action" > Save Fee </button> </form> <table class="table"> <thead> <tr> <th>Student</th> <th>Amount</th> <th>Status</th> </tr> </thead> <tbody id="fees-table-body"></tbody> </table> </div> </section> <!-- GRADES --> <section id="grades-section" class="page-section" > <div class="content-panel"> <h2>Academic Grade Book</h2> <form onsubmit="addGrade(event)"> <div class="form-group"> <label>Student Name</label> <input type="text" id="gradeStudent" class="form-control" required > </div> <div class="form-group"> <label>Subject</label> <input type="text" id="gradeSubject" class="form-control" required > </div> <div class="form-group"> <label>Marks</label> <input type="number" id="gradeMarks" class="form-control" required > </div> <button type="submit" class="btn-action" > Save Grade </button> </form> <table class="table"> <thead> <tr> <th>Student</th> <th>Subject</th> <th>Marks</th> <th>Grade</th> </tr> </thead> <tbody id="grades-table-body"></tbody> </table> </div> </section>
+        <!-- DASHBOARD -->
+
+        <section
+            id="dashboard-section"
+            class="page-section active"
+        >
+
+            <div class="dashboard-grid">
+
+                <div class="stat-card">
+                    <h3>Students</h3>
+                    <p id="students-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Books</h3>
+                    <p id="books-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Fees</h3>
+                    <p id="fees-count">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Grades</h3>
+                    <p id="grades-count">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- STUDENTS -->
+
+        <section
+            id="students-section"
+            class="page-section"
+        >
+
+            <div class="content-panel">
+
+                <h2>
+                    Students
+                </h2>
+
+                <form onsubmit="addStudent(event)">
+
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="studentName"
+                            class="form-control"
+                            placeholder="Student Name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            type="email"
+                            id="studentEmail"
+                            class="form-control"
+                            placeholder="Student Email"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="studentClass"
+                            class="form-control"
+                            placeholder="Class"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn-action"
+                    >
+                        Add Student
+                    </button>
+
+                </form>
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Class</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="students-table-body">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- LIBRARY -->
+
+        <section
+            id="library-section"
+            class="page-section"
+        >
+
+            <div class="content-panel">
+
+                <h2>
+                    Library Catalog
+                </h2>
+
+                <form onsubmit="addBook(event)">
+
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="bookTitle"
+                            class="form-control"
+                            placeholder="Book Title"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="bookAuthor"
+                            class="form-control"
+                            placeholder="Author"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="bookCategory"
+                            class="form-control"
+                            placeholder="Category"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn-action"
+                    >
+                        Add Book
+                    </button>
+
+                </form>
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="library-table-body">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
 
     </main>
 
 </div>
-   <!-- ========================================= -->
-<!-- LIBRARY CATALOG SECTION -->
-<!-- ========================================= -->
 
-<section
-    id="library-section"
-    class="page-section"
->
-
-    <div class="content-panel">
-
-        <h2>
-            Library Catalog
-        </h2>
-
-        <!-- ADD BOOK FORM -->
-        <div id="library-add-book-form">
-
-            <div class="form-group">
-                <label>Book Title</label>
-
-                <input
-                    type="text"
-                    id="bookTitle"
-                    class="form-control"
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Author</label>
-
-                <input
-                    type="text"
-                    id="bookAuthor"
-                    class="form-control"
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Category</label>
-
-                <input
-                    type="text"
-                    id="bookCategory"
-                    class="form-control"
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Quantity</label>
-
-                <input
-                    type="number"
-                    id="bookQuantity"
-                    class="form-control"
-                >
-            </div>
-
-            <button
-                class="btn-action"
-                onclick="addLibraryBook()"
-            >
-                Add New Book
-            </button>
-
-        </div>
-
-        <!-- BOOK TABLE -->
-
-        <table class="table">
-
-            <thead>
-
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
-                </tr>
-
-            </thead>
-
-            <tbody id="library-table-body">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</section><script>
+<script>
 
 /* =========================================
-   CURRENT USER
+   STORAGE KEYS
 ========================================= */
 
+const SCHOOL_REGISTRY_KEY =
+    "sms_registered_schools";
+
+const USERS_KEY =
+    "sms_users";
+
+const ACTIVE_SCHOOL_KEY =
+    "sms_active_school";
+
+/* =========================================
+   GLOBAL VARIABLES
+========================================= */
+
+let currentSchoolName = "";
 let currentLoggedInUser = null;
 
 /* =========================================
-   SWITCH TAB
+   DATABASE
 ========================================= */
 
-function switchTab(tab){
+function createEmptySchoolDatabase(
+    schoolName
+){
 
-    document
-        .querySelectorAll(".page-section")
-        .forEach(section=>{
+    return{
 
-            section.classList.remove("active");
+        schoolName,
 
-        });
+        students:[],
+        books:[],
+        fees:[],
+        marks:[]
+    };
+}
 
-    document
-        .querySelectorAll(".menu-btn")
-        .forEach(btn=>{
+function getSchoolIndex(){
 
-            btn.classList.remove("active");
+    return JSON.parse(
+        localStorage.getItem(
+            "sms_school_index"
+        )
+    ) || {};
+}
 
-        });
+function saveSchoolIndex(index){
 
-    const activeSection =
-        document.getElementById(
-            tab + "-section"
-        );
+    localStorage.setItem(
+        "sms_school_index",
+        JSON.stringify(index)
+    );
+}
 
-    if(activeSection){
+function loadSchoolData(schoolName){
 
-        activeSection.classList.add(
-            "active"
-        );
+    const schools =
+        getSchoolIndex();
+
+    if(!schools[schoolName]){
+
+        schools[schoolName] =
+            createEmptySchoolDatabase(
+                schoolName
+            );
+
+        saveSchoolIndex(schools);
     }
 
-    event?.target?.classList.add(
-        "active"
+    return schools[schoolName];
+}
+
+function saveSchoolData(
+    schoolName,
+    data
+){
+
+    const schools =
+        getSchoolIndex();
+
+    schools[schoolName] = data;
+
+    saveSchoolIndex(schools);
+}
+
+/* =========================================
+   REGISTER SCHOOL
+========================================= */
+
+function registerSchool(event){
+
+    event.preventDefault();
+
+    const schoolName =
+        document.getElementById(
+            "schoolRegisterName"
+        ).value.trim();
+
+    const schoolEmail =
+        document.getElementById(
+            "schoolRegisterEmail"
+        ).value.trim();
+
+    const schoolPhone =
+        document.getElementById(
+            "schoolRegisterPhone"
+        ).value.trim();
+
+    const schoolAddress =
+        document.getElementById(
+            "schoolRegisterAddress"
+        ).value.trim();
+
+    let schools =
+        JSON.parse(
+            localStorage.getItem(
+                SCHOOL_REGISTRY_KEY
+            )
+        ) || [];
+
+    schools.push({
+
+        schoolName,
+        schoolEmail,
+        schoolPhone,
+        schoolAddress
+    });
+
+    localStorage.setItem(
+        SCHOOL_REGISTRY_KEY,
+        JSON.stringify(schools)
     );
+
+    currentSchoolName =
+        schoolName;
+
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
+
+    const db =
+        createEmptySchoolDatabase(
+            currentSchoolName
+        );
+
+    saveSchoolData(
+        currentSchoolName,
+        db
+    );
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
+}
+
+/* =========================================
+   EXISTING SCHOOL
+========================================= */
+
+function openExistingSchoolRegistration(){
+
+    const school =
+        prompt(
+            "Enter school name"
+        );
+
+    if(!school){
+        return;
+    }
+
+    currentSchoolName =
+        school;
+
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        school
+    );
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
+}
+
+/* =========================================
+   OPEN LOGIN
+========================================= */
+
+function openLoginPage(){
+
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
+}
+
+/* =========================================
+   REGISTER USER
+========================================= */
+
+function registerUser(event){
+
+    event.preventDefault();
+
+    let users =
+        JSON.parse(
+            localStorage.getItem(
+                USERS_KEY
+            )
+        ) || [];
+
+    users.push({
+
+        fullName:
+            document.getElementById(
+                "registerFullName"
+            ).value,
+
+        email:
+            document.getElementById(
+                "registerEmail"
+            ).value,
+
+        username:
+            document.getElementById(
+                "registerUsername"
+            ).value,
+
+        password:
+            document.getElementById(
+                "registerPassword"
+            ).value,
+
+        role:
+            document.getElementById(
+                "registerRole"
+            ).value,
+
+        school:
+            currentSchoolName
+    });
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+
+    alert(
+        "Account created successfully."
+    );
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
 }
 
 /* =========================================
@@ -1000,12 +1044,12 @@ function executeSystemLogin(event){
     const loginValue =
         document.getElementById(
             "loginUser"
-        ).value.trim();
+        ).value;
 
     const password =
         document.getElementById(
             "loginPassword"
-        ).value.trim();
+        ).value;
 
     const users =
         JSON.parse(
@@ -1018,7 +1062,8 @@ function executeSystemLogin(event){
         users.find(
             user =>
                 (
-                    user.username === loginValue ||
+                    user.username === loginValue
+                    ||
                     user.email === loginValue
                 )
                 &&
@@ -1027,7 +1072,10 @@ function executeSystemLogin(event){
 
     if(!matchedUser){
 
-        alert("Invalid credentials");
+        alert(
+            "Invalid credentials"
+        );
+
         return;
     }
 
@@ -1037,19 +1085,10 @@ function executeSystemLogin(event){
     currentSchoolName =
         matchedUser.school;
 
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
     window.currentSchoolDatabase =
         loadSchoolData(
             currentSchoolName
         );
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
 
     document.getElementById(
         "login-screen"
@@ -1064,91 +1103,78 @@ function executeSystemLogin(event){
     ).textContent =
         matchedUser.role;
 
-    switchTab("dashboard");
-
     refreshEntireSystemUI();
-
-    applyRolePermissions();
 }
 
 /* =========================================
-   ROLE ACCESS
+   SWITCH TAB
 ========================================= */
 
-function applyRolePermissions(){
+function switchTab(tab){
 
-    if(!currentLoggedInUser){
+    document
+        .querySelectorAll(".page-section")
+        .forEach(section=>{
+
+            section.classList.remove(
+                "active"
+            );
+
+        });
+
+    document
+        .getElementById(
+            tab + "-section"
+        )
+        .classList.add("active");
+}
+
+/* =========================================
+   ADD STUDENT
+========================================= */
+
+function addStudent(event){
+
+    event.preventDefault();
+
+    if(
+        currentLoggedInUser.role !==
+        "admin"
+    ){
+
+        alert(
+            "Only admin can add students."
+        );
+
         return;
     }
 
-    const role =
-        currentLoggedInUser.role;
+    window.currentSchoolDatabase.students.push({
 
-    const libraryForm =
-        document.querySelector(
-            "#library-section form"
-        );
+        name:
+            document.getElementById(
+                "studentName"
+            ).value,
 
-    const feesForm =
-        document.querySelector(
-            "#fees-section form"
-        );
+        email:
+            document.getElementById(
+                "studentEmail"
+            ).value,
 
-    const gradesForm =
-        document.querySelector(
-            "#grades-section form"
-        );
+        className:
+            document.getElementById(
+                "studentClass"
+            ).value
+    });
 
-    /* =========================
-       LIBRARY ACCESS
-    ========================= */
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
 
-    if(
-        role === "admin" ||
-        role === "librarian"
-    ){
+    refreshEntireSystemUI();
 
-        libraryForm.style.display =
-            "block";
-
-    }else{
-
-        libraryForm.style.display =
-            "none";
-    }
-
-    /* =========================
-       FEES ACCESS
-    ========================= */
-
-    if(role === "admin"){
-
-        feesForm.style.display =
-            "block";
-
-    }else{
-
-        feesForm.style.display =
-            "none";
-    }
-
-    /* =========================
-       GRADE ACCESS
-    ========================= */
-
-    if(
-        role === "admin" ||
-        role === "teacher"
-    ){
-
-        gradesForm.style.display =
-            "block";
-
-    }else{
-
-        gradesForm.style.display =
-            "none";
-    }
+    event.target.reset();
 }
 
 /* =========================================
@@ -1174,54 +1200,106 @@ function addBook(event){
         return;
     }
 
-    const title =
-        document.getElementById(
-            "bookTitle"
-        ).value.trim();
+    window.currentSchoolDatabase.books.push({
 
-    const author =
-        document.getElementById(
-            "bookAuthor"
-        ).value.trim();
+        title:
+            document.getElementById(
+                "bookTitle"
+            ).value,
 
-    const category =
-        document.getElementById(
-            "bookCategory"
-        ).value.trim();
+        author:
+            document.getElementById(
+                "bookAuthor"
+            ).value,
 
-    const newBook = {
-
-        title,
-        author,
-        category,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    window.currentSchoolDatabase.books.push(
-        newBook
-    );
+        category:
+            document.getElementById(
+                "bookCategory"
+            ).value
+    });
 
     saveSchoolData(
         currentSchoolName,
         window.currentSchoolDatabase
     );
 
-    renderLibraryTable();
-
     refreshEntireSystemUI();
 
     event.target.reset();
-
-    alert("Book added successfully.");
 }
 
 /* =========================================
-   RENDER LIBRARY TABLE
+   REFRESH UI
 ========================================= */
 
-function renderLibraryTable(){
+function refreshEntireSystemUI(){
+
+    document.getElementById(
+        "students-count"
+    ).textContent =
+        window.currentSchoolDatabase.students.length;
+
+    document.getElementById(
+        "books-count"
+    ).textContent =
+        window.currentSchoolDatabase.books.length;
+
+    document.getElementById(
+        "fees-count"
+    ).textContent =
+        window.currentSchoolDatabase.fees.length;
+
+    document.getElementById(
+        "grades-count"
+    ).textContent =
+        window.currentSchoolDatabase.marks.length;
+
+    renderStudentsTable();
+
+    renderBooksTable();
+
+    document.getElementById(
+        "sidebar-school-name"
+    ).textContent =
+        currentSchoolName;
+
+    document.getElementById(
+        "header-school-name"
+    ).textContent =
+        currentSchoolName;
+}
+
+/* =========================================
+   STUDENT TABLE
+========================================= */
+
+function renderStudentsTable(){
+
+    const tbody =
+        document.getElementById(
+            "students-table-body"
+        );
+
+    tbody.innerHTML = "";
+
+    window.currentSchoolDatabase.students
+    .forEach(student=>{
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${student.name}</td>
+                <td>${student.email}</td>
+                <td>${student.className}</td>
+            </tr>
+        `;
+    });
+}
+
+/* =========================================
+   BOOK TABLE
+========================================= */
+
+function renderBooksTable(){
 
     const tbody =
         document.getElementById(
@@ -1244,265 +1322,10 @@ function renderLibraryTable(){
 }
 
 /* =========================================
-   ADD FEES
-========================================= */
-
-function addFee(event){
-
-    event.preventDefault();
-
-    if(
-        currentLoggedInUser.role !==
-        "admin"
-    ){
-
-        alert(
-            "Only admin can manage fees."
-        );
-
-        return;
-    }
-
-    if(
-        !window.currentSchoolDatabase.fees
-    ){
-
-        window.currentSchoolDatabase.fees = [];
-    }
-
-    const student =
-        document.getElementById(
-            "feeStudent"
-        ).value.trim();
-
-    const amount =
-        document.getElementById(
-            "feeAmount"
-        ).value;
-
-    const status =
-        document.getElementById(
-            "feeStatus"
-        ).value;
-
-    window.currentSchoolDatabase.fees.push({
-
-        student,
-        amount,
-        status
-    });
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderFeesTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert("Fee saved.");
-}
-
-/* =========================================
-   RENDER FEES TABLE
-========================================= */
-
-function renderFeesTable(){
-
-    const tbody =
-        document.getElementById(
-            "fees-table-body"
-        );
-
-    tbody.innerHTML = "";
-
-    const fees =
-        window.currentSchoolDatabase.fees
-        || [];
-
-    fees.forEach(fee=>{
-
-        tbody.innerHTML += `
-            <tr>
-                <td>${fee.student}</td>
-                <td>${fee.amount}</td>
-                <td>${fee.status}</td>
-            </tr>
-        `;
-    });
-}
-
-/* =========================================
-   ADD GRADES
-========================================= */
-
-function addGrade(event){
-
-    event.preventDefault();
-
-    if(
-        currentLoggedInUser.role !==
-        "admin"
-        &&
-        currentLoggedInUser.role !==
-        "teacher"
-    ){
-
-        alert(
-            "Only admin or teacher can add grades."
-        );
-
-        return;
-    }
-
-    const student =
-        document.getElementById(
-            "gradeStudent"
-        ).value.trim();
-
-    const subject =
-        document.getElementById(
-            "gradeSubject"
-        ).value.trim();
-
-    const marks =
-        Number(
-            document.getElementById(
-                "gradeMarks"
-            ).value
-        );
-
-    let grade = "F";
-
-    if(marks >= 90){
-        grade = "A";
-    }
-    else if(marks >= 80){
-        grade = "B";
-    }
-    else if(marks >= 70){
-        grade = "C";
-    }
-    else if(marks >= 60){
-        grade = "D";
-    }
-
-    window.currentSchoolDatabase.marks.push({
-
-        student,
-        subject,
-        marks,
-        grade
-    });
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderGradesTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert("Grade saved.");
-}
-
-/* =========================================
-   RENDER GRADES TABLE
-========================================= */
-
-function renderGradesTable(){
-
-    const tbody =
-        document.getElementById(
-            "grades-table-body"
-        );
-
-    tbody.innerHTML = "";
-
-    window.currentSchoolDatabase.marks
-    .forEach(mark=>{
-
-        tbody.innerHTML += `
-            <tr>
-                <td>${mark.student}</td>
-                <td>${mark.subject}</td>
-                <td>${mark.marks}</td>
-                <td>${mark.grade}</td>
-            </tr>
-        `;
-    });
-}
-
-/* =========================================
-   REFRESH UI
-========================================= */
-
-function refreshEntireSystemUI(){
-
-    if(!window.currentSchoolDatabase){
-        return;
-    }
-
-    document.getElementById(
-        "books-count"
-    ).textContent =
-        window.currentSchoolDatabase.books.length;
-
-    document.getElementById(
-        "fees-count"
-    ).textContent =
-        (
-            window.currentSchoolDatabase.fees
-            || []
-        ).length;
-
-    document.getElementById(
-        "grades-count"
-    ).textContent =
-        window.currentSchoolDatabase.marks.length;
-
-    renderLibraryTable();
-
-    renderFeesTable();
-
-    renderGradesTable();
-
-    const sidebarTitle =
-        document.getElementById(
-            "sidebar-school-name"
-        );
-
-    if(sidebarTitle){
-
-        sidebarTitle.textContent =
-            currentSchoolName;
-    }
-
-    const headerTitle =
-        document.getElementById(
-            "header-school-name"
-        );
-
-    if(headerTitle){
-
-        headerTitle.textContent =
-            currentSchoolName;
-    }
-}
-
-/* =========================================
    LOGOUT
 ========================================= */
 
 function logoutSystem(){
-
-    currentLoggedInUser = null;
 
     document.getElementById(
         "app-container"
@@ -1526,5 +1349,6 @@ function logoutSystem(){
 }
 
 </script>
+
 </body>
 </html>
