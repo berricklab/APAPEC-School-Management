@@ -852,393 +852,141 @@ main{
     </main>
 
 </div>
-<script>    
-/* =========================================
-   AUTHENTICATION SYSTEM
-========================================= */
+   <!-- ========================================= -->
+<!-- LIBRARY CATALOG SECTION -->
+<!-- ========================================= -->
 
-const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
-const USERS_KEY = "sms_users";
-   const ACTIVE_SCHOOL_KEY = "sms_active_school";
+<section
+    id="library-section"
+    class="page-section"
+>
 
-let currentSchoolName =
-    localStorage.getItem(
-        ACTIVE_SCHOOL_KEY
-    ) || "";
+    <div class="content-panel">
 
-function createEmptySchoolDatabase(schoolName){
+        <h2>
+            Library Catalog
+        </h2>
 
-    return{
-        schoolName,
+        <!-- ADD BOOK FORM -->
+        <div id="library-add-book-form">
 
-        students:[],
-        teachers:[],
-        parents:[],
-        librarians:[],
-        admins:[],
-        books:[],
-        announcements:[],
-        attendance:[],
-        marks:[],
+            <div class="form-group">
+                <label>Book Title</label>
 
-        createdAt:
-            new Date().toISOString()
-    };
-}
+                <input
+                    type="text"
+                    id="bookTitle"
+                    class="form-control"
+                >
+            </div>
 
-function getSchoolIndex(){
+            <div class="form-group">
+                <label>Author</label>
 
-    return JSON.parse(
-        localStorage.getItem(
-            "sms_school_index"
-        )
-    ) || {};
-}
+                <input
+                    type="text"
+                    id="bookAuthor"
+                    class="form-control"
+                >
+            </div>
 
-function saveSchoolIndex(index){
+            <div class="form-group">
+                <label>Category</label>
 
-    localStorage.setItem(
-        "sms_school_index",
-        JSON.stringify(index)
-    );
-}
+                <input
+                    type="text"
+                    id="bookCategory"
+                    class="form-control"
+                >
+            </div>
 
-function loadSchoolData(schoolName){
+            <div class="form-group">
+                <label>Quantity</label>
 
-    const schools =
-        getSchoolIndex();
+                <input
+                    type="number"
+                    id="bookQuantity"
+                    class="form-control"
+                >
+            </div>
 
-    if(!schools[schoolName]){
+            <button
+                class="btn-action"
+                onclick="addLibraryBook()"
+            >
+                Add New Book
+            </button>
 
-        schools[schoolName] =
-            createEmptySchoolDatabase(
-                schoolName
-            );
+        </div>
 
-        saveSchoolIndex(schools);
-    }
+        <!-- BOOK TABLE -->
 
-    return schools[schoolName];
-}
+        <table class="table">
 
-function saveSchoolData(
-    schoolName,
-    data
-){
+            <thead>
 
-    const schools =
-        getSchoolIndex();
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                </tr>
 
-    schools[schoolName] = data;
+            </thead>
 
-    saveSchoolIndex(schools);
-}
+            <tbody id="library-table-body">
 
-function executeGlobalSchoolRebrand(
-    schoolName
-){
+            </tbody>
 
-    document.title =
-        schoolName +
-        " | School Management System";
+        </table>
 
-    const title =
-        document.getElementById(
-            "window-title"
-        );
+    </div>
 
-    if(title){
-        title.textContent =
-            schoolName +
-            " | School Management System";
-    }
-
-    const schoolLabel =
-        document.getElementById(
-            "active-school-label"
-        );
-
-    if(schoolLabel){
-
-        schoolLabel.innerHTML =
-            "Registering for <b>" +
-            schoolName +
-            "</b>";
-    }
-}
+</section><script>
 
 /* =========================================
-   REGISTER SCHOOL
+   CURRENT USER
 ========================================= */
 
-function registerSchool(event){
+let currentLoggedInUser = null;
 
-    event.preventDefault();
-
-    const schoolName =
-        document.getElementById(
-            "schoolRegisterName"
-        ).value.trim();
-
-    const schoolEmail =
-        document.getElementById(
-            "schoolRegisterEmail"
-        ).value.trim();
-
-    const schoolPhone =
-        document.getElementById(
-            "schoolRegisterPhone"
-        ).value.trim();
-
-    const schoolAddress =
-        document.getElementById(
-            "schoolRegisterAddress"
-        ).value.trim();
-
-    if(!schoolName){
-        alert("Enter school name");
-        return;
-    }
-
-    /* =========================
-       LOAD REGISTERED SCHOOLS
-    ========================= */
-
-    let schools =
-        JSON.parse(
-            localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
-            )
-        ) || [];
-
-    /* =========================
-       CHECK EXISTING SCHOOL
-    ========================= */
-
-    const existingSchool =
-        schools.find(
-            school =>
-                school.schoolName.toLowerCase()
-                ===
-                schoolName.toLowerCase()
-        );
-
-    /* =========================
-       RESTORE OLD SCHOOL
-    ========================= */
-
-    if(existingSchool){
-
-        currentSchoolName =
-            existingSchool.schoolName;
-
-        localStorage.setItem(
-            ACTIVE_SCHOOL_KEY,
-            currentSchoolName
-        );
-
-        window.currentSchoolDatabase =
-            loadSchoolData(
-                currentSchoolName
-            );
-
-    }else{
-
-        /* =========================
-           CREATE NEW SCHOOL
-        ========================= */
-
-        const schoolPayload = {
-            schoolName,
-            schoolEmail,
-            schoolPhone,
-            schoolAddress,
-            createdAt:
-                new Date().toISOString()
-        };
-
-        schools.push(
-            schoolPayload
-        );
-
-        localStorage.setItem(
-            SCHOOL_REGISTRY_KEY,
-            JSON.stringify(schools)
-        );
-
-        currentSchoolName =
-            schoolName;
-
-        localStorage.setItem(
-            ACTIVE_SCHOOL_KEY,
-            currentSchoolName
-        );
-
-        const newDatabase =
-            createEmptySchoolDatabase(
-                currentSchoolName
-            );
-
-        saveSchoolData(
-            currentSchoolName,
-            newDatabase
-        );
-
-        window.currentSchoolDatabase =
-            newDatabase;
-    }
-
-    /* =========================
-       UPDATE SYSTEM BRANDING
-    ========================= */
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
-
-    /* =========================
-       DIRECTLY OPEN
-       USER REGISTER PAGE
-    ========================= */
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-
-    /* =========================
-       SHOW LOGIN SCREEN
-    ========================= */
-
-    document.getElementById(
-        "login-screen"
-    ).style.display = "flex";
-
-    /* =========================
-       AUTO FOCUS
-    ========================= */
-
-    setTimeout(()=>{
-
-        document.getElementById(
-            "registerFullName"
-        ).focus();
-
-    },200);
-
-    alert(
-        "School registered successfully.\nNow create your account."
-    );
-}
 /* =========================================
-   REGISTER USER
+   SWITCH TAB
 ========================================= */
 
-function registerUser(event){
+function switchTab(tab){
 
-    event.preventDefault();
+    document
+        .querySelectorAll(".page-section")
+        .forEach(section=>{
 
-    const activeSchool =
-        localStorage.getItem(
-            ACTIVE_SCHOOL_KEY
+            section.classList.remove("active");
+
+        });
+
+    document
+        .querySelectorAll(".menu-btn")
+        .forEach(btn=>{
+
+            btn.classList.remove("active");
+
+        });
+
+    const activeSection =
+        document.getElementById(
+            tab + "-section"
         );
 
-    if(!activeSchool){
+    if(activeSection){
 
-        alert(
-            "You must register a school first."
+        activeSection.classList.add(
+            "active"
         );
-
-        return;
     }
 
-    const fullName =
-        document.getElementById(
-            "registerFullName"
-        ).value.trim();
-
-    const email =
-        document.getElementById(
-            "registerEmail"
-        ).value.trim();
-
-    const username =
-        document.getElementById(
-            "registerUsername"
-        ).value.trim();
-
-    const password =
-        document.getElementById(
-            "registerPassword"
-        ).value.trim();
-
-    const role =
-        document.getElementById(
-            "registerRole"
-        ).value;
-
-    let users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
-
-    const existingUser =
-        users.find(
-            user =>
-                user.username === username ||
-                user.email === email
-        );
-
-    if(existingUser){
-
-        alert(
-            "User account already exists."
-        );
-
-        return;
-    }
-
-    const userPayload = {
-
-        fullName,
-        email,
-        username,
-        password,
-        role,
-
-        school: activeSchool,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    users.push(userPayload);
-
-    localStorage.setItem(
-        USERS_KEY,
-        JSON.stringify(users)
+    event?.target?.classList.add(
+        "active"
     );
-
-    alert(
-        "Permanent account created successfully."
-    );
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
 }
 
 /* =========================================
@@ -1283,6 +1031,9 @@ function executeSystemLogin(event){
         return;
     }
 
+    currentLoggedInUser =
+        matchedUser;
+
     currentSchoolName =
         matchedUser.school;
 
@@ -1292,7 +1043,9 @@ function executeSystemLogin(event){
     );
 
     window.currentSchoolDatabase =
-        loadSchoolData(currentSchoolName);
+        loadSchoolData(
+            currentSchoolName
+        );
 
     executeGlobalSchoolRebrand(
         currentSchoolName
@@ -1314,121 +1067,376 @@ function executeSystemLogin(event){
     switchTab("dashboard");
 
     refreshEntireSystemUI();
+
+    applyRolePermissions();
 }
-   /* =========================================
-   OPEN USER REGISTRATION
-   FOR EXISTING SCHOOL
+
+/* =========================================
+   ROLE ACCESS
 ========================================= */
 
-function openExistingSchoolRegistration(){
+function applyRolePermissions(){
 
-    let schools =
-        JSON.parse(
-            localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
-            )
-        ) || [];
+    if(!currentLoggedInUser){
+        return;
+    }
 
-    if(schools.length === 0){
+    const role =
+        currentLoggedInUser.role;
+
+    const libraryForm =
+        document.querySelector(
+            "#library-section form"
+        );
+
+    const feesForm =
+        document.querySelector(
+            "#fees-section form"
+        );
+
+    const gradesForm =
+        document.querySelector(
+            "#grades-section form"
+        );
+
+    /* =========================
+       LIBRARY ACCESS
+    ========================= */
+
+    if(
+        role === "admin" ||
+        role === "librarian"
+    ){
+
+        libraryForm.style.display =
+            "block";
+
+    }else{
+
+        libraryForm.style.display =
+            "none";
+    }
+
+    /* =========================
+       FEES ACCESS
+    ========================= */
+
+    if(role === "admin"){
+
+        feesForm.style.display =
+            "block";
+
+    }else{
+
+        feesForm.style.display =
+            "none";
+    }
+
+    /* =========================
+       GRADE ACCESS
+    ========================= */
+
+    if(
+        role === "admin" ||
+        role === "teacher"
+    ){
+
+        gradesForm.style.display =
+            "block";
+
+    }else{
+
+        gradesForm.style.display =
+            "none";
+    }
+}
+
+/* =========================================
+   ADD BOOK
+========================================= */
+
+function addBook(event){
+
+    event.preventDefault();
+
+    if(
+        currentLoggedInUser.role !==
+        "admin"
+        &&
+        currentLoggedInUser.role !==
+        "librarian"
+    ){
 
         alert(
-            "No registered schools found."
+            "Only admin or librarian can add books."
         );
 
         return;
     }
 
-    const schoolNames =
-        schools.map(
-            school => school.schoolName
-        ).join("\n");
-
-    const selectedSchool =
-        prompt(
-            "Enter your registered school name:\n\n" +
-            schoolNames
-        );
-
-    if(!selectedSchool){
-        return;
-    }
-
-    const matchedSchool =
-        schools.find(
-            school =>
-                school.schoolName.toLowerCase()
-                ===
-                selectedSchool.toLowerCase()
-        );
-
-    if(!matchedSchool){
-
-        alert(
-            "School not found."
-        );
-
-        return;
-    }
-
-    currentSchoolName =
-        matchedSchool.schoolName;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
-    window.currentSchoolDatabase =
-        loadSchoolData(
-            currentSchoolName
-        );
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-
-    setTimeout(()=>{
-
+    const title =
         document.getElementById(
-            "registerFullName"
-        ).focus();
+            "bookTitle"
+        ).value.trim();
 
-    },200);
+    const author =
+        document.getElementById(
+            "bookAuthor"
+        ).value.trim();
+
+    const category =
+        document.getElementById(
+            "bookCategory"
+        ).value.trim();
+
+    const newBook = {
+
+        title,
+        author,
+        category,
+
+        createdAt:
+            new Date().toISOString()
+    };
+
+    window.currentSchoolDatabase.books.push(
+        newBook
+    );
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderLibraryTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Book added successfully.");
 }
-   /* =========================================
-   SWITCH TAB
+
+/* =========================================
+   RENDER LIBRARY TABLE
 ========================================= */
 
-function switchTab(tab){
+function renderLibraryTable(){
 
-    document
-        .querySelectorAll(".page-section")
-        .forEach(section=>{
+    const tbody =
+        document.getElementById(
+            "library-table-body"
+        );
 
-            section.classList.remove("active");
+    tbody.innerHTML = "";
 
-        });
+    window.currentSchoolDatabase.books
+    .forEach(book=>{
 
-    if(tab === "dashboard"){
+        tbody.innerHTML += `
+            <tr>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.category}</td>
+            </tr>
+        `;
+    });
+}
 
-        document
-            .getElementById(
-                "dashboard-section"
-            )
-            .classList.add("active");
+/* =========================================
+   ADD FEES
+========================================= */
+
+function addFee(event){
+
+    event.preventDefault();
+
+    if(
+        currentLoggedInUser.role !==
+        "admin"
+    ){
+
+        alert(
+            "Only admin can manage fees."
+        );
+
+        return;
     }
+
+    if(
+        !window.currentSchoolDatabase.fees
+    ){
+
+        window.currentSchoolDatabase.fees = [];
+    }
+
+    const student =
+        document.getElementById(
+            "feeStudent"
+        ).value.trim();
+
+    const amount =
+        document.getElementById(
+            "feeAmount"
+        ).value;
+
+    const status =
+        document.getElementById(
+            "feeStatus"
+        ).value;
+
+    window.currentSchoolDatabase.fees.push({
+
+        student,
+        amount,
+        status
+    });
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderFeesTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Fee saved.");
+}
+
+/* =========================================
+   RENDER FEES TABLE
+========================================= */
+
+function renderFeesTable(){
+
+    const tbody =
+        document.getElementById(
+            "fees-table-body"
+        );
+
+    tbody.innerHTML = "";
+
+    const fees =
+        window.currentSchoolDatabase.fees
+        || [];
+
+    fees.forEach(fee=>{
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${fee.student}</td>
+                <td>${fee.amount}</td>
+                <td>${fee.status}</td>
+            </tr>
+        `;
+    });
+}
+
+/* =========================================
+   ADD GRADES
+========================================= */
+
+function addGrade(event){
+
+    event.preventDefault();
+
+    if(
+        currentLoggedInUser.role !==
+        "admin"
+        &&
+        currentLoggedInUser.role !==
+        "teacher"
+    ){
+
+        alert(
+            "Only admin or teacher can add grades."
+        );
+
+        return;
+    }
+
+    const student =
+        document.getElementById(
+            "gradeStudent"
+        ).value.trim();
+
+    const subject =
+        document.getElementById(
+            "gradeSubject"
+        ).value.trim();
+
+    const marks =
+        Number(
+            document.getElementById(
+                "gradeMarks"
+            ).value
+        );
+
+    let grade = "F";
+
+    if(marks >= 90){
+        grade = "A";
+    }
+    else if(marks >= 80){
+        grade = "B";
+    }
+    else if(marks >= 70){
+        grade = "C";
+    }
+    else if(marks >= 60){
+        grade = "D";
+    }
+
+    window.currentSchoolDatabase.marks.push({
+
+        student,
+        subject,
+        marks,
+        grade
+    });
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderGradesTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Grade saved.");
+}
+
+/* =========================================
+   RENDER GRADES TABLE
+========================================= */
+
+function renderGradesTable(){
+
+    const tbody =
+        document.getElementById(
+            "grades-table-body"
+        );
+
+    tbody.innerHTML = "";
+
+    window.currentSchoolDatabase.marks
+    .forEach(mark=>{
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${mark.student}</td>
+                <td>${mark.subject}</td>
+                <td>${mark.marks}</td>
+                <td>${mark.grade}</td>
+            </tr>
+        `;
+    });
 }
 
 /* =========================================
@@ -1442,24 +1450,28 @@ function refreshEntireSystemUI(){
     }
 
     document.getElementById(
-        "students-count"
-    ).textContent =
-        window.currentSchoolDatabase.students.length;
-
-    document.getElementById(
-        "teachers-count"
-    ).textContent =
-        window.currentSchoolDatabase.teachers.length;
-
-    document.getElementById(
-        "parents-count"
-    ).textContent =
-        window.currentSchoolDatabase.parents.length;
-
-    document.getElementById(
         "books-count"
     ).textContent =
         window.currentSchoolDatabase.books.length;
+
+    document.getElementById(
+        "fees-count"
+    ).textContent =
+        (
+            window.currentSchoolDatabase.fees
+            || []
+        ).length;
+
+    document.getElementById(
+        "grades-count"
+    ).textContent =
+        window.currentSchoolDatabase.marks.length;
+
+    renderLibraryTable();
+
+    renderFeesTable();
+
+    renderGradesTable();
 
     const sidebarTitle =
         document.getElementById(
@@ -1490,6 +1502,8 @@ function refreshEntireSystemUI(){
 
 function logoutSystem(){
 
+    currentLoggedInUser = null;
+
     document.getElementById(
         "app-container"
     ).style.display = "none";
@@ -1510,48 +1524,7 @@ function logoutSystem(){
         "school-registration-view"
     ).style.display = "none";
 }
-   /* =========================================
-   OPEN LOGIN PAGE
-========================================= */
 
-function openLoginPage(){
-
-    const users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
-
-    if(users.length === 0){
-
-        alert(
-            "No registered accounts found."
-        );
-
-        return;
-    }
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-
-    setTimeout(()=>{
-
-        document.getElementById(
-            "loginUser"
-        ).focus();
-
-    },200);
-}
-    </script>
+</script>
 </body>
 </html>
