@@ -802,7 +802,7 @@ Save Grade
 <script>
 
 /* =========================================
-STORAGE
+   AUTHENTICATION SYSTEM
 ========================================= */
 
 const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
@@ -810,891 +810,1041 @@ const USERS_KEY = "sms_users";
 const ACTIVE_SCHOOL_KEY = "sms_active_school";
 
 let currentSchoolName =
-localStorage.getItem(ACTIVE_SCHOOL_KEY) || "";
+    localStorage.getItem(
+        ACTIVE_SCHOOL_KEY
+    ) || "";
 
 let currentLoggedInUser = null;
 
 /* =========================================
-DATABASE
+   CREATE DATABASE
 ========================================= */
 
 function createEmptySchoolDatabase(schoolName){
 
-return{
+    return{
 
-schoolName,
+        schoolName,
 
-students:[],
-books:[],
-fees:[],
-grades:[],
+        students:[],
+        teachers:[],
+        parents:[],
+        librarians:[],
+        admins:[],
 
-createdAt:new Date().toISOString()
+        books:[],
+        fees:[],
+        grades:[],
+        announcements:[],
+        attendance:[],
+        marks:[],
 
-};
-
+        createdAt:
+            new Date().toISOString()
+    };
 }
+
+/* =========================================
+   STORAGE
+========================================= */
 
 function getSchoolIndex(){
 
-return JSON.parse(
-localStorage.getItem("sms_school_index")
-) || {};
-
+    return JSON.parse(
+        localStorage.getItem(
+            "sms_school_index"
+        )
+    ) || {};
 }
 
 function saveSchoolIndex(index){
 
-localStorage.setItem(
-"sms_school_index",
-JSON.stringify(index)
-);
-
+    localStorage.setItem(
+        "sms_school_index",
+        JSON.stringify(index)
+    );
 }
 
 function loadSchoolData(schoolName){
 
-const schools = getSchoolIndex();
+    const schools =
+        getSchoolIndex();
 
-if(!schools[schoolName]){
+    if(!schools[schoolName]){
 
-schools[schoolName] =
-createEmptySchoolDatabase(schoolName);
+        schools[schoolName] =
+            createEmptySchoolDatabase(
+                schoolName
+            );
 
-saveSchoolIndex(schools);
+        saveSchoolIndex(schools);
+    }
 
+    return schools[schoolName];
 }
 
-return schools[schoolName];
+function saveSchoolData(
+    schoolName,
+    data
+){
 
-}
+    const schools =
+        getSchoolIndex();
 
-function saveCurrentSchoolData(){
+    schools[schoolName] = data;
 
-const schools = getSchoolIndex();
-
-schools[currentSchoolName] =
-window.currentSchoolDatabase;
-
-saveSchoolIndex(schools);
-
+    saveSchoolIndex(schools);
 }
 
 /* =========================================
-BRAND
+   BRANDING
 ========================================= */
 
-function executeGlobalSchoolRebrand(schoolName){
+function executeGlobalSchoolRebrand(
+    schoolName
+){
 
-document.title =
-schoolName +
-" | School Management System";
+    document.title =
+        schoolName +
+        " | School Management System";
 
-document.getElementById(
-"window-title"
-).textContent =
-schoolName +
-" | School Management System";
+    const title =
+        document.getElementById(
+            "window-title"
+        );
 
-document.getElementById(
-"active-school-label"
-).innerHTML =
-"Registering for <b>" +
-schoolName +
-"</b>";
+    if(title){
 
+        title.textContent =
+            schoolName +
+            " | School Management System";
+    }
+
+    const schoolLabel =
+        document.getElementById(
+            "active-school-label"
+        );
+
+    if(schoolLabel){
+
+        schoolLabel.innerHTML =
+            "Registering for <b>" +
+            schoolName +
+            "</b>";
+    }
+
+    const sidebarTitle =
+        document.getElementById(
+            "sidebar-school-name"
+        );
+
+    if(sidebarTitle){
+
+        sidebarTitle.textContent =
+            schoolName;
+    }
+
+    const headerTitle =
+        document.getElementById(
+            "header-school-name"
+        );
+
+    if(headerTitle){
+
+        headerTitle.textContent =
+            schoolName;
+    }
 }
 
 /* =========================================
-REGISTER SCHOOL
+   REGISTER SCHOOL
 ========================================= */
 
 function registerSchool(event){
 
-event.preventDefault();
+    event.preventDefault();
 
-const schoolName =
-document.getElementById(
-"schoolRegisterName"
-).value.trim();
+    const schoolName =
+        document.getElementById(
+            "schoolRegisterName"
+        ).value.trim();
 
-const schoolEmail =
-document.getElementById(
-"schoolRegisterEmail"
-).value.trim();
+    const schoolEmail =
+        document.getElementById(
+            "schoolRegisterEmail"
+        ).value.trim();
 
-const schoolPhone =
-document.getElementById(
-"schoolRegisterPhone"
-).value.trim();
+    const schoolPhone =
+        document.getElementById(
+            "schoolRegisterPhone"
+        ).value.trim();
 
-const schoolAddress =
-document.getElementById(
-"schoolRegisterAddress"
-).value.trim();
+    const schoolAddress =
+        document.getElementById(
+            "schoolRegisterAddress"
+        ).value.trim();
 
-let schools =
-JSON.parse(
-localStorage.getItem(
-SCHOOL_REGISTRY_KEY
-)
-) || [];
+    let schools =
+        JSON.parse(
+            localStorage.getItem(
+                SCHOOL_REGISTRY_KEY
+            )
+        ) || [];
 
-const existingSchool =
-schools.find(
-school =>
-school.schoolName.toLowerCase()
-===
-schoolName.toLowerCase()
-);
+    const existingSchool =
+        schools.find(
+            school =>
+                school.schoolName.toLowerCase()
+                ===
+                schoolName.toLowerCase()
+        );
 
-if(existingSchool){
+    if(existingSchool){
 
-currentSchoolName =
-existingSchool.schoolName;
+        currentSchoolName =
+            existingSchool.schoolName;
 
-}else{
+    }else{
 
-const schoolPayload = {
+        const schoolPayload = {
 
-schoolName,
-schoolEmail,
-schoolPhone,
-schoolAddress,
-createdAt:new Date().toISOString()
+            schoolName,
+            schoolEmail,
+            schoolPhone,
+            schoolAddress,
 
-};
+            createdAt:
+                new Date().toISOString()
+        };
 
-schools.push(schoolPayload);
+        schools.push(
+            schoolPayload
+        );
 
-localStorage.setItem(
-SCHOOL_REGISTRY_KEY,
-JSON.stringify(schools)
-);
+        localStorage.setItem(
+            SCHOOL_REGISTRY_KEY,
+            JSON.stringify(schools)
+        );
 
-currentSchoolName = schoolName;
+        currentSchoolName =
+            schoolName;
 
-const newDatabase =
-createEmptySchoolDatabase(
-currentSchoolName
-);
+        const newDatabase =
+            createEmptySchoolDatabase(
+                currentSchoolName
+            );
 
-const schoolIndex =
-getSchoolIndex();
+        saveSchoolData(
+            currentSchoolName,
+            newDatabase
+        );
+    }
 
-schoolIndex[currentSchoolName] =
-newDatabase;
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
 
-saveSchoolIndex(schoolIndex);
+    window.currentSchoolDatabase =
+        loadSchoolData(
+            currentSchoolName
+        );
 
-}
+    executeGlobalSchoolRebrand(
+        currentSchoolName
+    );
 
-localStorage.setItem(
-ACTIVE_SCHOOL_KEY,
-currentSchoolName
-);
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
 
-window.currentSchoolDatabase =
-loadSchoolData(currentSchoolName);
+    document.getElementById(
+        "signin-view"
+    ).style.display = "none";
 
-executeGlobalSchoolRebrand(
-currentSchoolName
-);
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
 
-document.getElementById(
-"school-registration-view"
-).style.display = "none";
-
-document.getElementById(
-"register-view"
-).style.display = "block";
-
-alert(
-"School registered successfully."
-);
-
+    alert(
+        "School registered successfully."
+    );
 }
 
 /* =========================================
-REGISTER USER
+   REGISTER USER
 ========================================= */
 
 function registerUser(event){
 
-event.preventDefault();
+    event.preventDefault();
 
-const fullName =
-document.getElementById(
-"registerFullName"
-).value.trim();
+    const activeSchool =
+        localStorage.getItem(
+            ACTIVE_SCHOOL_KEY
+        );
 
-const email =
-document.getElementById(
-"registerEmail"
-).value.trim();
+    if(!activeSchool){
 
-const username =
-document.getElementById(
-"registerUsername"
-).value.trim();
+        alert(
+            "Register school first."
+        );
 
-const password =
-document.getElementById(
-"registerPassword"
-).value.trim();
+        return;
+    }
 
-const role =
-document.getElementById(
-"registerRole"
-).value;
+    const fullName =
+        document.getElementById(
+            "registerFullName"
+        ).value.trim();
 
-let users =
-JSON.parse(
-localStorage.getItem(USERS_KEY)
-) || [];
+    const email =
+        document.getElementById(
+            "registerEmail"
+        ).value.trim();
 
-const existingUser =
-users.find(
-user =>
-user.username === username ||
-user.email === email
-);
+    const username =
+        document.getElementById(
+            "registerUsername"
+        ).value.trim();
 
-if(existingUser){
+    const password =
+        document.getElementById(
+            "registerPassword"
+        ).value.trim();
 
-alert("Account already exists");
-return;
+    const role =
+        document.getElementById(
+            "registerRole"
+        ).value;
 
-}
+    let users =
+        JSON.parse(
+            localStorage.getItem(
+                USERS_KEY
+            )
+        ) || [];
 
-users.push({
+    const existingUser =
+        users.find(
+            user =>
+                user.username === username ||
+                user.email === email
+        );
 
-fullName,
-email,
-username,
-password,
-role,
-school:currentSchoolName
+    if(existingUser){
 
-});
+        alert(
+            "Account already exists."
+        );
 
-localStorage.setItem(
-USERS_KEY,
-JSON.stringify(users)
-);
+        return;
+    }
 
-alert("Account created successfully");
+    const userPayload = {
 
-document.getElementById(
-"register-view"
-).style.display = "none";
+        fullName,
+        email,
+        username,
+        password,
+        role,
 
-document.getElementById(
-"signin-view"
-).style.display = "block";
+        school: activeSchool,
 
+        createdAt:
+            new Date().toISOString()
+    };
+
+    users.push(
+        userPayload
+    );
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+
+    alert(
+        "Account created successfully."
+    );
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
 }
 
 /* =========================================
-LOGIN
+   LOGIN
 ========================================= */
 
 function executeSystemLogin(event){
 
-event.preventDefault();
+    event.preventDefault();
 
-const loginValue =
-document.getElementById(
-"loginUser"
-).value.trim();
+    const loginValue =
+        document.getElementById(
+            "loginUser"
+        ).value.trim();
 
-const password =
-document.getElementById(
-"loginPassword"
-).value.trim();
+    const password =
+        document.getElementById(
+            "loginPassword"
+        ).value.trim();
 
-const users =
-JSON.parse(
-localStorage.getItem(USERS_KEY)
-) || [];
+    const users =
+        JSON.parse(
+            localStorage.getItem(
+                USERS_KEY
+            )
+        ) || [];
 
-const matchedUser =
-users.find(
-user =>
-(
-user.username === loginValue ||
-user.email === loginValue
-)
-&&
-user.password === password
-);
+    const matchedUser =
+        users.find(
+            user =>
+                (
+                    user.username === loginValue ||
+                    user.email === loginValue
+                )
+                &&
+                user.password === password
+        );
 
-if(!matchedUser){
+    if(!matchedUser){
 
-alert("Invalid credentials");
-return;
+        alert("Invalid credentials");
+        return;
+    }
 
-}
+    currentLoggedInUser =
+        matchedUser;
 
-currentLoggedInUser = matchedUser;
+    currentSchoolName =
+        matchedUser.school;
 
-currentSchoolName =
-matchedUser.school;
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
 
-localStorage.setItem(
-ACTIVE_SCHOOL_KEY,
-currentSchoolName
-);
+    window.currentSchoolDatabase =
+        loadSchoolData(
+            currentSchoolName
+        );
 
-window.currentSchoolDatabase =
-loadSchoolData(currentSchoolName);
+    executeGlobalSchoolRebrand(
+        currentSchoolName
+    );
 
-executeGlobalSchoolRebrand(
-currentSchoolName
-);
+    document.getElementById(
+        "login-screen"
+    ).style.display = "none";
 
-document.getElementById(
-"login-screen"
-).style.display = "none";
+    document.getElementById(
+        "app-container"
+    ).style.display = "block";
 
-document.getElementById(
-"app-container"
-).style.display = "block";
+    document.getElementById(
+        "header-active-role-badge"
+    ).textContent =
+        matchedUser.role;
 
-document.getElementById(
-"header-active-role-badge"
-).textContent =
-matchedUser.role;
+    switchTab("dashboard");
 
-refreshEntireSystemUI();
-
-switchTab("dashboard");
-
+    refreshEntireSystemUI();
 }
 
 /* =========================================
-OPEN SCHOOL REGISTER
+   EXISTING SCHOOL
 ========================================= */
 
 function openExistingSchoolRegistration(){
 
-const schools =
-JSON.parse(
-localStorage.getItem(
-SCHOOL_REGISTRY_KEY
-)
-) || [];
+    let schools =
+        JSON.parse(
+            localStorage.getItem(
+                SCHOOL_REGISTRY_KEY
+            )
+        ) || [];
 
-if(schools.length === 0){
+    if(schools.length === 0){
 
-alert("No registered schools");
-return;
+        alert(
+            "No registered schools found."
+        );
 
-}
+        return;
+    }
 
-const schoolNames =
-schools.map(
-school => school.schoolName
-).join("\n");
+    const schoolNames =
+        schools.map(
+            school => school.schoolName
+        ).join("\n");
 
-const selectedSchool =
-prompt(
-"Enter school name:\n\n" +
-schoolNames
-);
+    const selectedSchool =
+        prompt(
+            "Enter school name:\n\n" +
+            schoolNames
+        );
 
-if(!selectedSchool){
-return;
-}
+    if(!selectedSchool){
+        return;
+    }
 
-const matchedSchool =
-schools.find(
-school =>
-school.schoolName.toLowerCase()
-===
-selectedSchool.toLowerCase()
-);
+    const matchedSchool =
+        schools.find(
+            school =>
+                school.schoolName.toLowerCase()
+                ===
+                selectedSchool.toLowerCase()
+        );
 
-if(!matchedSchool){
+    if(!matchedSchool){
 
-alert("School not found");
-return;
+        alert(
+            "School not found."
+        );
 
-}
+        return;
+    }
 
-currentSchoolName =
-matchedSchool.schoolName;
+    currentSchoolName =
+        matchedSchool.schoolName;
 
-localStorage.setItem(
-ACTIVE_SCHOOL_KEY,
-currentSchoolName
-);
+    localStorage.setItem(
+        ACTIVE_SCHOOL_KEY,
+        currentSchoolName
+    );
 
-window.currentSchoolDatabase =
-loadSchoolData(currentSchoolName);
+    window.currentSchoolDatabase =
+        loadSchoolData(
+            currentSchoolName
+        );
 
-executeGlobalSchoolRebrand(
-currentSchoolName
-);
+    executeGlobalSchoolRebrand(
+        currentSchoolName
+    );
 
-document.getElementById(
-"school-registration-view"
-).style.display = "none";
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
 
-document.getElementById(
-"register-view"
-).style.display = "block";
-
+    document.getElementById(
+        "register-view"
+    ).style.display = "block";
 }
 
 /* =========================================
-OPEN LOGIN
+   OPEN LOGIN PAGE
 ========================================= */
 
 function openLoginPage(){
 
-document.getElementById(
-"school-registration-view"
-).style.display = "none";
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
 
-document.getElementById(
-"register-view"
-).style.display = "none";
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
 
-document.getElementById(
-"signin-view"
-).style.display = "block";
-
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
 }
 
 /* =========================================
-SWITCH TAB
+   SWITCH TAB
 ========================================= */
 
 function switchTab(tab){
 
-document
-.querySelectorAll(".page-section")
-.forEach(section=>{
+    document
+        .querySelectorAll(".page-section")
+        .forEach(section=>{
 
-section.classList.remove("active");
+            section.classList.remove(
+                "active"
+            );
+        });
 
-});
+    document
+        .querySelectorAll(".menu-btn")
+        .forEach(btn=>{
 
-document
-.getElementById(
-tab + "-section"
-)
-.classList.add("active");
+            btn.classList.remove(
+                "active"
+            );
+        });
 
+    document.getElementById(
+        tab + "-section"
+    ).classList.add(
+        "active"
+    );
+
+    event.target.classList.add(
+        "active"
+    );
+
+    if(tab === "library"){
+
+        renderLibraryTable();
+    }
+
+    if(tab === "fees"){
+
+        renderFeesTable();
+    }
+
+    if(tab === "grades"){
+
+        renderGradesTable();
+    }
+
+    if(tab === "students"){
+
+        renderStudentsTable();
+    }
 }
 
 /* =========================================
-ADD STUDENT
-========================================= */
-
-function addStudent(event){
-
-event.preventDefault();
-
-if(currentLoggedInUser.role !== "admin"){
-
-alert("Only admin can add students");
-return;
-
-}
-
-const name =
-document.getElementById(
-"studentName"
-).value;
-
-const studentClass =
-document.getElementById(
-"studentClass"
-).value;
-
-const gender =
-document.getElementById(
-"studentGender"
-).value;
-
-window.currentSchoolDatabase.students.push({
-
-name,
-studentClass,
-gender
-
-});
-
-saveCurrentSchoolData();
-
-renderStudents();
-
-refreshEntireSystemUI();
-
-event.target.reset();
-
-}
-
-/* =========================================
-ADD BOOK
+   ADD BOOK
 ========================================= */
 
 function addBook(event){
 
-event.preventDefault();
+    event.preventDefault();
 
-if(
-currentLoggedInUser.role !== "admin"
-&&
-currentLoggedInUser.role !== "librarian"
-){
+    if(
+        currentLoggedInUser.role !== "admin"
+        &&
+        currentLoggedInUser.role !== "librarian"
+    ){
 
-alert(
-"Only admin or librarian can add books"
-);
+        alert(
+            "Only admin or librarian can add books."
+        );
 
-return;
+        return;
+    }
 
-}
+    const title =
+        document.getElementById(
+            "bookTitle"
+        ).value.trim();
 
-const title =
-document.getElementById(
-"bookTitle"
-).value;
+    const author =
+        document.getElementById(
+            "bookAuthor"
+        ).value.trim();
 
-const author =
-document.getElementById(
-"bookAuthor"
-).value;
+    const category =
+        document.getElementById(
+            "bookCategory"
+        ).value.trim();
 
-const category =
-document.getElementById(
-"bookCategory"
-).value;
+    const bookPayload = {
 
-window.currentSchoolDatabase.books.push({
+        title,
+        author,
+        category
+    };
 
-title,
-author,
-category
+    window.currentSchoolDatabase.books.push(
+        bookPayload
+    );
 
-});
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
 
-saveCurrentSchoolData();
+    renderLibraryTable();
 
-renderBooks();
+    refreshEntireSystemUI();
 
-refreshEntireSystemUI();
+    event.target.reset();
 
-event.target.reset();
-
-}
-
-/* =========================================
-ADD FEE
-========================================= */
-
-function addFee(event){
-
-event.preventDefault();
-
-const student =
-document.getElementById(
-"feeStudent"
-).value;
-
-const amount =
-document.getElementById(
-"feeAmount"
-).value;
-
-const status =
-document.getElementById(
-"feeStatus"
-).value;
-
-window.currentSchoolDatabase.fees.push({
-
-student,
-amount,
-status
-
-});
-
-saveCurrentSchoolData();
-
-renderFees();
-
-refreshEntireSystemUI();
-
-event.target.reset();
-
+    alert("Book added successfully.");
 }
 
 /* =========================================
-ADD GRADE
+   RENDER BOOKS
 ========================================= */
 
-function addGrade(event){
+function renderLibraryTable(){
 
-event.preventDefault();
+    const table =
+        document.getElementById(
+            "library-table-body"
+        );
 
-if(
-currentLoggedInUser.role !== "admin"
-&&
-currentLoggedInUser.role !== "teacher"
-){
+    table.innerHTML = "";
 
-alert(
-"Only admin or teacher can add grades"
-);
+    window.currentSchoolDatabase.books
+    .forEach(book=>{
 
-return;
-
-}
-
-const student =
-document.getElementById(
-"gradeStudent"
-).value;
-
-const subject =
-document.getElementById(
-"gradeSubject"
-).value;
-
-const marks =
-parseInt(
-document.getElementById(
-"gradeMarks"
-).value
-);
-
-let grade = "F";
-
-if(marks >= 80){
-grade = "A";
-}
-else if(marks >= 70){
-grade = "B";
-}
-else if(marks >= 60){
-grade = "C";
-}
-else if(marks >= 50){
-grade = "D";
-}
-
-window.currentSchoolDatabase.grades.push({
-
-student,
-subject,
-marks,
-grade
-
-});
-
-saveCurrentSchoolData();
-
-renderGrades();
-
-refreshEntireSystemUI();
-
-event.target.reset();
-
-}
-
-/* =========================================
-RENDER STUDENTS
-========================================= */
-
-function renderStudents(){
-
-const tbody =
-document.getElementById(
-"students-table-body"
-);
-
-tbody.innerHTML = "";
-
-window.currentSchoolDatabase.students.forEach(student=>{
-
-tbody.innerHTML += `
-
-<tr>
-<td>${student.name}</td>
-<td>${student.studentClass}</td>
-<td>${student.gender}</td>
-</tr>
-
-`;
-
-});
-
-}
-
-/* =========================================
-RENDER BOOKS
-========================================= */
-
-function renderBooks(){
-
-const tbody =
-document.getElementById(
-"library-table-body"
-);
-
-tbody.innerHTML = "";
-
-window.currentSchoolDatabase.books.forEach(book=>{
-
-tbody.innerHTML += `
-
+        table.innerHTML += `
 <tr>
 <td>${book.title}</td>
 <td>${book.author}</td>
 <td>${book.category}</td>
 </tr>
-
-`;
-
-});
-
+        `;
+    });
 }
 
 /* =========================================
-RENDER FEES
+   ADD FEE
 ========================================= */
 
-function renderFees(){
+function addFee(event){
 
-const tbody =
-document.getElementById(
-"fees-table-body"
-);
+    event.preventDefault();
 
-tbody.innerHTML = "";
+    const student =
+        document.getElementById(
+            "feeStudent"
+        ).value.trim();
 
-window.currentSchoolDatabase.fees.forEach(fee=>{
+    const amount =
+        document.getElementById(
+            "feeAmount"
+        ).value.trim();
 
-tbody.innerHTML += `
+    const status =
+        document.getElementById(
+            "feeStatus"
+        ).value;
 
+    const feePayload = {
+
+        student,
+        amount,
+        status
+    };
+
+    if(
+        !window.currentSchoolDatabase.fees
+    ){
+
+        window.currentSchoolDatabase.fees = [];
+    }
+
+    window.currentSchoolDatabase.fees.push(
+        feePayload
+    );
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderFeesTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Fee saved successfully.");
+}
+
+/* =========================================
+   RENDER FEES
+========================================= */
+
+function renderFeesTable(){
+
+    const table =
+        document.getElementById(
+            "fees-table-body"
+        );
+
+    table.innerHTML = "";
+
+    const fees =
+        window.currentSchoolDatabase.fees || [];
+
+    fees.forEach(fee=>{
+
+        table.innerHTML += `
 <tr>
 <td>${fee.student}</td>
 <td>${fee.amount}</td>
 <td>${fee.status}</td>
 </tr>
+        `;
+    });
 
-`;
+    const feesCount =
+        document.getElementById(
+            "fees-count"
+        );
 
-});
+    if(feesCount){
 
+        feesCount.textContent =
+            fees.length;
+    }
 }
 
 /* =========================================
-RENDER GRADES
+   ADD GRADE
 ========================================= */
 
-function renderGrades(){
+function addGrade(event){
 
-const tbody =
-document.getElementById(
-"grades-table-body"
-);
+    event.preventDefault();
 
-tbody.innerHTML = "";
+    const student =
+        document.getElementById(
+            "gradeStudent"
+        ).value.trim();
 
-window.currentSchoolDatabase.grades.forEach(grade=>{
+    const subject =
+        document.getElementById(
+            "gradeSubject"
+        ).value.trim();
 
-tbody.innerHTML += `
+    const marks =
+        parseInt(
+            document.getElementById(
+                "gradeMarks"
+            ).value
+        );
 
-<tr>
-<td>${grade.student}</td>
-<td>${grade.subject}</td>
-<td>${grade.marks}</td>
-<td>${grade.grade}</td>
-</tr>
+    let grade = "F";
 
-`;
+    if(marks >= 80){
+        grade = "A";
+    }
+    else if(marks >= 70){
+        grade = "B";
+    }
+    else if(marks >= 60){
+        grade = "C";
+    }
+    else if(marks >= 50){
+        grade = "D";
+    }
 
-});
+    const gradePayload = {
 
+        student,
+        subject,
+        marks,
+        grade
+    };
+
+    window.currentSchoolDatabase.grades.push(
+        gradePayload
+    );
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderGradesTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Grade saved successfully.");
 }
 
 /* =========================================
-REFRESH UI
+   RENDER GRADES
+========================================= */
+
+function renderGradesTable(){
+
+    const table =
+        document.getElementById(
+            "grades-table-body"
+        );
+
+    table.innerHTML = "";
+
+    window.currentSchoolDatabase.grades
+    .forEach(record=>{
+
+        table.innerHTML += `
+<tr>
+<td>${record.student}</td>
+<td>${record.subject}</td>
+<td>${record.marks}</td>
+<td>${record.grade}</td>
+</tr>
+        `;
+    });
+}
+
+/* =========================================
+   ADD STUDENT
+========================================= */
+
+function addStudent(event){
+
+    event.preventDefault();
+
+    if(
+        currentLoggedInUser.role !== "admin"
+    ){
+
+        alert(
+            "Only admin can add students."
+        );
+
+        return;
+    }
+
+    const name =
+        document.getElementById(
+            "studentName"
+        ).value.trim();
+
+    const className =
+        document.getElementById(
+            "studentClass"
+        ).value.trim();
+
+    const gender =
+        document.getElementById(
+            "studentGender"
+        ).value;
+
+    const studentPayload = {
+
+        name,
+        className,
+        gender
+    };
+
+    window.currentSchoolDatabase.students.push(
+        studentPayload
+    );
+
+    saveSchoolData(
+        currentSchoolName,
+        window.currentSchoolDatabase
+    );
+
+    renderStudentsTable();
+
+    refreshEntireSystemUI();
+
+    event.target.reset();
+
+    alert("Student added successfully.");
+}
+
+/* =========================================
+   RENDER STUDENTS
+========================================= */
+
+function renderStudentsTable(){
+
+    const table =
+        document.getElementById(
+            "students-table-body"
+        );
+
+    if(!table){
+        return;
+    }
+
+    table.innerHTML = "";
+
+    window.currentSchoolDatabase.students
+    .forEach(student=>{
+
+        table.innerHTML += `
+<tr>
+<td>${student.name}</td>
+<td>${student.className}</td>
+<td>${student.gender}</td>
+</tr>
+        `;
+    });
+}
+
+/* =========================================
+   REFRESH UI
 ========================================= */
 
 function refreshEntireSystemUI(){
 
-document.getElementById(
-"students-count"
-).textContent =
-window.currentSchoolDatabase.students.length;
+    if(!window.currentSchoolDatabase){
+        return;
+    }
 
-document.getElementById(
-"books-count"
-).textContent =
-window.currentSchoolDatabase.books.length;
+    const booksCount =
+        document.getElementById(
+            "books-count"
+        );
 
-document.getElementById(
-"fees-count"
-).textContent =
-window.currentSchoolDatabase.fees.length;
+    if(booksCount){
 
-document.getElementById(
-"grades-count"
-).textContent =
-window.currentSchoolDatabase.grades.length;
+        booksCount.textContent =
+            window.currentSchoolDatabase.books.length;
+    }
 
-document.getElementById(
-"sidebar-school-name"
-).textContent =
-currentSchoolName;
+    const feesCount =
+        document.getElementById(
+            "fees-count"
+        );
 
-document.getElementById(
-"header-school-name"
-).textContent =
-currentSchoolName;
+    if(feesCount){
 
-renderStudents();
-renderBooks();
-renderFees();
-renderGrades();
+        feesCount.textContent =
+            window.currentSchoolDatabase.fees.length;
+    }
 
+    const gradesCount =
+        document.getElementById(
+            "grades-count"
+        );
+
+    if(gradesCount){
+
+        gradesCount.textContent =
+            window.currentSchoolDatabase.grades.length;
+    }
 }
 
 /* =========================================
-LOGOUT
+   LOGOUT
 ========================================= */
 
 function logoutSystem(){
 
-document.getElementById(
-"app-container"
-).style.display = "none";
+    document.getElementById(
+        "app-container"
+    ).style.display = "none";
 
-document.getElementById(
-"login-screen"
-).style.display = "flex";
+    document.getElementById(
+        "login-screen"
+    ).style.display = "flex";
 
-document.getElementById(
-"signin-view"
-).style.display = "block";
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
 
-document.getElementById(
-"register-view"
-).style.display = "none";
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
 
-document.getElementById(
-"school-registration-view"
-).style.display = "none";
-
+    document.getElementById(
+        "school-registration-view"
+    ).style.display = "none";
 }
 
 </script>
-
 </body>
 </html>
