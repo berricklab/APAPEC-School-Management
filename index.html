@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="classic">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,9 @@ APAPEC-IREBERO | School Management System
 
 <style>
 
-/* ===============================
+/* =========================================
    ROOT
-================================== */
+========================================= */
 
 :root{
     --primary:#1e3a8a;
@@ -24,11 +24,12 @@ APAPEC-IREBERO | School Management System
     --surface:#ffffff;
     --text:#1f2937;
     --shadow:0 10px 30px rgba(0,0,0,.12);
+    --radius:18px;
 }
 
-/* ===============================
+/* =========================================
    GLOBAL
-================================== */
+========================================= */
 
 *{
     margin:0;
@@ -38,112 +39,36 @@ APAPEC-IREBERO | School Management System
 }
 
 body{
-    background:#f8fafc;
+    background:#f1f5f9;
     color:var(--text);
 }
 
-.page-section{
-    display:none;
+html{
+    scroll-behavior:smooth;
 }
 
-.page-section.active{
-    display:block;
-}
-
-.form-group{
-    margin-bottom:15px;
-}
-
-.form-control{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    border:1px solid #dbeafe;
-}
-
-.btn-auth,
-.btn-action{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    color:#fff;
-    font-weight:bold;
-    cursor:pointer;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
-}
-
-.table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-.table th{
-    background:var(--primary);
-    color:#fff;
-    padding:12px;
-}
-
-.table td{
-    padding:12px;
-    border-bottom:1px solid #ddd;
-}
-
-.content-panel{
-    background:#fff;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:var(--shadow);
-}
-
-.dashboard-grid{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
-
-.stat-card{
-    background:#fff;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:var(--shadow);
-}
-
-.stat-card p{
-    font-size:2rem;
-    font-weight:bold;
-}
-
-/* ===============================
+/* =========================================
    LOGIN SCREEN
-================================== */
+========================================= */
 
 #login-screen{
     min-height:100vh;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
     background:
-    linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
-    padding:20px;
+    linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
+    linear-gradient(135deg,var(--primary),var(--secondary));
+    padding:30px;
 }
 
 .auth-card{
     width:100%;
-    max-width:500px;
+    max-width:550px;
     background:#fff;
-    padding:35px;
-    border-radius:25px;
+    border-radius:30px;
+    padding:40px;
+    box-shadow:var(--shadow);
 }
 
 .auth-header{
@@ -153,25 +78,76 @@ body{
 
 .auth-header h1{
     color:var(--primary);
+    margin-bottom:10px;
 }
 
-/* ===============================
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.form-control{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:2px solid #e2e8f0;
+    font-size:15px;
+}
+
+.form-control:focus{
+    outline:none;
+    border-color:var(--secondary);
+}
+
+.btn-auth,
+.btn-action{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    color:#fff;
+    font-weight:700;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+    margin-top:10px;
+}
+
+/* =========================================
    APP
-================================== */
+========================================= */
 
 #app-container{
     display:none;
 }
 
 aside{
-    width:260px;
     position:fixed;
     top:0;
-    bottom:0;
     left:0;
-    background:var(--dark);
+    bottom:0;
+    width:260px;
+    background:linear-gradient(
+        180deg,
+        var(--dark),
+        var(--primary)
+    );
     color:#fff;
-    padding:20px;
+    padding:25px;
+    overflow-y:auto;
+}
+
+aside h2{
+    text-align:center;
+    margin-bottom:30px;
 }
 
 .sidebar-menu{
@@ -181,16 +157,18 @@ aside{
 .menu-btn{
     width:100%;
     padding:14px;
-    margin-bottom:12px;
     border:none;
-    border-radius:12px;
-    background:rgba(255,255,255,.1);
-    color:#fff;
+    border-radius:14px;
+    margin-bottom:10px;
     cursor:pointer;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    text-align:left;
+    font-weight:600;
 }
 
-.menu-btn.active{
-    background:var(--secondary);
+.menu-btn:hover{
+    background:rgba(255,255,255,.2);
 }
 
 header{
@@ -203,26 +181,12 @@ header{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 25px;
-    box-shadow:var(--shadow);
-}
-
-main{
-    margin-left:260px;
-    margin-top:90px;
-    padding:30px;
-}
-
-#header-active-role-badge{
-    padding:8px 14px;
-    border-radius:20px;
-    background:var(--accent);
-    color:#fff;
-    margin-right:10px;
+    padding:0 30px;
+    border-bottom:1px solid #e2e8f0;
 }
 
 header button{
-    padding:10px 16px;
+    padding:10px 18px;
     border:none;
     border-radius:10px;
     background:var(--danger);
@@ -230,1122 +194,1504 @@ header button{
     cursor:pointer;
 }
 
+main{
+    margin-left:260px;
+    margin-top:80px;
+    padding:30px;
+}
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+}
+
+.stat-card{
+    background:#fff;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:var(--shadow);
+}
+
+.stat-card h3{
+    margin-bottom:10px;
+    color:var(--primary);
+}
+
+.stat-card p{
+    font-size:2rem;
+    font-weight:800;
+}
+
+/* =========================================
+   PANELS
+========================================= */
+
+.content-panel{
+    background:#fff;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:var(--shadow);
+}
+
+.content-panel h2{
+    margin-bottom:20px;
+    color:var(--primary);
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.table th{
+    background:var(--primary);
+    color:#fff;
+    padding:14px;
+    text-align:left;
+}
+
+.table td{
+    padding:14px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+/* =========================================
+   PAGES
+========================================= */
+
+.page-section{
+    display:none;
+}
+
+.page-section.active{
+    display:block;
+}
+
+#header-active-role-badge{
+    padding:8px 16px;
+    border-radius:30px;
+    background:var(--accent);
+    color:#fff;
+    margin-right:10px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media(max-width:900px){
+
+aside{
+    position:relative;
+    width:100%;
+}
+
+header{
+    left:0;
+}
+
+main{
+    margin-left:0;
+}
+
+}
+
 </style>
 </head>
 <body>
 
-<!-- ========================================= -->
-<!-- LOGIN SCREEN -->
-<!-- ========================================= -->
+<!-- =========================================
+LOGIN
+========================================= -->
 
 <div id="login-screen">
 
-    <div class="auth-card">
+<div class="auth-card">
 
-        <!-- SCHOOL REGISTER -->
+<!-- SCHOOL REGISTER -->
 
-        <div id="school-registration-view">
+<div id="school-registration-view">
 
-            <div class="auth-header">
+<div class="auth-header">
+<h1>Register School</h1>
+<p>Create school before account</p>
+</div>
 
-                <h1>
-                    Register School
-                </h1>
+<form onsubmit="registerSchool(event)">
 
-            </div>
+<div class="form-group">
+<label>School Name</label>
+<input type="text" id="schoolRegisterName" class="form-control" required>
+</div>
 
-            <form onsubmit="registerSchool(event)">
+<div class="form-group">
+<label>School Email</label>
+<input type="email" id="schoolRegisterEmail" class="form-control" required>
+</div>
 
-                <div class="form-group">
-                    <input
-                        type="text"
-                        id="schoolRegisterName"
-                        class="form-control"
-                        placeholder="School Name"
-                        required
-                    >
-                </div>
+<div class="form-group">
+<label>School Phone</label>
+<input type="text" id="schoolRegisterPhone" class="form-control" required>
+</div>
 
-                <div class="form-group">
-                    <input
-                        type="email"
-                        id="schoolRegisterEmail"
-                        class="form-control"
-                        placeholder="School Email"
-                        required
-                    >
-                </div>
+<div class="form-group">
+<label>School Address</label>
+<input type="text" id="schoolRegisterAddress" class="form-control" required>
+</div>
 
-                <div class="form-group">
-                    <input
-                        type="text"
-                        id="schoolRegisterPhone"
-                        class="form-control"
-                        placeholder="School Phone"
-                        required
-                    >
-                </div>
+<button type="submit" class="btn-auth">
+Register School
+</button>
 
-                <div class="form-group">
-                    <input
-                        type="text"
-                        id="schoolRegisterAddress"
-                        class="form-control"
-                        placeholder="School Address"
-                        required
-                    >
-                </div>
+<button
+type="button"
+class="btn-auth"
+onclick="openExistingSchoolRegistration()"
+style="background:#059669;"
+>
+Already Registered School?
+</button>
 
-                <button
-                    type="submit"
-                    class="btn-auth"
-                >
-                    Register School
-                </button>
+<button
+type="button"
+class="btn-auth"
+onclick="openLoginPage()"
+style="background:#d97706;"
+>
+Already Have An Account?
+</button>
 
-                <button
-                    type="button"
-                    class="btn-auth"
-                    onclick="openExistingSchoolRegistration()"
-                    style="
-                        margin-top:15px;
-                        background:#10b981;
-                    "
-                >
-                    Already Registered School?
-                </button>
-
-                <button
-                    type="button"
-                    class="btn-auth"
-                    onclick="openLoginPage()"
-                    style="
-                        margin-top:15px;
-                        background:#f59e0b;
-                    "
-                >
-                    Already Have Account?
-                </button>
-
-            </form>
-
-        </div>
-
-        <!-- USER REGISTER -->
-
-        <div
-            id="register-view"
-            style="display:none;"
-        >
-
-            <div class="auth-header">
-
-                <h1>
-                    Create Account
-                </h1>
-
-                <p id="active-school-label"></p>
-
-            </div>
-
-            <form onsubmit="registerUser(event)">
-
-                <div class="form-group">
-                    <input
-                        type="text"
-                        id="registerFullName"
-                        class="form-control"
-                        placeholder="Full Name"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <input
-                        type="email"
-                        id="registerEmail"
-                        class="form-control"
-                        placeholder="Email"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <input
-                        type="text"
-                        id="registerUsername"
-                        class="form-control"
-                        placeholder="Username"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <input
-                        type="password"
-                        id="registerPassword"
-                        class="form-control"
-                        placeholder="Password"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-
-                    <select
-                        id="registerRole"
-                        class="form-control"
-                    >
-
-                        <option value="admin">
-                            Administrator
-                        </option>
-
-                        <option value="teacher">
-                            Teacher
-                        </option>
-
-                        <option value="student">
-                            Student
-                        </option>
-
-                        <option value="librarian">
-                            Librarian
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn-auth"
-                >
-                    Create Account
-                </button>
-
-            </form>
-
-        </div>
-
-        <!-- LOGIN -->
-
-        <div
-            id="signin-view"
-            style="display:none;"
-        >
-
-            <div class="auth-header">
-
-                <h1>
-                    Login
-                </h1>
-
-            </div>
-
-            <form onsubmit="executeSystemLogin(event)">
-
-                <div class="form-group">
-
-                    <input
-                        type="text"
-                        id="loginUser"
-                        class="form-control"
-                        placeholder="Username or Email"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        class="form-control"
-                        placeholder="Password"
-                        required
-                    >
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn-auth"
-                >
-                    Login
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
+</form>
 
 </div>
 
-<!-- ========================================= -->
-<!-- APP -->
-<!-- ========================================= -->
+<!-- REGISTER -->
+
+<div id="register-view" style="display:none;">
+
+<div class="auth-header">
+<h1>Create Account</h1>
+<p id="active-school-label"></p>
+</div>
+
+<form onsubmit="registerUser(event)">
+
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="registerFullName" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="registerEmail" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Username</label>
+<input type="text" id="registerUsername" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="registerPassword" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Role</label>
+
+<select id="registerRole" class="form-control">
+
+<option value="admin">
+Administrator
+</option>
+
+<option value="teacher">
+Teacher
+</option>
+
+<option value="student">
+Student
+</option>
+
+<option value="librarian">
+Librarian
+</option>
+
+<option value="parent">
+Parent
+</option>
+
+</select>
+
+</div>
+
+<button type="submit" class="btn-auth">
+Create Account
+</button>
+
+</form>
+
+</div>
+
+<!-- LOGIN -->
+
+<div id="signin-view" style="display:none;">
+
+<div class="auth-header">
+<h1>Login</h1>
+</div>
+
+<form onsubmit="executeSystemLogin(event)">
+
+<div class="form-group">
+<label>Username or Email</label>
+<input type="text" id="loginUser" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="loginPassword" class="form-control" required>
+</div>
+
+<button type="submit" class="btn-auth">
+Login
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =========================================
+APP
+========================================= -->
 
 <div id="app-container">
 
-    <aside>
-
-        <h2 id="sidebar-school-name">
-            School System
-        </h2>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <button
-                    class="menu-btn active"
-                    onclick="switchTab('dashboard')"
-                >
-                    Dashboard
-                </button>
-            </li>
-
-            <li>
-                <button
-                    class="menu-btn"
-                    onclick="switchTab('students')"
-                >
-                    Students
-                </button>
-            </li>
-
-            <li>
-                <button
-                    class="menu-btn"
-                    onclick="switchTab('library')"
-                >
-                    Library
-                </button>
-            </li>
-
-            <li>
-                <button
-                    class="menu-btn"
-                    onclick="switchTab('fees')"
-                >
-                    Fees
-                </button>
-            </li>
-
-            <li>
-                <button
-                    class="menu-btn"
-                    onclick="switchTab('grades')"
-                >
-                    Grade Book
-                </button>
-            </li>
-
-        </ul>
-
-    </aside>
-
-    <header>
-
-        <h2 id="header-school-name">
-            Dashboard
-        </h2>
-
-        <div>
-
-            <span id="header-active-role-badge">
-                User
-            </span>
-
-            <button onclick="logoutSystem()">
-                Logout
-            </button>
-
-        </div>
-
-    </header>
-
-    <main>
-
-        <!-- DASHBOARD -->
-
-        <section
-            id="dashboard-section"
-            class="page-section active"
-        >
-
-            <div class="dashboard-grid">
-
-                <div class="stat-card">
-                    <h3>Students</h3>
-                    <p id="students-count">0</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Books</h3>
-                    <p id="books-count">0</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3>Fees</h3>
-                    <p id="fees-count">0</p>
-                </div>
+<aside>
 
-                <div class="stat-card">
-                    <h3>Grades</h3>
-                    <p id="grades-count">0</p>
-                </div>
+<h2 id="sidebar-school-name">
+School System
+</h2>
 
-            </div>
+<ul class="sidebar-menu">
 
-        </section>
+<li>
+<button class="menu-btn" onclick="switchTab('dashboard')">
+Dashboard
+</button>
+</li>
 
-        <!-- STUDENTS -->
+<li>
+<button class="menu-btn" onclick="switchTab('students')">
+Students
+</button>
+</li>
 
-        <section
-            id="students-section"
-            class="page-section"
-        >
-
-            <div class="content-panel">
-
-                <h2>
-                    Students
-                </h2>
-
-                <form onsubmit="addStudent(event)">
-
-                    <div class="form-group">
-                        <input
-                            type="text"
-                            id="studentName"
-                            class="form-control"
-                            placeholder="Student Name"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <input
-                            type="email"
-                            id="studentEmail"
-                            class="form-control"
-                            placeholder="Student Email"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <input
-                            type="text"
-                            id="studentClass"
-                            class="form-control"
-                            placeholder="Class"
-                            required
-                        >
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="btn-action"
-                    >
-                        Add Student
-                    </button>
+<li>
+<button class="menu-btn" onclick="switchTab('library')">
+Library Catalog
+</button>
+</li>
 
-                </form>
+<li>
+<button class="menu-btn" onclick="switchTab('fees')">
+Fees Management
+</button>
+</li>
 
-                <table class="table">
+<li>
+<button class="menu-btn" onclick="switchTab('grades')">
+Academic Grade Book
+</button>
+</li>
 
-                    <thead>
+</ul>
 
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Class</th>
-                        </tr>
+</aside>
 
-                    </thead>
+<header>
 
-                    <tbody id="students-table-body">
+<h2 id="header-school-name">
+Dashboard
+</h2>
 
-                    </tbody>
+<div>
 
-                </table>
+<span id="header-active-role-badge">
+User
+</span>
 
-            </div>
+<button onclick="logoutSystem()">
+Logout
+</button>
 
-        </section>
+</div>
 
-        <!-- LIBRARY -->
+</header>
 
-        <section
-            id="library-section"
-            class="page-section"
-        >
+<main>
 
-            <div class="content-panel">
+<!-- DASHBOARD -->
 
-                <h2>
-                    Library Catalog
-                </h2>
+<section id="dashboard-section" class="page-section active">
 
-                <form onsubmit="addBook(event)">
+<div class="dashboard-grid">
 
-                    <div class="form-group">
-                        <input
-                            type="text"
-                            id="bookTitle"
-                            class="form-control"
-                            placeholder="Book Title"
-                            required
-                        >
-                    </div>
+<div class="stat-card">
+<h3>Students</h3>
+<p id="students-count">0</p>
+</div>
 
-                    <div class="form-group">
-                        <input
-                            type="text"
-                            id="bookAuthor"
-                            class="form-control"
-                            placeholder="Author"
-                            required
-                        >
-                    </div>
+<div class="stat-card">
+<h3>Books</h3>
+<p id="books-count">0</p>
+</div>
 
-                    <div class="form-group">
-                        <input
-                            type="text"
-                            id="bookCategory"
-                            class="form-control"
-                            placeholder="Category"
-                            required
-                        >
-                    </div>
+<div class="stat-card">
+<h3>Fees</h3>
+<p id="fees-count">0</p>
+</div>
 
-                    <button
-                        type="submit"
-                        class="btn-action"
-                    >
-                        Add Book
-                    </button>
+<div class="stat-card">
+<h3>Grades</h3>
+<p id="grades-count">0</p>
+</div>
 
-                </form>
+</div>
 
-                <table class="table">
+</section>
 
-                    <thead>
+<!-- STUDENTS -->
 
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Category</th>
-                        </tr>
+<section id="students-section" class="page-section">
 
-                    </thead>
+<div class="content-panel">
 
-                    <tbody id="library-table-body">
+<h2>Add Student</h2>
 
-                    </tbody>
+<form onsubmit="addStudent(event)">
 
-                </table>
+<div class="form-group">
+<label>Student Name</label>
+<input type="text" id="studentName" class="form-control" required>
+</div>
 
-            </div>
+<div class="form-group">
+<label>Class</label>
+<input type="text" id="studentClass" class="form-control" required>
+</div>
 
-        </section>
+<div class="form-group">
+<label>Gender</label>
 
-    </main>
+<select id="studentGender" class="form-control">
+
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+</div>
+
+<button type="submit" class="btn-action">
+Add Student
+</button>
+
+</form>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Name</th>
+<th>Class</th>
+<th>Gender</th>
+</tr>
+
+</thead>
+
+<tbody id="students-table-body"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- LIBRARY -->
+
+<section id="library-section" class="page-section">
+
+<div class="content-panel">
+
+<h2>Library Catalog</h2>
+
+<form onsubmit="addBook(event)">
+
+<div class="form-group">
+<label>Book Title</label>
+<input type="text" id="bookTitle" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Author</label>
+<input type="text" id="bookAuthor" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Category</label>
+<input type="text" id="bookCategory" class="form-control" required>
+</div>
+
+<button type="submit" class="btn-action">
+Add Book
+</button>
+
+</form>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Title</th>
+<th>Author</th>
+<th>Category</th>
+</tr>
+
+</thead>
+
+<tbody id="library-table-body"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- FEES -->
+
+<section id="fees-section" class="page-section">
+
+<div class="content-panel">
+
+<h2>Fees Management</h2>
+
+<form onsubmit="addFee(event)">
+
+<div class="form-group">
+<label>Student Name</label>
+<input type="text" id="feeStudent" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Amount</label>
+<input type="number" id="feeAmount" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Status</label>
+
+<select id="feeStatus" class="form-control">
+
+<option>Paid</option>
+<option>Pending</option>
+
+</select>
+
+</div>
+
+<button type="submit" class="btn-action">
+Save Fee
+</button>
+
+</form>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Student</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody id="fees-table-body"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- GRADES -->
+
+<section id="grades-section" class="page-section">
+
+<div class="content-panel">
+
+<h2>Academic Grade Book</h2>
+
+<form onsubmit="addGrade(event)">
+
+<div class="form-group">
+<label>Student Name</label>
+<input type="text" id="gradeStudent" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Subject</label>
+<input type="text" id="gradeSubject" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Marks</label>
+<input type="number" id="gradeMarks" class="form-control" required>
+</div>
+
+<button type="submit" class="btn-action">
+Save Grade
+</button>
+
+</form>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Student</th>
+<th>Subject</th>
+<th>Marks</th>
+<th>Grade</th>
+</tr>
+
+</thead>
+
+<tbody id="grades-table-body"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</main>
 
 </div>
 
 <script>
 
 /* =========================================
-   STORAGE KEYS
+STORAGE
 ========================================= */
 
-const SCHOOL_REGISTRY_KEY =
-    "sms_registered_schools";
+const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
+const USERS_KEY = "sms_users";
+const ACTIVE_SCHOOL_KEY = "sms_active_school";
 
-const USERS_KEY =
-    "sms_users";
+let currentSchoolName =
+localStorage.getItem(ACTIVE_SCHOOL_KEY) || "";
 
-const ACTIVE_SCHOOL_KEY =
-    "sms_active_school";
-
-/* =========================================
-   GLOBAL VARIABLES
-========================================= */
-
-let currentSchoolName = "";
 let currentLoggedInUser = null;
 
 /* =========================================
-   DATABASE
+DATABASE
 ========================================= */
 
-function createEmptySchoolDatabase(
-    schoolName
-){
+function createEmptySchoolDatabase(schoolName){
 
-    return{
+return{
 
-        schoolName,
+schoolName,
 
-        students:[],
-        books:[],
-        fees:[],
-        marks:[]
-    };
+students:[],
+books:[],
+fees:[],
+grades:[],
+
+createdAt:new Date().toISOString()
+
+};
+
 }
 
 function getSchoolIndex(){
 
-    return JSON.parse(
-        localStorage.getItem(
-            "sms_school_index"
-        )
-    ) || {};
+return JSON.parse(
+localStorage.getItem("sms_school_index")
+) || {};
+
 }
 
 function saveSchoolIndex(index){
 
-    localStorage.setItem(
-        "sms_school_index",
-        JSON.stringify(index)
-    );
+localStorage.setItem(
+"sms_school_index",
+JSON.stringify(index)
+);
+
 }
 
 function loadSchoolData(schoolName){
 
-    const schools =
-        getSchoolIndex();
+const schools = getSchoolIndex();
 
-    if(!schools[schoolName]){
+if(!schools[schoolName]){
 
-        schools[schoolName] =
-            createEmptySchoolDatabase(
-                schoolName
-            );
+schools[schoolName] =
+createEmptySchoolDatabase(schoolName);
 
-        saveSchoolIndex(schools);
-    }
+saveSchoolIndex(schools);
 
-    return schools[schoolName];
 }
 
-function saveSchoolData(
-    schoolName,
-    data
-){
+return schools[schoolName];
 
-    const schools =
-        getSchoolIndex();
+}
 
-    schools[schoolName] = data;
+function saveCurrentSchoolData(){
 
-    saveSchoolIndex(schools);
+const schools = getSchoolIndex();
+
+schools[currentSchoolName] =
+window.currentSchoolDatabase;
+
+saveSchoolIndex(schools);
+
 }
 
 /* =========================================
-   REGISTER SCHOOL
+BRAND
+========================================= */
+
+function executeGlobalSchoolRebrand(schoolName){
+
+document.title =
+schoolName +
+" | School Management System";
+
+document.getElementById(
+"window-title"
+).textContent =
+schoolName +
+" | School Management System";
+
+document.getElementById(
+"active-school-label"
+).innerHTML =
+"Registering for <b>" +
+schoolName +
+"</b>";
+
+}
+
+/* =========================================
+REGISTER SCHOOL
 ========================================= */
 
 function registerSchool(event){
 
-    event.preventDefault();
+event.preventDefault();
 
-    const schoolName =
-        document.getElementById(
-            "schoolRegisterName"
-        ).value.trim();
+const schoolName =
+document.getElementById(
+"schoolRegisterName"
+).value.trim();
 
-    const schoolEmail =
-        document.getElementById(
-            "schoolRegisterEmail"
-        ).value.trim();
+const schoolEmail =
+document.getElementById(
+"schoolRegisterEmail"
+).value.trim();
 
-    const schoolPhone =
-        document.getElementById(
-            "schoolRegisterPhone"
-        ).value.trim();
+const schoolPhone =
+document.getElementById(
+"schoolRegisterPhone"
+).value.trim();
 
-    const schoolAddress =
-        document.getElementById(
-            "schoolRegisterAddress"
-        ).value.trim();
+const schoolAddress =
+document.getElementById(
+"schoolRegisterAddress"
+).value.trim();
 
-    let schools =
-        JSON.parse(
-            localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
-            )
-        ) || [];
+let schools =
+JSON.parse(
+localStorage.getItem(
+SCHOOL_REGISTRY_KEY
+)
+) || [];
 
-    schools.push({
+const existingSchool =
+schools.find(
+school =>
+school.schoolName.toLowerCase()
+===
+schoolName.toLowerCase()
+);
 
-        schoolName,
-        schoolEmail,
-        schoolPhone,
-        schoolAddress
-    });
+if(existingSchool){
 
-    localStorage.setItem(
-        SCHOOL_REGISTRY_KEY,
-        JSON.stringify(schools)
-    );
+currentSchoolName =
+existingSchool.schoolName;
 
-    currentSchoolName =
-        schoolName;
+}else{
 
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
+const schoolPayload = {
 
-    const db =
-        createEmptySchoolDatabase(
-            currentSchoolName
-        );
+schoolName,
+schoolEmail,
+schoolPhone,
+schoolAddress,
+createdAt:new Date().toISOString()
 
-    saveSchoolData(
-        currentSchoolName,
-        db
-    );
+};
 
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
+schools.push(schoolPayload);
 
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
+localStorage.setItem(
+SCHOOL_REGISTRY_KEY,
+JSON.stringify(schools)
+);
+
+currentSchoolName = schoolName;
+
+const newDatabase =
+createEmptySchoolDatabase(
+currentSchoolName
+);
+
+const schoolIndex =
+getSchoolIndex();
+
+schoolIndex[currentSchoolName] =
+newDatabase;
+
+saveSchoolIndex(schoolIndex);
+
+}
+
+localStorage.setItem(
+ACTIVE_SCHOOL_KEY,
+currentSchoolName
+);
+
+window.currentSchoolDatabase =
+loadSchoolData(currentSchoolName);
+
+executeGlobalSchoolRebrand(
+currentSchoolName
+);
+
+document.getElementById(
+"school-registration-view"
+).style.display = "none";
+
+document.getElementById(
+"register-view"
+).style.display = "block";
+
+alert(
+"School registered successfully."
+);
+
 }
 
 /* =========================================
-   EXISTING SCHOOL
-========================================= */
-
-function openExistingSchoolRegistration(){
-
-    const school =
-        prompt(
-            "Enter school name"
-        );
-
-    if(!school){
-        return;
-    }
-
-    currentSchoolName =
-        school;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        school
-    );
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-}
-
-/* =========================================
-   OPEN LOGIN
-========================================= */
-
-function openLoginPage(){
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-}
-
-/* =========================================
-   REGISTER USER
+REGISTER USER
 ========================================= */
 
 function registerUser(event){
 
-    event.preventDefault();
+event.preventDefault();
 
-    let users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
+const fullName =
+document.getElementById(
+"registerFullName"
+).value.trim();
 
-    users.push({
+const email =
+document.getElementById(
+"registerEmail"
+).value.trim();
 
-        fullName:
-            document.getElementById(
-                "registerFullName"
-            ).value,
+const username =
+document.getElementById(
+"registerUsername"
+).value.trim();
 
-        email:
-            document.getElementById(
-                "registerEmail"
-            ).value,
+const password =
+document.getElementById(
+"registerPassword"
+).value.trim();
 
-        username:
-            document.getElementById(
-                "registerUsername"
-            ).value,
+const role =
+document.getElementById(
+"registerRole"
+).value;
 
-        password:
-            document.getElementById(
-                "registerPassword"
-            ).value,
+let users =
+JSON.parse(
+localStorage.getItem(USERS_KEY)
+) || [];
 
-        role:
-            document.getElementById(
-                "registerRole"
-            ).value,
+const existingUser =
+users.find(
+user =>
+user.username === username ||
+user.email === email
+);
 
-        school:
-            currentSchoolName
-    });
+if(existingUser){
 
-    localStorage.setItem(
-        USERS_KEY,
-        JSON.stringify(users)
-    );
+alert("Account already exists");
+return;
 
-    alert(
-        "Account created successfully."
-    );
+}
 
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
+users.push({
 
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
+fullName,
+email,
+username,
+password,
+role,
+school:currentSchoolName
+
+});
+
+localStorage.setItem(
+USERS_KEY,
+JSON.stringify(users)
+);
+
+alert("Account created successfully");
+
+document.getElementById(
+"register-view"
+).style.display = "none";
+
+document.getElementById(
+"signin-view"
+).style.display = "block";
+
 }
 
 /* =========================================
-   LOGIN
+LOGIN
 ========================================= */
 
 function executeSystemLogin(event){
 
-    event.preventDefault();
+event.preventDefault();
 
-    const loginValue =
-        document.getElementById(
-            "loginUser"
-        ).value;
+const loginValue =
+document.getElementById(
+"loginUser"
+).value.trim();
 
-    const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
+const password =
+document.getElementById(
+"loginPassword"
+).value.trim();
 
-    const users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
+const users =
+JSON.parse(
+localStorage.getItem(USERS_KEY)
+) || [];
 
-    const matchedUser =
-        users.find(
-            user =>
-                (
-                    user.username === loginValue
-                    ||
-                    user.email === loginValue
-                )
-                &&
-                user.password === password
-        );
+const matchedUser =
+users.find(
+user =>
+(
+user.username === loginValue ||
+user.email === loginValue
+)
+&&
+user.password === password
+);
 
-    if(!matchedUser){
+if(!matchedUser){
 
-        alert(
-            "Invalid credentials"
-        );
+alert("Invalid credentials");
+return;
 
-        return;
-    }
+}
 
-    currentLoggedInUser =
-        matchedUser;
+currentLoggedInUser = matchedUser;
 
-    currentSchoolName =
-        matchedUser.school;
+currentSchoolName =
+matchedUser.school;
 
-    window.currentSchoolDatabase =
-        loadSchoolData(
-            currentSchoolName
-        );
+localStorage.setItem(
+ACTIVE_SCHOOL_KEY,
+currentSchoolName
+);
 
-    document.getElementById(
-        "login-screen"
-    ).style.display = "none";
+window.currentSchoolDatabase =
+loadSchoolData(currentSchoolName);
 
-    document.getElementById(
-        "app-container"
-    ).style.display = "block";
+executeGlobalSchoolRebrand(
+currentSchoolName
+);
 
-    document.getElementById(
-        "header-active-role-badge"
-    ).textContent =
-        matchedUser.role;
+document.getElementById(
+"login-screen"
+).style.display = "none";
 
-    refreshEntireSystemUI();
+document.getElementById(
+"app-container"
+).style.display = "block";
+
+document.getElementById(
+"header-active-role-badge"
+).textContent =
+matchedUser.role;
+
+refreshEntireSystemUI();
+
+switchTab("dashboard");
+
 }
 
 /* =========================================
-   SWITCH TAB
+OPEN SCHOOL REGISTER
+========================================= */
+
+function openExistingSchoolRegistration(){
+
+const schools =
+JSON.parse(
+localStorage.getItem(
+SCHOOL_REGISTRY_KEY
+)
+) || [];
+
+if(schools.length === 0){
+
+alert("No registered schools");
+return;
+
+}
+
+const schoolNames =
+schools.map(
+school => school.schoolName
+).join("\n");
+
+const selectedSchool =
+prompt(
+"Enter school name:\n\n" +
+schoolNames
+);
+
+if(!selectedSchool){
+return;
+}
+
+const matchedSchool =
+schools.find(
+school =>
+school.schoolName.toLowerCase()
+===
+selectedSchool.toLowerCase()
+);
+
+if(!matchedSchool){
+
+alert("School not found");
+return;
+
+}
+
+currentSchoolName =
+matchedSchool.schoolName;
+
+localStorage.setItem(
+ACTIVE_SCHOOL_KEY,
+currentSchoolName
+);
+
+window.currentSchoolDatabase =
+loadSchoolData(currentSchoolName);
+
+executeGlobalSchoolRebrand(
+currentSchoolName
+);
+
+document.getElementById(
+"school-registration-view"
+).style.display = "none";
+
+document.getElementById(
+"register-view"
+).style.display = "block";
+
+}
+
+/* =========================================
+OPEN LOGIN
+========================================= */
+
+function openLoginPage(){
+
+document.getElementById(
+"school-registration-view"
+).style.display = "none";
+
+document.getElementById(
+"register-view"
+).style.display = "none";
+
+document.getElementById(
+"signin-view"
+).style.display = "block";
+
+}
+
+/* =========================================
+SWITCH TAB
 ========================================= */
 
 function switchTab(tab){
 
-    document
-        .querySelectorAll(".page-section")
-        .forEach(section=>{
+document
+.querySelectorAll(".page-section")
+.forEach(section=>{
 
-            section.classList.remove(
-                "active"
-            );
+section.classList.remove("active");
 
-        });
+});
 
-    document
-        .getElementById(
-            tab + "-section"
-        )
-        .classList.add("active");
+document
+.getElementById(
+tab + "-section"
+)
+.classList.add("active");
+
 }
 
 /* =========================================
-   ADD STUDENT
+ADD STUDENT
 ========================================= */
 
 function addStudent(event){
 
-    event.preventDefault();
+event.preventDefault();
 
-    if(
-        currentLoggedInUser.role !==
-        "admin"
-    ){
+if(currentLoggedInUser.role !== "admin"){
 
-        alert(
-            "Only admin can add students."
-        );
+alert("Only admin can add students");
+return;
 
-        return;
-    }
+}
 
-    window.currentSchoolDatabase.students.push({
+const name =
+document.getElementById(
+"studentName"
+).value;
 
-        name:
-            document.getElementById(
-                "studentName"
-            ).value,
+const studentClass =
+document.getElementById(
+"studentClass"
+).value;
 
-        email:
-            document.getElementById(
-                "studentEmail"
-            ).value,
+const gender =
+document.getElementById(
+"studentGender"
+).value;
 
-        className:
-            document.getElementById(
-                "studentClass"
-            ).value
-    });
+window.currentSchoolDatabase.students.push({
 
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
+name,
+studentClass,
+gender
 
-    refreshEntireSystemUI();
+});
 
-    event.target.reset();
+saveCurrentSchoolData();
+
+renderStudents();
+
+refreshEntireSystemUI();
+
+event.target.reset();
+
 }
 
 /* =========================================
-   ADD BOOK
+ADD BOOK
 ========================================= */
 
 function addBook(event){
 
-    event.preventDefault();
+event.preventDefault();
 
-    if(
-        currentLoggedInUser.role !==
-        "admin"
-        &&
-        currentLoggedInUser.role !==
-        "librarian"
-    ){
+if(
+currentLoggedInUser.role !== "admin"
+&&
+currentLoggedInUser.role !== "librarian"
+){
 
-        alert(
-            "Only admin or librarian can add books."
-        );
+alert(
+"Only admin or librarian can add books"
+);
 
-        return;
-    }
+return;
 
-    window.currentSchoolDatabase.books.push({
+}
 
-        title:
-            document.getElementById(
-                "bookTitle"
-            ).value,
+const title =
+document.getElementById(
+"bookTitle"
+).value;
 
-        author:
-            document.getElementById(
-                "bookAuthor"
-            ).value,
+const author =
+document.getElementById(
+"bookAuthor"
+).value;
 
-        category:
-            document.getElementById(
-                "bookCategory"
-            ).value
-    });
+const category =
+document.getElementById(
+"bookCategory"
+).value;
 
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
+window.currentSchoolDatabase.books.push({
 
-    refreshEntireSystemUI();
+title,
+author,
+category
 
-    event.target.reset();
+});
+
+saveCurrentSchoolData();
+
+renderBooks();
+
+refreshEntireSystemUI();
+
+event.target.reset();
+
 }
 
 /* =========================================
-   REFRESH UI
+ADD FEE
+========================================= */
+
+function addFee(event){
+
+event.preventDefault();
+
+const student =
+document.getElementById(
+"feeStudent"
+).value;
+
+const amount =
+document.getElementById(
+"feeAmount"
+).value;
+
+const status =
+document.getElementById(
+"feeStatus"
+).value;
+
+window.currentSchoolDatabase.fees.push({
+
+student,
+amount,
+status
+
+});
+
+saveCurrentSchoolData();
+
+renderFees();
+
+refreshEntireSystemUI();
+
+event.target.reset();
+
+}
+
+/* =========================================
+ADD GRADE
+========================================= */
+
+function addGrade(event){
+
+event.preventDefault();
+
+if(
+currentLoggedInUser.role !== "admin"
+&&
+currentLoggedInUser.role !== "teacher"
+){
+
+alert(
+"Only admin or teacher can add grades"
+);
+
+return;
+
+}
+
+const student =
+document.getElementById(
+"gradeStudent"
+).value;
+
+const subject =
+document.getElementById(
+"gradeSubject"
+).value;
+
+const marks =
+parseInt(
+document.getElementById(
+"gradeMarks"
+).value
+);
+
+let grade = "F";
+
+if(marks >= 80){
+grade = "A";
+}
+else if(marks >= 70){
+grade = "B";
+}
+else if(marks >= 60){
+grade = "C";
+}
+else if(marks >= 50){
+grade = "D";
+}
+
+window.currentSchoolDatabase.grades.push({
+
+student,
+subject,
+marks,
+grade
+
+});
+
+saveCurrentSchoolData();
+
+renderGrades();
+
+refreshEntireSystemUI();
+
+event.target.reset();
+
+}
+
+/* =========================================
+RENDER STUDENTS
+========================================= */
+
+function renderStudents(){
+
+const tbody =
+document.getElementById(
+"students-table-body"
+);
+
+tbody.innerHTML = "";
+
+window.currentSchoolDatabase.students.forEach(student=>{
+
+tbody.innerHTML += `
+
+<tr>
+<td>${student.name}</td>
+<td>${student.studentClass}</td>
+<td>${student.gender}</td>
+</tr>
+
+`;
+
+});
+
+}
+
+/* =========================================
+RENDER BOOKS
+========================================= */
+
+function renderBooks(){
+
+const tbody =
+document.getElementById(
+"library-table-body"
+);
+
+tbody.innerHTML = "";
+
+window.currentSchoolDatabase.books.forEach(book=>{
+
+tbody.innerHTML += `
+
+<tr>
+<td>${book.title}</td>
+<td>${book.author}</td>
+<td>${book.category}</td>
+</tr>
+
+`;
+
+});
+
+}
+
+/* =========================================
+RENDER FEES
+========================================= */
+
+function renderFees(){
+
+const tbody =
+document.getElementById(
+"fees-table-body"
+);
+
+tbody.innerHTML = "";
+
+window.currentSchoolDatabase.fees.forEach(fee=>{
+
+tbody.innerHTML += `
+
+<tr>
+<td>${fee.student}</td>
+<td>${fee.amount}</td>
+<td>${fee.status}</td>
+</tr>
+
+`;
+
+});
+
+}
+
+/* =========================================
+RENDER GRADES
+========================================= */
+
+function renderGrades(){
+
+const tbody =
+document.getElementById(
+"grades-table-body"
+);
+
+tbody.innerHTML = "";
+
+window.currentSchoolDatabase.grades.forEach(grade=>{
+
+tbody.innerHTML += `
+
+<tr>
+<td>${grade.student}</td>
+<td>${grade.subject}</td>
+<td>${grade.marks}</td>
+<td>${grade.grade}</td>
+</tr>
+
+`;
+
+});
+
+}
+
+/* =========================================
+REFRESH UI
 ========================================= */
 
 function refreshEntireSystemUI(){
 
-    document.getElementById(
-        "students-count"
-    ).textContent =
-        window.currentSchoolDatabase.students.length;
+document.getElementById(
+"students-count"
+).textContent =
+window.currentSchoolDatabase.students.length;
 
-    document.getElementById(
-        "books-count"
-    ).textContent =
-        window.currentSchoolDatabase.books.length;
+document.getElementById(
+"books-count"
+).textContent =
+window.currentSchoolDatabase.books.length;
 
-    document.getElementById(
-        "fees-count"
-    ).textContent =
-        window.currentSchoolDatabase.fees.length;
+document.getElementById(
+"fees-count"
+).textContent =
+window.currentSchoolDatabase.fees.length;
 
-    document.getElementById(
-        "grades-count"
-    ).textContent =
-        window.currentSchoolDatabase.marks.length;
+document.getElementById(
+"grades-count"
+).textContent =
+window.currentSchoolDatabase.grades.length;
 
-    renderStudentsTable();
+document.getElementById(
+"sidebar-school-name"
+).textContent =
+currentSchoolName;
 
-    renderBooksTable();
+document.getElementById(
+"header-school-name"
+).textContent =
+currentSchoolName;
 
-    document.getElementById(
-        "sidebar-school-name"
-    ).textContent =
-        currentSchoolName;
+renderStudents();
+renderBooks();
+renderFees();
+renderGrades();
 
-    document.getElementById(
-        "header-school-name"
-    ).textContent =
-        currentSchoolName;
 }
 
 /* =========================================
-   STUDENT TABLE
-========================================= */
-
-function renderStudentsTable(){
-
-    const tbody =
-        document.getElementById(
-            "students-table-body"
-        );
-
-    tbody.innerHTML = "";
-
-    window.currentSchoolDatabase.students
-    .forEach(student=>{
-
-        tbody.innerHTML += `
-            <tr>
-                <td>${student.name}</td>
-                <td>${student.email}</td>
-                <td>${student.className}</td>
-            </tr>
-        `;
-    });
-}
-
-/* =========================================
-   BOOK TABLE
-========================================= */
-
-function renderBooksTable(){
-
-    const tbody =
-        document.getElementById(
-            "library-table-body"
-        );
-
-    tbody.innerHTML = "";
-
-    window.currentSchoolDatabase.books
-    .forEach(book=>{
-
-        tbody.innerHTML += `
-            <tr>
-                <td>${book.title}</td>
-                <td>${book.author}</td>
-                <td>${book.category}</td>
-            </tr>
-        `;
-    });
-}
-
-/* =========================================
-   LOGOUT
+LOGOUT
 ========================================= */
 
 function logoutSystem(){
 
-    document.getElementById(
-        "app-container"
-    ).style.display = "none";
+document.getElementById(
+"app-container"
+).style.display = "none";
 
-    document.getElementById(
-        "login-screen"
-    ).style.display = "flex";
+document.getElementById(
+"login-screen"
+).style.display = "flex";
 
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
+document.getElementById(
+"signin-view"
+).style.display = "block";
 
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
+document.getElementById(
+"register-view"
+).style.display = "none";
 
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
+document.getElementById(
+"school-registration-view"
+).style.display = "none";
+
 }
 
 </script>
