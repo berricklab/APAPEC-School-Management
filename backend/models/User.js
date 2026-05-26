@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+
     fullName: String,
-    email: String,
-    username: String,
+
+    email: {
+        type: String,
+        unique: true
+    },
+
+    username: {
+        type: String,
+        unique: true
+    },
+
     password: String,
+
     role: {
         type: String,
         enum: [
@@ -15,12 +26,16 @@ const userSchema = new mongoose.Schema({
             "librarian"
         ]
     },
-    school: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "School"
-    }
+
+    school: String,
+
+    profileImage: String
+
 }, {
     timestamps: true
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model(
+    "User",
+    UserSchema
+);
