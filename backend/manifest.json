@@ -1,0 +1,15 @@
+{
+  "name": "APAPEC School Management",
+  "short_name": "APAPEC SMS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
