@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
 
     const token = req.headers.authorization;
 
-    if(!token){
+    if (!token) {
         return res.status(401).json({
             message: "Unauthorized"
         });
@@ -12,19 +12,19 @@ module.exports = (req, res, next) => {
 
     try {
 
-        const decoded = jwt.verify(
+        const verified = jwt.verify(
             token,
             process.env.JWT_SECRET
         );
 
-        req.user = decoded;
+        req.user = verified;
 
         next();
 
     } catch (error) {
 
         res.status(401).json({
-            message: "Invalid token"
+            message: "Invalid Token"
         });
     }
 };
