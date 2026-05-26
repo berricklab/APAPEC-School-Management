@@ -1,28 +1,9 @@
 const express = require("express");
-
-const router = express.Router();
-
-router.post("/register", async (req, res) => {
-
-    try {
-
-        const hashedPassword = await bcrypt.hash(
-            req.body.password,
-            10
-        );
-
-        const user = await User.create({
-            ...req.body,
-            password: hashedPassword
-        });
-
-        res.json(user);
+        res.status(201).json(user);
 
     } catch (error) {
 
-        res.status(500).json({
-            error: error.message
-        });
+        res.status(500).json(error);
     }
 });
 
@@ -30,29 +11,39 @@ router.post("/login", async (req, res) => {
 
     try {
 
+        const {
+            login,
+            password
+        } = req.body;
+
         const user = await User.findOne({
-            email: req.body.email
+            $or: [
+                { email: login },
+                { username: login }
+            ]
         });
 
-        if(!user){
+        if (!user) {
             return res.status(404).json({
                 message: "User not found"
             });
         }
 
-        const validPassword = await bcrypt.compare(
-            req.body.password,
+        const matched = await bcrypt.compare(
+            password,
             user.password
         );
 
-        if(!validPassword){
-            return res.status(400).json({
-                message: "Invalid password"
+        if (!matched) {
+            return res.status(401).json({
+                message: "Wrong Password"
             });
         }
 
         const token = jwt.sign({
-            id: user._id
+            id: user._id,
+            role: user.role,
+            school: user.school
         }, process.env.JWT_SECRET);
 
         res.json({
@@ -62,9 +53,7 @@ router.post("/login", async (req, res) => {
 
     } catch (error) {
 
-        res.status(500).json({
-            error: error.message
-        });
+        res.status(500).json(error);
     }
 });
 
