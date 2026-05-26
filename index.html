@@ -1044,7 +1044,23 @@ function renderGradesTable(){
 const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
 const USERS_KEY = "sms_users";
 const ACTIVE_SCHOOL_KEY = "sms_active_school";
+async function fetchStudents(){
 
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+        "http://localhost:5000/api/students",
+        {
+            headers: {
+                Authorization: token
+            }
+        }
+    );
+
+    const students = await response.json();
+
+    console.log(students);
+}
 let currentSchoolName =
     localStorage.getItem(
         ACTIVE_SCHOOL_KEY
@@ -1190,6 +1206,12 @@ function executeGlobalSchoolRebrand(
         headerTitle.textContent =
             schoolName;
     }
+}
+   function toggleDarkMode(){
+
+    document.body.classList.toggle(
+        "dark-mode"
+    );
 }
 
 /* =========================================
