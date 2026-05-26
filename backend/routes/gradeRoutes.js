@@ -1,23 +1,34 @@
 const express = require("express");
-const router = express.Router();
+const PDFDocument = require("pdfkit");
 const Grade = require("../models/Grade");
 
-router.post("/add", async (req, res) => {
-    try {
-        const grade = await Grade.create(req.body);
-        res.json(grade);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+const router = express.Router();
 
-router.get("/all", async (req, res) => {
-    try {
-        const grades = await Grade.find();
-        res.json(grades);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+router.get("/report/:student", async (req, res) => {
+
+    const grades = await Grade.find({
+        student: req.params.student
+    });
+
+    const doc = new PDFDocument();
+
+    res.setHeader(
+        "Content-Type",
+        "application/pdf"
+    );
+
+    doc.pipe(res);
+
+    doc.fontSize(24).text("Student Report Card");
+
+    grades.forEach(g => {
+
+        doc.text(
+            `${g.subject} : ${g.marks} (${g.grade})`
+        );
+    });
+
+    doc.end();
 });
 
 module.exports = router;
