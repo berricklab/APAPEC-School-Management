@@ -718,70 +718,114 @@ function registerUser(event){
     event.preventDefault();
 
     const fullName =
-    document.getElementById(
-        "registerFullName"
-    ).value.trim();
+    document.getElementById("registerFullName").value.trim();
 
     const email =
-    document.getElementById(
-        "registerEmail"
-    ).value.trim();
+    document.getElementById("registerEmail").value.trim();
 
     const username =
-    document.getElementById(
-        "registerUsername"
-    ).value.trim();
+    document.getElementById("registerUsername").value.trim();
 
     const password =
-    document.getElementById(
-        "registerPassword"
-    ).value.trim();
+    document.getElementById("registerPassword").value.trim();
 
     const role =
-    document.getElementById(
-        "registerRole"
-    ).value;
+    document.getElementById("registerRole").value;
 
     const adminSecretCode =
-    document.getElementById(
-        "adminSecretCode"
-    ).value.trim();
+    document.getElementById("adminSecretCode").value.trim();
 
     let schools =
-    JSON.parse(
-        localStorage.getItem(
-            SCHOOL_REGISTRY_KEY
-        )
-    ) || [];
+    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
 
     if(schools.length === 0){
 
-        alert("Register school first.");
+        alert("Please register school first");
         return;
     }
 
     const school = schools[0];
 
     let users =
-    JSON.parse(
-        localStorage.getItem(
-            USERS_KEY
-        )
-    ) || [];
+    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+
+    /* =========================
+       CHECK ADMINS
+    ========================= */
+
+    const admins =
+    users.filter(user => user.role === "admin");
+
+    if(role === "admin"){
+
+        /* CHECK SECRET CODE */
+
+        if(adminSecretCode !== school.mainAdminCode){
+
+            alert(
+                "Wrong Main Admin Secret Code"
+            );
+
+            return;
+        }
+
+        /* CHECK MAX ADMINS */
+
+        if(admins.length >= school.maxAdmins){
+
+            alert(
+                "Maximum Admins Reached"
+            );
+
+            return;
+        }
+    }
+
+    /* =========================
+       CHECK DUPLICATES
+    ========================= */
 
     const existingUser =
-    users.find(
-        user =>
-        user.username === username
-        ||
+    users.find(user =>
+        user.username === username ||
         user.email === email
     );
 
     if(existingUser){
 
-        alert("User already exists.");
+        alert("User already exists");
         return;
     }
+
+    /* =========================
+       SAVE USER
+    ========================= */
+
+    users.push({
+
+        fullName,
+        email,
+        username,
+        password,
+        role
+
+    });
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+
+    alert("Account Created Successfully");
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
+        "signin-view"
+    ).style.display = "block";
+}
 
     /* =====================
        ADMIN SECURITY
