@@ -1214,8 +1214,9 @@ function executeGlobalSchoolRebrand(
     );
 }
 
+
 /* =========================================
-   REGISTER SCHOOL
+REGISTER SCHOOL
 ========================================= */
 
 function registerSchool(event){
@@ -1242,6 +1243,18 @@ function registerSchool(event){
             "schoolRegisterAddress"
         ).value.trim();
 
+    const mainAdminCode =
+        document.getElementById(
+            "schoolMainAdminCode"
+        ).value.trim();
+
+    const maxAdmins =
+        parseInt(
+            document.getElementById(
+                "maxAdmins"
+            ).value
+        );
+
     let schools =
         JSON.parse(
             localStorage.getItem(
@@ -1259,54 +1272,55 @@ function registerSchool(event){
 
     if(existingSchool){
 
-        currentSchoolName =
-            existingSchool.schoolName;
-
-    }else{
-
-        const schoolPayload = {
-
-            schoolName,
-            schoolEmail,
-            schoolPhone,
-            schoolAddress,
-
-            createdAt:
-                new Date().toISOString()
-        };
-
-        schools.push(
-            schoolPayload
+        alert(
+            "School already exists."
         );
 
-        localStorage.setItem(
-            SCHOOL_REGISTRY_KEY,
-            JSON.stringify(schools)
-        );
-
-        currentSchoolName =
-            schoolName;
-
-        const newDatabase =
-            createEmptySchoolDatabase(
-                currentSchoolName
-            );
-
-        saveSchoolData(
-            currentSchoolName,
-            newDatabase
-        );
+        return;
     }
+
+    const schoolPayload = {
+
+        schoolName,
+        schoolEmail,
+        schoolPhone,
+        schoolAddress,
+        mainAdminCode,
+        maxAdmins,
+
+        createdAt:
+            new Date().toISOString()
+    };
+
+    schools.push(
+        schoolPayload
+    );
+
+    localStorage.setItem(
+        SCHOOL_REGISTRY_KEY,
+        JSON.stringify(schools)
+    );
+
+    currentSchoolName =
+        schoolName;
 
     localStorage.setItem(
         ACTIVE_SCHOOL_KEY,
         currentSchoolName
     );
 
-    window.currentSchoolDatabase =
-        loadSchoolData(
+    const newDatabase =
+        createEmptySchoolDatabase(
             currentSchoolName
         );
+
+    saveSchoolData(
+        currentSchoolName,
+        newDatabase
+    );
+
+    window.currentSchoolDatabase =
+        newDatabase;
 
     executeGlobalSchoolRebrand(
         currentSchoolName
@@ -1325,9 +1339,10 @@ function registerSchool(event){
     ).style.display = "block";
 
     alert(
-        "School registered successfully."
+        "School registered successfully.\nNow create MAIN ADMIN account."
     );
 }
+
 
 /* =========================================
    REGISTER USER
