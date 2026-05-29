@@ -51,7 +51,8 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
+    background:
+    linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
     linear-gradient(135deg,var(--primary),var(--secondary));
     padding:30px;
 }
@@ -93,7 +94,11 @@ body{
     padding:14px;
     border:none;
     border-radius:10px;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
     color:white;
     cursor:pointer;
     font-weight:bold;
@@ -110,7 +115,11 @@ aside{
     left:0;
     bottom:0;
     width:250px;
-    background:linear-gradient(180deg,var(--dark),var(--primary));
+    background:linear-gradient(
+        180deg,
+        var(--dark),
+        var(--primary)
+    );
     color:white;
     padding:20px;
 }
@@ -152,6 +161,7 @@ header button{
     cursor:pointer;
     color:white;
     background:var(--danger);
+    margin-left:10px;
 }
 
 main{
@@ -162,7 +172,8 @@ main{
 
 .dashboard-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
 }
 
@@ -276,7 +287,12 @@ main{
 Register School
 </button>
 
-<button type="button" class="btn-auth" onclick="openLoginPage()" style="background:#059669;">
+<button
+type="button"
+class="btn-auth"
+onclick="openLoginPage()"
+style="background:#059669;"
+>
 Already Have Account?
 </button>
 
@@ -343,9 +359,19 @@ Parent
 
 </div>
 
-<div class="form-group" id="admin-secret-box" style="display:none;">
+<div
+class="form-group"
+id="admin-secret-box"
+style="display:none;"
+>
 <label>Main Admin Secret Code</label>
-<input type="text" id="adminSecretCode" class="form-control">
+
+<input
+type="text"
+id="adminSecretCode"
+class="form-control"
+>
+
 </div>
 
 <button type="submit" class="btn-auth">
@@ -368,12 +394,26 @@ Create Account
 
 <div class="form-group">
 <label>Username Or Email</label>
-<input type="text" id="loginUser" class="form-control" required>
+
+<input
+type="text"
+id="loginUser"
+class="form-control"
+required
+>
+
 </div>
 
 <div class="form-group">
 <label>Password</label>
-<input type="password" id="loginPassword" class="form-control" required>
+
+<input
+type="password"
+id="loginPassword"
+class="form-control"
+required
+>
+
 </div>
 
 <button type="submit" class="btn-auth">
@@ -406,18 +446,6 @@ Dashboard
 Students
 </button>
 
-<button class="menu-btn" onclick="switchTab('library')">
-Library
-</button>
-
-<button class="menu-btn" onclick="switchTab('fees')">
-Fees
-</button>
-
-<button class="menu-btn" onclick="switchTab('grades')">
-Grades
-</button>
-
 </aside>
 
 <header>
@@ -444,7 +472,10 @@ Logout
 
 <main>
 
-<section id="dashboard-section" class="page-section active">
+<section
+id="dashboard-section"
+class="page-section active"
+>
 
 <div class="dashboard-grid">
 
@@ -454,25 +485,18 @@ Logout
 </div>
 
 <div class="stat-card">
-<h3>Books</h3>
-<p id="books-count">0</p>
-</div>
-
-<div class="stat-card">
-<h3>Fees</h3>
-<p id="fees-count">0</p>
-</div>
-
-<div class="stat-card">
-<h3>Grades</h3>
-<p id="grades-count">0</p>
+<h3>Admins</h3>
+<p id="admins-count">0</p>
 </div>
 
 </div>
 
 </section>
 
-<section id="students-section" class="page-section">
+<section
+id="students-section"
+class="page-section"
+>
 
 <div class="content-panel">
 
@@ -482,20 +506,39 @@ Logout
 
 <div class="form-group">
 <label>Name</label>
-<input type="text" id="studentName" class="form-control" required>
+
+<input
+type="text"
+id="studentName"
+class="form-control"
+required
+>
+
 </div>
 
 <div class="form-group">
 <label>Class</label>
-<input type="text" id="studentClass" class="form-control" required>
+
+<input
+type="text"
+id="studentClass"
+class="form-control"
+required
+>
+
 </div>
 
 <div class="form-group">
 <label>Gender</label>
 
-<select id="studentGender" class="form-control">
+<select
+id="studentGender"
+class="form-control"
+>
+
 <option>Male</option>
 <option>Female</option>
+
 </select>
 
 </div>
@@ -509,11 +552,13 @@ Add Student
 <table class="table">
 
 <thead>
+
 <tr>
 <th>Name</th>
 <th>Class</th>
 <th>Gender</th>
 </tr>
+
 </thead>
 
 <tbody id="students-table-body"></tbody>
@@ -530,52 +575,110 @@ Add Student
 
 <script>
 
-const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
-const USERS_KEY = "sms_users";
+const SCHOOL_REGISTRY_KEY =
+"sms_registered_schools";
+
+const USERS_KEY =
+"sms_users";
+
+const STUDENTS_KEY =
+"sms_students";
 
 let currentLoggedInUser = null;
 
-document.getElementById("registerRole").addEventListener("change", function(){
+/* =========================
+ROLE CHANGE
+========================= */
+
+document
+.getElementById("registerRole")
+.addEventListener("change", function(){
 
     if(this.value === "admin"){
 
-        document.getElementById("admin-secret-box").style.display = "block";
+        document.getElementById(
+            "admin-secret-box"
+        ).style.display = "block";
 
     }else{
 
-        document.getElementById("admin-secret-box").style.display = "none";
+        document.getElementById(
+            "admin-secret-box"
+        ).style.display = "none";
     }
 });
 
+/* =========================
+DARK MODE
+========================= */
+
 function toggleDarkMode(){
 
-    document.body.classList.toggle("dark-mode");
+    document.body.classList.toggle(
+        "dark-mode"
+    );
 }
+
+/* =========================
+REGISTER SCHOOL
+========================= */
 
 function registerSchool(event){
 
     event.preventDefault();
 
     const schoolName =
-    document.getElementById("schoolRegisterName").value;
+    document.getElementById(
+        "schoolRegisterName"
+    ).value.trim();
 
     const schoolEmail =
-    document.getElementById("schoolRegisterEmail").value;
+    document.getElementById(
+        "schoolRegisterEmail"
+    ).value.trim();
 
     const schoolPhone =
-    document.getElementById("schoolRegisterPhone").value;
+    document.getElementById(
+        "schoolRegisterPhone"
+    ).value.trim();
 
     const schoolAddress =
-    document.getElementById("schoolRegisterAddress").value;
+    document.getElementById(
+        "schoolRegisterAddress"
+    ).value.trim();
 
     const mainAdminCode =
-    document.getElementById("schoolMainAdminCode").value;
+    document.getElementById(
+        "schoolMainAdminCode"
+    ).value.trim();
 
     const maxAdmins =
-    parseInt(document.getElementById("maxAdmins").value);
+    parseInt(
+        document.getElementById(
+            "maxAdmins"
+        ).value
+    );
 
     let schools =
-    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
+    JSON.parse(
+        localStorage.getItem(
+            SCHOOL_REGISTRY_KEY
+        )
+    ) || [];
+
+    const existingSchool =
+    schools.find(
+        school =>
+        school.schoolName.toLowerCase()
+        ===
+        schoolName.toLowerCase()
+    );
+
+    if(existingSchool){
+
+        alert("School already exists.");
+        return;
+    }
 
     schools.push({
 
@@ -593,7 +696,9 @@ function registerSchool(event){
         JSON.stringify(schools)
     );
 
-    alert("School Registered Successfully");
+    alert(
+        "School Registered Successfully"
+    );
 
     document.getElementById(
         "school-registration-view"
@@ -604,78 +709,115 @@ function registerSchool(event){
     ).style.display = "block";
 }
 
+/* =========================
+REGISTER USER
+========================= */
+
 function registerUser(event){
 
     event.preventDefault();
 
     const fullName =
-    document.getElementById("registerFullName").value;
+    document.getElementById(
+        "registerFullName"
+    ).value.trim();
 
     const email =
-    document.getElementById("registerEmail").value;
+    document.getElementById(
+        "registerEmail"
+    ).value.trim();
 
     const username =
-    document.getElementById("registerUsername").value;
+    document.getElementById(
+        "registerUsername"
+    ).value.trim();
 
     const password =
-    document.getElementById("registerPassword").value;
+    document.getElementById(
+        "registerPassword"
+    ).value.trim();
 
     const role =
-    document.getElementById("registerRole").value;
+    document.getElementById(
+        "registerRole"
+    ).value;
 
     const adminSecretCode =
-    document.getElementById("adminSecretCode").value;
+    document.getElementById(
+        "adminSecretCode"
+    ).value.trim();
 
     let schools =
-    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
+    JSON.parse(
+        localStorage.getItem(
+            SCHOOL_REGISTRY_KEY
+        )
+    ) || [];
+
+    if(schools.length === 0){
+
+        alert("Register school first.");
+        return;
+    }
 
     const school = schools[0];
 
-if(role === "admin"){
-
-    if(admins.length === 0){
-
-        // FIRST ADMIN = MAIN ADMIN
-
-        if(secretCode !== school.mainAdminCode){
-
-            alert(
-                "Wrong Main Admin Secret Code.\n\n" +
-                "Use the same code you entered when registering the school."
-            );
-
-            return;
-        }
-
-    }else{
-
-        // OTHER ADMINS
-
-        if(secretCode !== school.mainAdminCode){
-
-            alert(
-                "Only Main Admin can create other admins."
-            );
-
-            return;
-        }
-    }
-}
-        let users =
-        JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-
-        const adminCount =
-        users.filter(user => user.role === "admin").length;
-
-        if(adminCount >= school.maxAdmins){
-
-            alert("Maximum Admins Reached");
-            return;
-        }
-    }
-
     let users =
-    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+    JSON.parse(
+        localStorage.getItem(
+            USERS_KEY
+        )
+    ) || [];
+
+    const existingUser =
+    users.find(
+        user =>
+        user.username === username
+        ||
+        user.email === email
+    );
+
+    if(existingUser){
+
+        alert("User already exists.");
+        return;
+    }
+
+    /* =====================
+       ADMIN SECURITY
+    ===================== */
+
+    if(role === "admin"){
+
+        const admins =
+        users.filter(
+            user => user.role === "admin"
+        );
+
+        if(
+            adminSecretCode !==
+            school.mainAdminCode
+        ){
+
+            alert(
+                "Wrong Main Admin Secret Code"
+            );
+
+            return;
+        }
+
+        if(
+            admins.length >=
+            school.maxAdmins
+        ){
+
+            alert(
+                "Maximum Admins Reached"
+            );
+
+            return;
+        }
+    }
 
     users.push({
 
@@ -692,7 +834,9 @@ if(role === "admin"){
         JSON.stringify(users)
     );
 
-    alert("Account Created Successfully");
+    alert(
+        "Account Created Successfully"
+    );
 
     document.getElementById(
         "register-view"
@@ -703,26 +847,42 @@ if(role === "admin"){
     ).style.display = "block";
 }
 
+/* =========================
+LOGIN
+========================= */
+
 function executeSystemLogin(event){
 
     event.preventDefault();
 
     const loginUser =
-    document.getElementById("loginUser").value;
+    document.getElementById(
+        "loginUser"
+    ).value.trim();
 
     const loginPassword =
-    document.getElementById("loginPassword").value;
+    document.getElementById(
+        "loginPassword"
+    ).value.trim();
 
     let users =
-    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+    JSON.parse(
+        localStorage.getItem(
+            USERS_KEY
+        )
+    ) || [];
 
     const matchedUser =
     users.find(user =>
+
         (
-            user.username === loginUser ||
+            user.username === loginUser
+            ||
             user.email === loginUser
         )
+
         &&
+
         user.password === loginPassword
     );
 
@@ -732,7 +892,8 @@ function executeSystemLogin(event){
         return;
     }
 
-    currentLoggedInUser = matchedUser;
+    currentLoggedInUser =
+    matchedUser;
 
     document.getElementById(
         "login-screen"
@@ -744,10 +905,15 @@ function executeSystemLogin(event){
 
     document.getElementById(
         "header-active-role-badge"
-    ).innerText = matchedUser.role;
+    ).innerText =
+    matchedUser.role;
 
     refreshDashboard();
 }
+
+/* =========================
+OPEN LOGIN
+========================= */
 
 function openLoginPage(){
 
@@ -756,9 +922,17 @@ function openLoginPage(){
     ).style.display = "none";
 
     document.getElementById(
+        "register-view"
+    ).style.display = "none";
+
+    document.getElementById(
         "signin-view"
     ).style.display = "block";
 }
+
+/* =========================
+LOGOUT
+========================= */
 
 function logoutSystem(){
 
@@ -773,42 +947,89 @@ function logoutSystem(){
     document.getElementById(
         "signin-view"
     ).style.display = "block";
+
+    document.getElementById(
+        "register-view"
+    ).style.display = "none";
 }
+
+/* =========================
+SWITCH TAB
+========================= */
 
 function switchTab(tab){
 
-    document.querySelectorAll(".page-section")
+    document
+    .querySelectorAll(".page-section")
     .forEach(section => {
 
-        section.classList.remove("active");
+        section.classList.remove(
+            "active"
+        );
     });
 
+    const selectedSection =
     document.getElementById(
         tab + "-section"
-    ).classList.add("active");
+    );
+
+    if(selectedSection){
+
+        selectedSection.classList.add(
+            "active"
+        );
+    }
 }
+
+/* =========================
+ADD STUDENT
+========================= */
 
 function addStudent(event){
 
     event.preventDefault();
 
-    if(currentLoggedInUser.role !== "admin"){
+    if(
+        !currentLoggedInUser
+    ){
 
-        alert("Only Admin Can Add Students");
+        alert("Login first.");
+        return;
+    }
+
+    if(
+        currentLoggedInUser.role !==
+        "admin"
+    ){
+
+        alert(
+            "Only Admin Can Add Students"
+        );
+
         return;
     }
 
     const name =
-    document.getElementById("studentName").value;
+    document.getElementById(
+        "studentName"
+    ).value.trim();
 
     const className =
-    document.getElementById("studentClass").value;
+    document.getElementById(
+        "studentClass"
+    ).value.trim();
 
     const gender =
-    document.getElementById("studentGender").value;
+    document.getElementById(
+        "studentGender"
+    ).value;
 
     let students =
-    JSON.parse(localStorage.getItem("students")) || [];
+    JSON.parse(
+        localStorage.getItem(
+            STUDENTS_KEY
+        )
+    ) || [];
 
     students.push({
 
@@ -819,7 +1040,7 @@ function addStudent(event){
     });
 
     localStorage.setItem(
-        "students",
+        STUDENTS_KEY,
         JSON.stringify(students)
     );
 
@@ -828,17 +1049,31 @@ function addStudent(event){
     refreshDashboard();
 
     event.target.reset();
+
+    alert(
+        "Student Added Successfully"
+    );
 }
+
+/* =========================
+RENDER STUDENTS
+========================= */
 
 function renderStudents(){
 
     const table =
-    document.getElementById("students-table-body");
+    document.getElementById(
+        "students-table-body"
+    );
 
     table.innerHTML = "";
 
     let students =
-    JSON.parse(localStorage.getItem("students")) || [];
+    JSON.parse(
+        localStorage.getItem(
+            STUDENTS_KEY
+        )
+    ) || [];
 
     students.forEach(student => {
 
@@ -852,14 +1087,40 @@ function renderStudents(){
     });
 }
 
+/* =========================
+REFRESH DASHBOARD
+========================= */
+
 function refreshDashboard(){
 
     let students =
-    JSON.parse(localStorage.getItem("students")) || [];
+    JSON.parse(
+        localStorage.getItem(
+            STUDENTS_KEY
+        )
+    ) || [];
+
+    let users =
+    JSON.parse(
+        localStorage.getItem(
+            USERS_KEY
+        )
+    ) || [];
+
+    const admins =
+    users.filter(
+        user => user.role === "admin"
+    );
 
     document.getElementById(
         "students-count"
-    ).innerText = students.length;
+    ).innerText =
+    students.length;
+
+    document.getElementById(
+        "admins-count"
+    ).innerText =
+    admins.length;
 
     renderStudents();
 }
