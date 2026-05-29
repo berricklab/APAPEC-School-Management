@@ -4,15 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title id="window-title">
+<title>
 APAPEC-IREBERO | School Management System
 </title>
 
 <style>
-
-/* =========================================
-   ROOT
-========================================= */
 
 :root{
     --primary:#1e3a8a;
@@ -24,12 +20,7 @@ APAPEC-IREBERO | School Management System
     --surface:#ffffff;
     --text:#1f2937;
     --shadow:0 10px 30px rgba(0,0,0,.12);
-    --radius:18px;
 }
-
-/* =========================================
-   GLOBAL
-========================================= */
 
 *{
     margin:0;
@@ -43,31 +34,24 @@ body{
     color:var(--text);
 }
 
-html{
-    scroll-behavior:smooth;
-}
-.dark-mode {
-    background: #0f172a;
-    color: white;
+.dark-mode{
+    background:#0f172a;
+    color:white;
 }
 
 .dark-mode .content-panel,
 .dark-mode .stat-card,
-.dark-mode header {
-    background: #1e293b;
-    color: white;
+.dark-mode header{
+    background:#1e293b;
+    color:white;
 }
-/* =========================================
-   LOGIN SCREEN
-========================================= */
 
 #login-screen{
     min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:
-    linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
+    background:linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
     linear-gradient(135deg,var(--primary),var(--secondary));
     padding:30px;
 }
@@ -75,43 +59,32 @@ html{
 .auth-card{
     width:100%;
     max-width:550px;
-    background:#fff;
-    border-radius:30px;
+    background:white;
+    border-radius:25px;
     padding:40px;
     box-shadow:var(--shadow);
 }
 
 .auth-header{
     text-align:center;
-    margin-bottom:25px;
-}
-
-.auth-header h1{
-    color:var(--primary);
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
 
 .form-group{
-    margin-bottom:18px;
+    margin-bottom:15px;
 }
 
 .form-group label{
     display:block;
     margin-bottom:8px;
-    font-weight:600;
+    font-weight:bold;
 }
 
 .form-control{
     width:100%;
     padding:14px;
-    border-radius:14px;
-    border:2px solid #e2e8f0;
-    font-size:15px;
-}
-
-.form-control:focus{
-    outline:none;
-    border-color:var(--secondary);
+    border-radius:10px;
+    border:2px solid #ddd;
 }
 
 .btn-auth,
@@ -119,21 +92,13 @@ html{
     width:100%;
     padding:14px;
     border:none;
-    border-radius:14px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;
     cursor:pointer;
-    color:#fff;
-    font-weight:700;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
+    font-weight:bold;
     margin-top:10px;
 }
-
-/* =========================================
-   APP
-========================================= */
 
 #app-container{
     display:none;
@@ -144,15 +109,10 @@ aside{
     top:0;
     left:0;
     bottom:0;
-    width:260px;
-    background:linear-gradient(
-        180deg,
-        var(--dark),
-        var(--primary)
-    );
-    color:#fff;
-    padding:25px;
-    overflow-y:auto;
+    width:250px;
+    background:linear-gradient(180deg,var(--dark),var(--primary));
+    color:white;
+    padding:20px;
 }
 
 aside h2{
@@ -160,103 +120,65 @@ aside h2{
     margin-bottom:30px;
 }
 
-.sidebar-menu{
-    list-style:none;
-}
-
 .menu-btn{
     width:100%;
     padding:14px;
     border:none;
-    border-radius:14px;
+    border-radius:10px;
     margin-bottom:10px;
     cursor:pointer;
-    background:rgba(255,255,255,.08);
-    color:#fff;
+    background:rgba(255,255,255,.1);
+    color:white;
     text-align:left;
-    font-weight:600;
-}
-
-.menu-btn:hover{
-    background:rgba(255,255,255,.2);
 }
 
 header{
     position:fixed;
     top:0;
-    left:260px;
+    left:250px;
     right:0;
     height:80px;
-    background:#fff;
+    background:white;
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:0 30px;
-    border-bottom:1px solid #e2e8f0;
 }
 
 header button{
-    padding:10px 18px;
+    padding:10px 15px;
     border:none;
-    border-radius:10px;
-    background:var(--danger);
-    color:#fff;
+    border-radius:8px;
     cursor:pointer;
+    color:white;
+    background:var(--danger);
 }
 
 main{
-    margin-left:260px;
+    margin-left:250px;
     margin-top:80px;
     padding:30px;
 }
 
-/* =========================================
-   DASHBOARD
-========================================= */
-
 .dashboard-grid{
     display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(240px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
 }
 
 .stat-card{
-    background:#fff;
-    border-radius:20px;
+    background:white;
     padding:30px;
+    border-radius:20px;
     box-shadow:var(--shadow);
 }
-
-.stat-card h3{
-    margin-bottom:10px;
-    color:var(--primary);
-}
-
-.stat-card p{
-    font-size:2rem;
-    font-weight:800;
-}
-
-/* =========================================
-   PANELS
-========================================= */
 
 .content-panel{
-    background:#fff;
-    border-radius:20px;
+    background:white;
     padding:30px;
+    border-radius:20px;
     box-shadow:var(--shadow);
 }
-
-.content-panel h2{
-    margin-bottom:20px;
-    color:var(--primary);
-}
-
-/* =========================================
-   TABLE
-========================================= */
 
 .table{
     width:100%;
@@ -266,19 +188,14 @@ main{
 
 .table th{
     background:var(--primary);
-    color:#fff;
+    color:white;
     padding:14px;
-    text-align:left;
 }
 
 .table td{
     padding:14px;
-    border-bottom:1px solid #e5e7eb;
+    border-bottom:1px solid #ddd;
 }
-
-/* =========================================
-   PAGES
-========================================= */
 
 .page-section{
     display:none;
@@ -287,18 +204,6 @@ main{
 .page-section.active{
     display:block;
 }
-
-#header-active-role-badge{
-    padding:8px 16px;
-    border-radius:30px;
-    background:var(--accent);
-    color:#fff;
-    margin-right:10px;
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
 
 @media(max-width:900px){
 
@@ -319,17 +224,14 @@ main{
 
 </style>
 </head>
-<body>
 
-<!-- =========================================
-LOGIN
-========================================= -->
+<body>
 
 <div id="login-screen">
 
 <div class="auth-card">
 
-<!-- SCHOOL REGISTER -->
+<!-- SCHOOL REGISTRATION -->
 
 <div id="school-registration-view">
 
@@ -360,26 +262,22 @@ LOGIN
 <input type="text" id="schoolRegisterAddress" class="form-control" required>
 </div>
 
+<div class="form-group">
+<label>Main Admin Secret Code</label>
+<input type="text" id="schoolMainAdminCode" class="form-control" required>
+</div>
+
+<div class="form-group">
+<label>Maximum Number Of Admins</label>
+<input type="number" id="maxAdmins" class="form-control" required>
+</div>
+
 <button type="submit" class="btn-auth">
 Register School
 </button>
 
-<button
-type="button"
-class="btn-auth"
-onclick="openExistingSchoolRegistration()"
-style="background:#059669;"
->
-Already Registered School?
-</button>
-
-<button
-type="button"
-class="btn-auth"
-onclick="openLoginPage()"
-style="background:#d97706;"
->
-Already Have An Account?
+<button type="button" class="btn-auth" onclick="openLoginPage()" style="background:#059669;">
+Already Have Account?
 </button>
 
 </form>
@@ -392,7 +290,6 @@ Already Have An Account?
 
 <div class="auth-header">
 <h1>Create Account</h1>
-<p id="active-school-label"></p>
 </div>
 
 <form onsubmit="registerUser(event)">
@@ -446,6 +343,11 @@ Parent
 
 </div>
 
+<div class="form-group" id="admin-secret-box" style="display:none;">
+<label>Main Admin Secret Code</label>
+<input type="text" id="adminSecretCode" class="form-control">
+</div>
+
 <button type="submit" class="btn-auth">
 Create Account
 </button>
@@ -465,7 +367,7 @@ Create Account
 <form onsubmit="executeSystemLogin(event)">
 
 <div class="form-group">
-<label>Username or Email</label>
+<label>Username Or Email</label>
 <input type="text" id="loginUser" class="form-control" required>
 </div>
 
@@ -486,9 +388,7 @@ Login
 
 </div>
 
-<!-- =========================================
-APP
-========================================= -->
+<!-- APP -->
 
 <div id="app-container">
 
@@ -498,39 +398,25 @@ APP
 School System
 </h2>
 
-<ul class="sidebar-menu">
-
-<li>
 <button class="menu-btn" onclick="switchTab('dashboard')">
 Dashboard
 </button>
-</li>
 
-<li>
 <button class="menu-btn" onclick="switchTab('students')">
 Students
 </button>
-</li>
 
-<li>
 <button class="menu-btn" onclick="switchTab('library')">
-Library Catalog
+Library
 </button>
-</li>
 
-<li>
 <button class="menu-btn" onclick="switchTab('fees')">
-Fees Management
+Fees
 </button>
-</li>
 
-<li>
 <button class="menu-btn" onclick="switchTab('grades')">
-Academic Grade Book
+Grades
 </button>
-</li>
-
-</ul>
 
 </aside>
 
@@ -542,15 +428,14 @@ Dashboard
 
 <div>
 
-<span id="header-active-role-badge">
-User
-</span>
+<span id="header-active-role-badge"></span>
+
+<button onclick="toggleDarkMode()">
+Dark Mode
+</button>
 
 <button onclick="logoutSystem()">
 Logout
-</button>
-   <button onclick="toggleDarkMode()">
-Dark Mode
 </button>
 
 </div>
@@ -558,8 +443,6 @@ Dark Mode
 </header>
 
 <main>
-
-<!-- DASHBOARD -->
 
 <section id="dashboard-section" class="page-section active">
 
@@ -589,8 +472,6 @@ Dark Mode
 
 </section>
 
-<!-- STUDENTS -->
-
 <section id="students-section" class="page-section">
 
 <div class="content-panel">
@@ -600,7 +481,7 @@ Dark Mode
 <form onsubmit="addStudent(event)">
 
 <div class="form-group">
-<label>Student Name</label>
+<label>Name</label>
 <input type="text" id="studentName" class="form-control" required>
 </div>
 
@@ -613,10 +494,8 @@ Dark Mode
 <label>Gender</label>
 
 <select id="studentGender" class="form-control">
-
 <option>Male</option>
 <option>Female</option>
-
 </select>
 
 </div>
@@ -630,13 +509,11 @@ Add Student
 <table class="table">
 
 <thead>
-
 <tr>
 <th>Name</th>
 <th>Class</th>
 <th>Gender</th>
 </tr>
-
 </thead>
 
 <tbody id="students-table-body"></tbody>
@@ -647,571 +524,32 @@ Add Student
 
 </section>
 
-<!-- LIBRARY -->
-
-<section id="library-section" class="page-section">
-
-<div class="content-panel">
-
-<h2>Library Catalog</h2>
-
-<form onsubmit="addBook(event)">
-
-<div class="form-group">
-<label>Book Title</label>
-<input type="text" id="bookTitle" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Author</label>
-<input type="text" id="bookAuthor" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Category</label>
-<input type="text" id="bookCategory" class="form-control" required>
-</div>
-
-<button type="submit" class="btn-action">
-Add Book
-</button>
-
-</form>
-
-<table class="table">
-
-<thead>
-
-<tr>
-<th>Title</th>
-<th>Author</th>
-<th>Category</th>
-</tr>
-
-</thead>
-
-<tbody id="library-table-body"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<!-- FEES -->
-
-<section id="fees-section" class="page-section">
-
-<div class="content-panel">
-
-<h2>Fees Management</h2>
-
-<form onsubmit="addFee(event)">
-
-<div class="form-group">
-<label>Student Name</label>
-<input type="text" id="feeStudent" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Amount</label>
-<input type="number" id="feeAmount" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Status</label>
-
-<select id="feeStatus" class="form-control">
-
-<option>Paid</option>
-<option>Pending</option>
-
-</select>
-
-</div>
-
-<button type="submit" class="btn-action">
-Save Fee
-</button>
-
-</form>
-
-<table class="table">
-
-<thead>
-
-<tr>
-<th>Student</th>
-<th>Amount</th>
-<th>Status</th>
-</tr>
-
-</thead>
-
-<tbody id="fees-table-body"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<!-- GRADES -->
-
-<!-- ========================================= -->
-<!-- GRADES -->
-<!-- ========================================= -->
-
-<section id="grades-section" class="page-section">
-
-    <div class="content-panel">
-
-        <h2>Academic Grade Book</h2>
-
-        <form onsubmit="addGrade(event)">
-
-            <div class="form-group">
-
-                <label>Student Name</label>
-
-                <input
-                    type="text"
-                    id="gradeStudent"
-                    class="form-control"
-                    required
-                >
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Subject</label>
-
-                <select
-                    id="gradeSubject"
-                    class="form-control"
-                    required
-                >
-
-                    <option value="">
-                        Select Subject
-                    </option>
-
-                    <option value="SET">
-                        SET
-                    </option>
-
-                    <option value="SRS">
-                        SRS
-                    </option>
-
-                    <option value="Mathematics">
-                        Mathematics
-                    </option>
-
-                    <option value="Kinyarwanda">
-                        Kinyarwanda
-                    </option>
-
-                    <option value="English">
-                        English
-                    </option>
-
-                    <option value="French">
-                        French
-                    </option>
-
-                    <option value="Creative Arts">
-                        Creative Arts
-                    </option>
-
-                    <option value="PES">
-                        PES
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Marks</label>
-
-                <input
-                    type="number"
-                    id="gradeMarks"
-                    class="form-control"
-                    min="0"
-                    max="100"
-                    required
-                >
-
-            </div>
-
-            <button
-                type="submit"
-                class="btn-action"
-            >
-                Save Grade
-            </button>
-
-        </form>
-
-        <table class="table">
-
-            <thead>
-
-                <tr>
-                    <th>Student</th>
-                    <th>Subject</th>
-                    <th>Marks</th>
-                    <th>Grade</th>
-                </tr>
-
-            </thead>
-
-            <tbody id="grades-table-body"></tbody>
-
-        </table>
-
-    </div>
-
-</section>
-
-<script>
-
-/* =========================================
-   ADD GRADE
-========================================= */
-
-function addGrade(event){
-
-    event.preventDefault();
-
-    if(!window.currentSchoolDatabase){
-
-        alert(
-            "No active school database."
-        );
-
-        return;
-    }
-
-    const student =
-        document.getElementById(
-            "gradeStudent"
-        ).value.trim();
-
-    const subject =
-        document.getElementById(
-            "gradeSubject"
-        ).value;
-
-    const marks =
-        parseInt(
-            document.getElementById(
-                "gradeMarks"
-            ).value
-        );
-
-    if(
-        !student ||
-        !subject ||
-        isNaN(marks)
-    ){
-
-        alert(
-            "Fill all fields correctly."
-        );
-
-        return;
-    }
-
-    let grade = "F";
-
-    if(marks >= 80){
-
-        grade = "A";
-
-    }else if(marks >= 70){
-
-        grade = "B";
-
-    }else if(marks >= 60){
-
-        grade = "C";
-
-    }else if(marks >= 50){
-
-        grade = "D";
-    }
-
-    const gradePayload = {
-
-        student,
-        subject,
-        marks,
-        grade,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    if(
-        !window.currentSchoolDatabase.grades
-    ){
-
-        window.currentSchoolDatabase.grades = [];
-    }
-
-    window.currentSchoolDatabase.grades.push(
-        gradePayload
-    );
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderGradesTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert(
-        "Grade saved successfully."
-    );
-}
-
-/* =========================================
-   RENDER GRADES
-========================================= */
-
-function renderGradesTable(){
-
-    const table =
-        document.getElementById(
-            "grades-table-body"
-        );
-
-    if(!table){
-        return;
-    }
-
-    table.innerHTML = "";
-
-    const grades =
-        window.currentSchoolDatabase.grades || [];
-
-    grades.forEach(record=>{
-
-        table.innerHTML += `
-
-<tr>
-    <td>${record.student}</td>
-    <td>${record.subject}</td>
-    <td>${record.marks}</td>
-    <td>${record.grade}</td>
-</tr>
-
-        `;
-    });
-
-    const gradesCount =
-        document.getElementById(
-            "grades-count"
-        );
-
-    if(gradesCount){
-
-        gradesCount.textContent =
-            grades.length;
-    }
-}
-
-</script>
 </main>
 
 </div>
 
 <script>
 
-/* =========================================
-   AUTHENTICATION SYSTEM
-========================================= */
-
 const SCHOOL_REGISTRY_KEY = "sms_registered_schools";
 const USERS_KEY = "sms_users";
-const ACTIVE_SCHOOL_KEY = "sms_active_school";
-async function fetchStudents(){
-
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(
-        "http://localhost:5000/api/students",
-        {
-            headers: {
-                Authorization: token
-            }
-        }
-    );
-
-    const students = await response.json();
-
-    console.log(students);
-}
-let currentSchoolName =
-    localStorage.getItem(
-        ACTIVE_SCHOOL_KEY
-    ) || "";
 
 let currentLoggedInUser = null;
 
-/* =========================================
-   CREATE DATABASE
-========================================= */
+document.getElementById("registerRole").addEventListener("change", function(){
 
-function createEmptySchoolDatabase(schoolName){
+    if(this.value === "admin"){
 
-    return{
+        document.getElementById("admin-secret-box").style.display = "block";
 
-        schoolName,
+    }else{
 
-        students:[],
-        teachers:[],
-        parents:[],
-        librarians:[],
-        admins:[],
-
-        books:[],
-        fees:[],
-        grades:[],
-        announcements:[],
-        attendance:[],
-        marks:[],
-
-        createdAt:
-            new Date().toISOString()
-    };
-}
-
-/* =========================================
-   STORAGE
-========================================= */
-
-function getSchoolIndex(){
-
-    return JSON.parse(
-        localStorage.getItem(
-            "sms_school_index"
-        )
-    ) || {};
-}
-
-function saveSchoolIndex(index){
-
-    localStorage.setItem(
-        "sms_school_index",
-        JSON.stringify(index)
-    );
-}
-
-function loadSchoolData(schoolName){
-
-    const schools =
-        getSchoolIndex();
-
-    if(!schools[schoolName]){
-
-        schools[schoolName] =
-            createEmptySchoolDatabase(
-                schoolName
-            );
-
-        saveSchoolIndex(schools);
+        document.getElementById("admin-secret-box").style.display = "none";
     }
+});
 
-    return schools[schoolName];
-}
+function toggleDarkMode(){
 
-function saveSchoolData(
-    schoolName,
-    data
-){
-
-    const schools =
-        getSchoolIndex();
-
-    schools[schoolName] = data;
-
-    saveSchoolIndex(schools);
-}
-
-/* =========================================
-   BRANDING
-========================================= */
-
-function executeGlobalSchoolRebrand(
-    schoolName
-){
-
-    document.title =
-        schoolName +
-        " | School Management System";
-
-    const title =
-        document.getElementById(
-            "window-title"
-        );
-
-    if(title){
-
-        title.textContent =
-            schoolName +
-            " | School Management System";
-    }
-
-    const schoolLabel =
-        document.getElementById(
-            "active-school-label"
-        );
-
-    if(schoolLabel){
-
-        schoolLabel.innerHTML =
-            "Registering for <b>" +
-            schoolName +
-            "</b>";
-    }
-
-    const sidebarTitle =
-        document.getElementById(
-            "sidebar-school-name"
-        );
-
-    if(sidebarTitle){
-
-        sidebarTitle.textContent =
-            schoolName;
-    }
-
-    const headerTitle =
-        document.getElementById(
-            "header-school-name"
-        );
-
-    if(headerTitle){
-
-        headerTitle.textContent =
-            schoolName;
-    }
-}
-   function toggleDarkMode(){
-
-    document.body.classList.toggle(
-        "dark-mode"
-    );
+    document.body.classList.toggle("dark-mode");
 }
 
 function registerSchool(event){
@@ -1219,223 +557,120 @@ function registerSchool(event){
     event.preventDefault();
 
     const schoolName =
-        document.getElementById(
-            "schoolRegisterName"
-        ).value.trim();
+    document.getElementById("schoolRegisterName").value;
 
     const schoolEmail =
-        document.getElementById(
-            "schoolRegisterEmail"
-        ).value.trim();
+    document.getElementById("schoolRegisterEmail").value;
 
     const schoolPhone =
-        document.getElementById(
-            "schoolRegisterPhone"
-        ).value.trim();
+    document.getElementById("schoolRegisterPhone").value;
 
     const schoolAddress =
-        document.getElementById(
-            "schoolRegisterAddress"
-        ).value.trim();
+    document.getElementById("schoolRegisterAddress").value;
 
     const mainAdminCode =
-        document.getElementById(
-            "schoolMainAdminCode"
-        ).value.trim();
+    document.getElementById("schoolMainAdminCode").value;
 
     const maxAdmins =
-        parseInt(
-            document.getElementById(
-                "maxAdmins"
-            ).value
-        );
+    parseInt(document.getElementById("maxAdmins").value);
 
     let schools =
-        JSON.parse(
-            localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
-            )
-        ) || [];
+    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
 
-    const existingSchool =
-        schools.find(
-            school =>
-                school.schoolName.toLowerCase()
-                ===
-                schoolName.toLowerCase()
-        );
-
-    if(existingSchool){
-
-        alert(
-            "School already exists."
-        );
-
-        return;
-    }
-
-    const schoolPayload = {
+    schools.push({
 
         schoolName,
         schoolEmail,
         schoolPhone,
         schoolAddress,
         mainAdminCode,
-        maxAdmins,
+        maxAdmins
 
-        createdAt:
-            new Date().toISOString()
-    };
-
-    schools.push(
-        schoolPayload
-    );
+    });
 
     localStorage.setItem(
         SCHOOL_REGISTRY_KEY,
         JSON.stringify(schools)
     );
 
-    currentSchoolName =
-        schoolName;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
-    const newDatabase =
-        createEmptySchoolDatabase(
-            currentSchoolName
-        );
-
-    saveSchoolData(
-        currentSchoolName,
-        newDatabase
-    );
-
-    window.currentSchoolDatabase =
-        newDatabase;
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
+    alert("School Registered Successfully");
 
     document.getElementById(
         "school-registration-view"
     ).style.display = "none";
 
     document.getElementById(
-        "signin-view"
-    ).style.display = "none";
-
-    document.getElementById(
         "register-view"
     ).style.display = "block";
-
-    alert(
-        "School registered successfully.\nNow create MAIN ADMIN account."
-    );
 }
-
-
-
-/* =========================================
-   REGISTER USER
-========================================= */
 
 function registerUser(event){
 
     event.preventDefault();
 
-    const activeSchool =
-        localStorage.getItem(
-            ACTIVE_SCHOOL_KEY
-        );
-
-    if(!activeSchool){
-
-        alert(
-            "Register school first."
-        );
-
-        return;
-    }
-
     const fullName =
-        document.getElementById(
-            "registerFullName"
-        ).value.trim();
+    document.getElementById("registerFullName").value;
 
     const email =
-        document.getElementById(
-            "registerEmail"
-        ).value.trim();
+    document.getElementById("registerEmail").value;
 
     const username =
-        document.getElementById(
-            "registerUsername"
-        ).value.trim();
+    document.getElementById("registerUsername").value;
 
     const password =
-        document.getElementById(
-            "registerPassword"
-        ).value.trim();
+    document.getElementById("registerPassword").value;
 
     const role =
-        document.getElementById(
-            "registerRole"
-        ).value;
+    document.getElementById("registerRole").value;
 
-    let users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
+    const adminSecretCode =
+    document.getElementById("adminSecretCode").value;
 
-    const existingUser =
-        users.find(
-            user =>
-                user.username === username ||
-                user.email === email
-        );
+    let schools =
+    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
 
-    if(existingUser){
+    const school = schools[0];
 
-        alert(
-            "Account already exists."
-        );
+    if(role === "admin"){
 
-        return;
+        if(adminSecretCode !== school.mainAdminCode){
+
+            alert("Wrong Main Admin Secret Code");
+            return;
+        }
+
+        let users =
+        JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+
+        const adminCount =
+        users.filter(user => user.role === "admin").length;
+
+        if(adminCount >= school.maxAdmins){
+
+            alert("Maximum Admins Reached");
+            return;
+        }
     }
 
-    const userPayload = {
+    let users =
+    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+
+    users.push({
 
         fullName,
         email,
         username,
         password,
-        role,
+        role
 
-        school: activeSchool,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    users.push(
-        userPayload
-    );
+    });
 
     localStorage.setItem(
         USERS_KEY,
         JSON.stringify(users)
     );
 
-    alert(
-        "Account created successfully."
-    );
+    alert("Account Created Successfully");
 
     document.getElementById(
         "register-view"
@@ -1446,67 +681,36 @@ function registerUser(event){
     ).style.display = "block";
 }
 
-/* =========================================
-   LOGIN
-========================================= */
-
 function executeSystemLogin(event){
 
     event.preventDefault();
 
-    const loginValue =
-        document.getElementById(
-            "loginUser"
-        ).value.trim();
+    const loginUser =
+    document.getElementById("loginUser").value;
 
-    const password =
-        document.getElementById(
-            "loginPassword"
-        ).value.trim();
+    const loginPassword =
+    document.getElementById("loginPassword").value;
 
-    const users =
-        JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
-        ) || [];
+    let users =
+    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
 
     const matchedUser =
-        users.find(
-            user =>
-                (
-                    user.username === loginValue ||
-                    user.email === loginValue
-                )
-                &&
-                user.password === password
-        );
+    users.find(user =>
+        (
+            user.username === loginUser ||
+            user.email === loginUser
+        )
+        &&
+        user.password === loginPassword
+    );
 
     if(!matchedUser){
 
-        alert("Invalid credentials");
+        alert("Invalid Login");
         return;
     }
 
-    currentLoggedInUser =
-        matchedUser;
-
-    currentSchoolName =
-        matchedUser.school;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
-    window.currentSchoolDatabase =
-        loadSchoolData(
-            currentSchoolName
-        );
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
+    currentLoggedInUser = matchedUser;
 
     document.getElementById(
         "login-screen"
@@ -1518,97 +722,10 @@ function executeSystemLogin(event){
 
     document.getElementById(
         "header-active-role-badge"
-    ).textContent =
-        matchedUser.role;
+    ).innerText = matchedUser.role;
 
-    switchTab("dashboard");
-
-    refreshEntireSystemUI();
+    refreshDashboard();
 }
-
-/* =========================================
-   EXISTING SCHOOL
-========================================= */
-
-function openExistingSchoolRegistration(){
-
-    let schools =
-        JSON.parse(
-            localStorage.getItem(
-                SCHOOL_REGISTRY_KEY
-            )
-        ) || [];
-
-    if(schools.length === 0){
-
-        alert(
-            "No registered schools found."
-        );
-
-        return;
-    }
-
-    const schoolNames =
-        schools.map(
-            school => school.schoolName
-        ).join("\n");
-
-    const selectedSchool =
-        prompt(
-            "Enter school name:\n\n" +
-            schoolNames
-        );
-
-    if(!selectedSchool){
-        return;
-    }
-
-    const matchedSchool =
-        schools.find(
-            school =>
-                school.schoolName.toLowerCase()
-                ===
-                selectedSchool.toLowerCase()
-        );
-
-    if(!matchedSchool){
-
-        alert(
-            "School not found."
-        );
-
-        return;
-    }
-
-    currentSchoolName =
-        matchedSchool.schoolName;
-
-    localStorage.setItem(
-        ACTIVE_SCHOOL_KEY,
-        currentSchoolName
-    );
-
-    window.currentSchoolDatabase =
-        loadSchoolData(
-            currentSchoolName
-        );
-
-    executeGlobalSchoolRebrand(
-        currentSchoolName
-    );
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-}
-
-/* =========================================
-   OPEN LOGIN PAGE
-========================================= */
 
 function openLoginPage(){
 
@@ -1617,589 +734,9 @@ function openLoginPage(){
     ).style.display = "none";
 
     document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
         "signin-view"
     ).style.display = "block";
 }
-
-
-
-/* =========================================
-   SWITCH TAB
-========================================= */
-
-function switchTab(tab){
-
-    document
-        .querySelectorAll(".page-section")
-        .forEach(section=>{
-
-            section.classList.remove(
-                "active"
-            );
-        });
-
-    document
-        .querySelectorAll(".menu-btn")
-        .forEach(btn=>{
-
-            btn.classList.remove(
-                "active"
-            );
-        });
-
-    const section =
-        document.getElementById(
-            tab + "-section"
-        );
-
-    if(section){
-
-        section.classList.add(
-            "active"
-        );
-    }
-
-    /* =========================
-       UPDATE HEADER TITLE
-    ========================= */
-
-    const header =
-        document.getElementById(
-            "header-school-name"
-        );
-
-    if(header){
-
-        header.textContent =
-            tab.charAt(0).toUpperCase()
-            +
-            tab.slice(1);
-    }
-
-    /* =========================
-       RENDER TABLES
-    ========================= */
-
-    if(tab === "library"){
-
-        renderLibraryTable();
-    }
-
-    if(tab === "fees"){
-
-        renderFeesTable();
-    }
-
-    if(tab === "grades"){
-
-        renderGradesTable();
-    }
-
-    if(tab === "students"){
-
-        renderStudentsTable();
-    }
-}
-
-
-/* =========================================
-   ADD BOOK
-========================================= */
-
-function addBook(event){
-
-    event.preventDefault();
-
-    if(
-        currentLoggedInUser.role !== "admin"
-        &&
-        currentLoggedInUser.role !== "librarian"
-    ){
-
-        alert(
-            "Only admin or librarian can add books."
-        );
-
-        return;
-    }
-
-    const title =
-        document.getElementById(
-            "bookTitle"
-        ).value.trim();
-
-    const author =
-        document.getElementById(
-            "bookAuthor"
-        ).value.trim();
-
-    const category =
-        document.getElementById(
-            "bookCategory"
-        ).value.trim();
-
-    const bookPayload = {
-
-        title,
-        author,
-        category
-    };
-
-    window.currentSchoolDatabase.books.push(
-        bookPayload
-    );
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderLibraryTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert("Book added successfully.");
-}
-
-/* =========================================
-   RENDER BOOKS
-========================================= */
-
-function renderLibraryTable(){
-
-    const table =
-        document.getElementById(
-            "library-table-body"
-        );
-
-    table.innerHTML = "";
-
-    window.currentSchoolDatabase.books
-    .forEach(book=>{
-
-        table.innerHTML += `
-<tr>
-<td>${book.title}</td>
-<td>${book.author}</td>
-<td>${book.category}</td>
-</tr>
-        `;
-    });
-}
-
-/* =========================================
-   ADD FEE
-========================================= */
-
-function addFee(event){
-
-    event.preventDefault();
-
-    const student =
-        document.getElementById(
-            "feeStudent"
-        ).value.trim();
-
-    const amount =
-        document.getElementById(
-            "feeAmount"
-        ).value.trim();
-
-    const status =
-        document.getElementById(
-            "feeStatus"
-        ).value;
-
-    const feePayload = {
-
-        student,
-        amount,
-        status
-    };
-
-    if(
-        !window.currentSchoolDatabase.fees
-    ){
-
-        window.currentSchoolDatabase.fees = [];
-    }
-
-    window.currentSchoolDatabase.fees.push(
-        feePayload
-    );
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderFeesTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert("Fee saved successfully.");
-}
-
-/* =========================================
-   RENDER FEES
-========================================= */
-
-function renderFeesTable(){
-
-    const table =
-        document.getElementById(
-            "fees-table-body"
-        );
-
-    table.innerHTML = "";
-
-    const fees =
-        window.currentSchoolDatabase.fees || [];
-
-    fees.forEach(fee=>{
-
-        table.innerHTML += `
-<tr>
-<td>${fee.student}</td>
-<td>${fee.amount}</td>
-<td>${fee.status}</td>
-</tr>
-        `;
-    });
-
-    const feesCount =
-        document.getElementById(
-            "fees-count"
-        );
-
-    if(feesCount){
-
-        feesCount.textContent =
-            fees.length;
-    }
-}
-
-/* =========================================
-   ADD GRADE
-========================================= */
-
-function addGrade(event){
-
-    event.preventDefault();
-
-    if(!window.currentSchoolDatabase){
-
-        alert(
-            "No active school database."
-        );
-
-        return;
-    }
-
-    const student =
-        document.getElementById(
-            "gradeStudent"
-        ).value.trim();
-
-    const subject =
-        document.getElementById(
-            "gradeSubject"
-        ).value;
-
-    const marks =
-        parseInt(
-            document.getElementById(
-                "gradeMarks"
-            ).value
-        );
-
-    if(
-        !student ||
-        !subject ||
-        isNaN(marks)
-    ){
-
-        alert(
-            "Fill all fields correctly."
-        );
-
-        return;
-    }
-
-    let grade = "F";
-
-    if(marks >= 80){
-
-        grade = "A";
-
-    }else if(marks >= 70){
-
-        grade = "B";
-
-    }else if(marks >= 60){
-
-        grade = "C";
-
-    }else if(marks >= 50){
-
-        grade = "D";
-    }
-
-    const gradePayload = {
-
-        student,
-        subject,
-        marks,
-        grade,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    if(
-        !window.currentSchoolDatabase.grades
-    ){
-
-        window.currentSchoolDatabase.grades = [];
-    }
-
-    window.currentSchoolDatabase.grades.push(
-        gradePayload
-    );
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderGradesTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert(
-        "Grade saved successfully."
-    );
-}
-
-/* =========================================
-   RENDER GRADES
-========================================= */
-
-function renderGradesTable(){
-
-    const table =
-        document.getElementById(
-            "grades-table-body"
-        );
-
-    if(!table){
-        return;
-    }
-
-    table.innerHTML = "";
-
-    const grades =
-        window.currentSchoolDatabase.grades || [];
-
-    grades.forEach(record=>{
-
-        table.innerHTML += `
-
-<tr>
-    <td>${record.student}</td>
-    <td>${record.subject}</td>
-    <td>${record.marks}</td>
-    <td>${record.grade}</td>
-</tr>
-
-        `;
-    });
-
-    const gradesCount =
-        document.getElementById(
-            "grades-count"
-        );
-
-    if(gradesCount){
-
-        gradesCount.textContent =
-            grades.length;
-    }
-}
-
-/* =========================================
-   RENDER GRADES
-========================================= */
-
-function renderGradesTable(){
-
-    const table =
-        document.getElementById(
-            "grades-table-body"
-        );
-
-    table.innerHTML = "";
-
-    window.currentSchoolDatabase.grades
-    .forEach(record=>{
-
-        table.innerHTML += `
-<tr>
-<td>${record.student}</td>
-<td>${record.subject}</td>
-<td>${record.marks}</td>
-<td>${record.grade}</td>
-</tr>
-        `;
-    });
-}
-
-/* =========================================
-   ADD STUDENT
-========================================= */
-
-function addStudent(event){
-
-    event.preventDefault();
-
-    if(
-        currentLoggedInUser.role !== "admin"
-    ){
-
-        alert(
-            "Only admin can add students."
-        );
-
-        return;
-    }
-
-    const name =
-        document.getElementById(
-            "studentName"
-        ).value.trim();
-
-    const className =
-        document.getElementById(
-            "studentClass"
-        ).value.trim();
-
-    const gender =
-        document.getElementById(
-            "studentGender"
-        ).value;
-
-    const studentPayload = {
-
-        name,
-        className,
-        gender
-    };
-
-    window.currentSchoolDatabase.students.push(
-        studentPayload
-    );
-
-    saveSchoolData(
-        currentSchoolName,
-        window.currentSchoolDatabase
-    );
-
-    renderStudentsTable();
-
-    refreshEntireSystemUI();
-
-    event.target.reset();
-
-    alert("Student added successfully.");
-}
-
-/* =========================================
-   RENDER STUDENTS
-========================================= */
-
-function renderStudentsTable(){
-
-    const table =
-        document.getElementById(
-            "students-table-body"
-        );
-
-    if(!table){
-        return;
-    }
-
-    table.innerHTML = "";
-
-    window.currentSchoolDatabase.students
-    .forEach(student=>{
-
-        table.innerHTML += `
-<tr>
-<td>${student.name}</td>
-<td>${student.className}</td>
-<td>${student.gender}</td>
-</tr>
-        `;
-    });
-}
-
-/* =========================================
-   REFRESH UI
-========================================= */
-
-function refreshEntireSystemUI(){
-
-    if(!window.currentSchoolDatabase){
-        return;
-    }
-
-    const booksCount =
-        document.getElementById(
-            "books-count"
-        );
-
-    if(booksCount){
-
-        booksCount.textContent =
-            window.currentSchoolDatabase.books.length;
-    }
-
-    const feesCount =
-        document.getElementById(
-            "fees-count"
-        );
-
-    if(feesCount){
-
-        feesCount.textContent =
-            window.currentSchoolDatabase.fees.length;
-    }
-
-    const gradesCount =
-        document.getElementById(
-            "grades-count"
-        );
-
-    if(gradesCount){
-
-        gradesCount.textContent =
-            window.currentSchoolDatabase.grades.length;
-    }
-}
-
-/* =========================================
-   LOGOUT
-========================================= */
 
 function logoutSystem(){
 
@@ -2214,16 +751,98 @@ function logoutSystem(){
     document.getElementById(
         "signin-view"
     ).style.display = "block";
+}
+
+function switchTab(tab){
+
+    document.querySelectorAll(".page-section")
+    .forEach(section => {
+
+        section.classList.remove("active");
+    });
 
     document.getElementById(
-        "register-view"
-    ).style.display = "none";
+        tab + "-section"
+    ).classList.add("active");
+}
+
+function addStudent(event){
+
+    event.preventDefault();
+
+    if(currentLoggedInUser.role !== "admin"){
+
+        alert("Only Admin Can Add Students");
+        return;
+    }
+
+    const name =
+    document.getElementById("studentName").value;
+
+    const className =
+    document.getElementById("studentClass").value;
+
+    const gender =
+    document.getElementById("studentGender").value;
+
+    let students =
+    JSON.parse(localStorage.getItem("students")) || [];
+
+    students.push({
+
+        name,
+        className,
+        gender
+
+    });
+
+    localStorage.setItem(
+        "students",
+        JSON.stringify(students)
+    );
+
+    renderStudents();
+
+    refreshDashboard();
+
+    event.target.reset();
+}
+
+function renderStudents(){
+
+    const table =
+    document.getElementById("students-table-body");
+
+    table.innerHTML = "";
+
+    let students =
+    JSON.parse(localStorage.getItem("students")) || [];
+
+    students.forEach(student => {
+
+        table.innerHTML += `
+        <tr>
+        <td>${student.name}</td>
+        <td>${student.className}</td>
+        <td>${student.gender}</td>
+        </tr>
+        `;
+    });
+}
+
+function refreshDashboard(){
+
+    let students =
+    JSON.parse(localStorage.getItem("students")) || [];
 
     document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
+        "students-count"
+    ).innerText = students.length;
+
+    renderStudents();
 }
 
 </script>
+
 </body>
 </html>
