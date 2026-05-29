@@ -631,14 +631,36 @@ function registerUser(event){
 
     const school = schools[0];
 
-    if(role === "admin"){
+if(role === "admin"){
 
-        if(adminSecretCode !== school.mainAdminCode){
+    if(admins.length === 0){
 
-            alert("Wrong Main Admin Secret Code");
+        // FIRST ADMIN = MAIN ADMIN
+
+        if(secretCode !== school.mainAdminCode){
+
+            alert(
+                "Wrong Main Admin Secret Code.\n\n" +
+                "Use the same code you entered when registering the school."
+            );
+
             return;
         }
 
+    }else{
+
+        // OTHER ADMINS
+
+        if(secretCode !== school.mainAdminCode){
+
+            alert(
+                "Only Main Admin can create other admins."
+            );
+
+            return;
+        }
+    }
+}
         let users =
         JSON.parse(localStorage.getItem(USERS_KEY)) || [];
 
