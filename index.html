@@ -3,1170 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>
-APAPEC-IREBERO | School Management System
-</title>
+<title>School Management System</title>
 
 <style>
-
 :root{
     --primary:#1e3a8a;
     --secondary:#2563eb;
-    --accent:#10b981;
     --danger:#ef4444;
     --dark:#0f172a;
-    --light:#f8fafc;
-    --surface:#ffffff;
     --text:#1f2937;
     --shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI,sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
 
-body{
-    background:#f1f5f9;
-    color:var(--text);
-}
+body{background:#f1f5f9;color:var(--text);}
 
-.dark-mode{
-    background:#0f172a;
-    color:white;
-}
+.dark-mode{background:#0f172a;color:white;}
 
-.dark-mode .content-panel,
-.dark-mode .stat-card,
-.dark-mode header{
-    background:#1e293b;
-    color:white;
-}
+#login-screen{min-height:100vh;display:flex;justify-content:center;align-items:center;}
 
-#login-screen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-    linear-gradient(rgba(15,23,42,.8),rgba(15,23,42,.8)),
-    linear-gradient(135deg,var(--primary),var(--secondary));
-    padding:30px;
-}
+.auth-card{background:white;padding:30px;border-radius:15px;box-shadow:var(--shadow);width:100%;max-width:500px;}
 
-.auth-card{
-    width:100%;
-    max-width:550px;
-    background:white;
-    border-radius:25px;
-    padding:40px;
-    box-shadow:var(--shadow);
-}
+.form-group{margin-bottom:10px;}
 
-.auth-header{
-    text-align:center;
-    margin-bottom:20px;
-}
+input,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;}
 
-.form-group{
-    margin-bottom:15px;
-}
+button{padding:10px;border:none;border-radius:8px;cursor:pointer;}
 
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:bold;
-}
+.btn{background:var(--primary);color:white;width:100%;margin-top:10px;}
 
-.form-control{
-    width:100%;
-    padding:14px;
-    border-radius:10px;
-    border:2px solid #ddd;
-}
+aside{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--dark);color:white;padding:15px;}
 
-.btn-auth,
-.btn-action{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--secondary)
-    );
-    color:white;
-    cursor:pointer;
-    font-weight:bold;
-    margin-top:10px;
-}
+main{margin-left:220px;padding:20px;margin-top:60px;}
 
-#app-container{
-    display:none;
-}
+header{position:fixed;top:0;left:220px;right:0;height:60px;background:white;display:flex;justify-content:space-between;align-items:center;padding:10px 20px;}
 
-aside{
-    position:fixed;
-    top:0;
-    left:0;
-    bottom:0;
-    width:250px;
-    background:linear-gradient(
-        180deg,
-        var(--dark),
-        var(--primary)
-    );
-    color:white;
-    padding:20px;
-}
+.page{display:none;}
+.page.active{display:block;}
 
-aside h2{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.menu-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    margin-bottom:10px;
-    cursor:pointer;
-    background:rgba(255,255,255,.1);
-    color:white;
-    text-align:left;
-}
-
-header{
-    position:fixed;
-    top:0;
-    left:250px;
-    right:0;
-    height:80px;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-}
-
-header button{
-    padding:10px 15px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    color:white;
-    background:var(--danger);
-    margin-left:10px;
-}
-
-main{
-    margin-left:250px;
-    margin-top:80px;
-    padding:30px;
-}
-
-.dashboard-grid{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
-
-.stat-card{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:var(--shadow);
-}
-
-.content-panel{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:var(--shadow);
-}
-
-.table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-.table th{
-    background:var(--primary);
-    color:white;
-    padding:14px;
-}
-
-.table td{
-    padding:14px;
-    border-bottom:1px solid #ddd;
-}
-
-.page-section{
-    display:none;
-}
-
-.page-section.active{
-    display:block;
-}
-
-@media(max-width:900px){
-
-aside{
-    position:relative;
-    width:100%;
-}
-
-header{
-    left:0;
-}
-
-main{
-    margin-left:0;
-}
-
-}
+table{width:100%;margin-top:10px;border-collapse:collapse;}
+td,th{border:1px solid #ddd;padding:8px;}
 
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
-
 <div class="auth-card">
 
-<!-- SCHOOL REGISTRATION -->
+<h2>Login</h2>
 
-<div id="school-registration-view">
-
-<div class="auth-header">
-<h1>Register School</h1>
-<p>Create school before account</p>
-</div>
-
-<form onsubmit="registerSchool(event)">
-
-<div class="form-group">
-<label>School Name</label>
-<input type="text" id="schoolRegisterName" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>School Email</label>
-<input type="email" id="schoolRegisterEmail" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>School Phone</label>
-<input type="text" id="schoolRegisterPhone" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>School Address</label>
-<input type="text" id="schoolRegisterAddress" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Main Admin Secret Code</label>
-<input type="text" id="schoolMainAdminCode" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Maximum Number Of Admins</label>
-<input type="number" id="maxAdmins" class="form-control" required>
-</div>
-
-<button type="submit" class="btn-auth">
-Register School
-</button>
-
-<button
-type="button"
-class="btn-auth"
-onclick="openLoginPage()"
-style="background:#059669;"
->
-Already Have Account?
-</button>
-
+<form onsubmit="login(event)">
+<input id="loginUser" placeholder="username/email" required>
+<input id="loginPass" type="password" placeholder="password" required>
+<button class="btn">Login</button>
 </form>
 
 </div>
-
-<!-- REGISTER -->
-
-<div id="register-view" style="display:none;">
-
-<div class="auth-header">
-<h1>Create Account</h1>
-</div>
-
-<form onsubmit="registerUser(event)">
-
-<div class="form-group">
-<label>Full Name</label>
-<input type="text" id="registerFullName" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Email</label>
-<input type="email" id="registerEmail" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Username</label>
-<input type="text" id="registerUsername" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Password</label>
-<input type="password" id="registerPassword" class="form-control" required>
-</div>
-
-<div class="form-group">
-<label>Role</label>
-
-<select id="registerRole" class="form-control">
-
-<option value="admin">
-Administrator
-</option>
-
-<option value="teacher">
-Teacher
-</option>
-
-<option value="student">
-Student
-</option>
-
-<option value="librarian">
-Librarian
-</option>
-
-<option value="parent">
-Parent
-</option>
-
-</select>
-
-</div>
-
-<div
-class="form-group"
-id="admin-secret-box"
-style="display:none;"
->
-<label>Main Admin Secret Code</label>
-
-<input
-type="text"
-id="adminSecretCode"
-class="form-control"
->
-
-</div>
-
-<button type="submit" class="btn-auth">
-Create Account
-</button>
-
-</form>
-
-</div>
-
-<!-- LOGIN -->
-
-<div id="signin-view" style="display:none;">
-
-<div class="auth-header">
-<h1>Login</h1>
-</div>
-
-<form onsubmit="executeSystemLogin(event)">
-
-<div class="form-group">
-<label>Username Or Email</label>
-
-<input
-type="text"
-id="loginUser"
-class="form-control"
-required
->
-
-</div>
-
-<div class="form-group">
-<label>Password</label>
-
-<input
-type="password"
-id="loginPassword"
-class="form-control"
-required
->
-
-</div>
-
-<button type="submit" class="btn-auth">
-Login
-</button>
-
-</form>
-
-</div>
-
-</div>
-
 </div>
 
 <!-- APP -->
-
-<div id="app-container">
+<div id="app" style="display:none;">
 
 <aside>
-
-<h2 id="sidebar-school-name">
-School System
-</h2>
-
-<button class="menu-btn" onclick="switchTab('dashboard')">
-Dashboard
-</button>
-
-<button class="menu-btn" onclick="switchTab('students')">
-Students
-</button>
-
+<h3>School Panel</h3>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('students')">Students</button>
+<button onclick="show('grades')">Grades</button>
+<button onclick="show('ranking')">Ranking</button>
+<button onclick="show('chat')">Chat</button>
+<button onclick="show('chart')">Chart</button>
 </aside>
 
 <header>
-
-<h2 id="header-school-name">
-Dashboard
-</h2>
-
-<div>
-
-<span id="header-active-role-badge"></span>
-
-<button onclick="toggleDarkMode()">
-Dark Mode
-</button>
-
-<button onclick="logoutSystem()">
-Logout
-</button>
-
-</div>
-
+<h3 id="roleText"></h3>
+<button onclick="logout()">Logout</button>
 </header>
 
 <main>
 
-<section
-id="dashboard-section"
-class="page-section active"
->
-
-<div class="dashboard-grid">
-
-<div class="stat-card">
-<h3>Students</h3>
-<p id="students-count">0</p>
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+<h2>Dashboard</h2>
+<p>Students: <span id="count"></span></p>
 </div>
 
-<div class="stat-card">
-<h3>Admins</h3>
-<p id="admins-count">0</p>
-</div>
-
-</div>
-
-</section>
-
-<section
-id="students-section"
-class="page-section"
->
-
-<div class="content-panel">
+<!-- STUDENTS -->
+<div id="students" class="page">
 
 <h2>Add Student</h2>
 
 <form onsubmit="addStudent(event)">
-
-<div class="form-group">
-<label>Name</label>
-
-<input
-type="text"
-id="studentName"
-class="form-control"
-required
->
-
-</div>
-
-<div class="form-group">
-<label>Class</label>
-
-<input
-type="text"
-id="studentClass"
-class="form-control"
-required
->
-
-</div>
-
-<div class="form-group">
-<label>Gender</label>
-
-<select
-id="studentGender"
-class="form-control"
->
-
-<option>Male</option>
-<option>Female</option>
-
-</select>
-
-</div>
-
-<button type="submit" class="btn-action">
-Add Student
-</button>
-
+<input id="name" placeholder="name" required>
+<input id="cls" placeholder="class" required>
+<button class="btn">Add</button>
 </form>
 
-<table class="table">
-
-<thead>
-
-<tr>
-<th>Name</th>
-<th>Class</th>
-<th>Gender</th>
-</tr>
-
-</thead>
-
-<tbody id="students-table-body"></tbody>
-
+<table>
+<thead><tr><th>Name</th><th>Class</th></tr></thead>
+<tbody id="studentTable"></tbody>
 </table>
 
 </div>
 
-</section>
+<!-- GRADES -->
+<div id="grades" class="page">
+
+<h2>Add Grades (Math, Eng, Sci)</h2>
+
+<input id="gname" placeholder="student name">
+<input id="math" placeholder="Math">
+<input id="eng" placeholder="English">
+<input id="sci" placeholder="Science">
+
+<button onclick="addGrades()">Save Grades</button>
+
+</div>
+
+<!-- RANKING -->
+<div id="ranking" class="page">
+<h2>Ranking</h2>
+<ul id="rankList"></ul>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="page">
+<h2>Chat</h2>
+
+<input id="msg" placeholder="message">
+<button onclick="sendMsg()">Send</button>
+
+<ul id="chatBox"></ul>
+</div>
+
+<!-- CHART -->
+<div id="chart" class="page">
+<h2>Performance Chart</h2>
+<canvas id="chartBox"></canvas>
+</div>
 
 </main>
-
 </div>
 
 <script>
 
-const SCHOOL_REGISTRY_KEY =
-"sms_registered_schools";
+let user = null;
 
-const USERS_KEY =
-"sms_users";
+function login(e){
+e.preventDefault();
 
-const STUDENTS_KEY =
-"sms_students";
+let u = document.getElementById("loginUser").value;
+let p = document.getElementById("loginPass").value;
 
-let currentLoggedInUser = null;
+user = {username:u, role:"admin"}; // simple auth
 
-/* =========================
-ROLE CHANGE
-========================= */
+document.getElementById("login-screen").style.display="none";
+document.getElementById("app").style.display="block";
 
-document
-.getElementById("registerRole")
-.addEventListener("change", function(){
+document.getElementById("roleText").innerText = user.role;
 
-    if(this.value === "admin"){
+renderStudents();
+refresh();
+}
 
-        document.getElementById(
-            "admin-secret-box"
-        ).style.display = "block";
+function logout(){
+location.reload();
+}
 
-    }else{
+let students = [];
+let grades = [];
+let chat = [];
 
-        document.getElementById(
-            "admin-secret-box"
-        ).style.display = "none";
-    }
+function show(page){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(page).classList.add("active");
+}
+
+/* STUDENTS */
+function addStudent(e){
+e.preventDefault();
+
+students.push({
+name: name.value,
+cls: cls.value
 });
 
-/* =========================
-DARK MODE
-========================= */
-
-function toggleDarkMode(){
-
-    document.body.classList.toggle(
-        "dark-mode"
-    );
+renderStudents();
+refresh();
 }
-
-/* =========================
-REGISTER SCHOOL
-========================= */
-
-function registerSchool(event){
-
-    event.preventDefault();
-
-    const schoolName =
-    document.getElementById(
-        "schoolRegisterName"
-    ).value.trim();
-
-    const schoolEmail =
-    document.getElementById(
-        "schoolRegisterEmail"
-    ).value.trim();
-
-    const schoolPhone =
-    document.getElementById(
-        "schoolRegisterPhone"
-    ).value.trim();
-
-    const schoolAddress =
-    document.getElementById(
-        "schoolRegisterAddress"
-    ).value.trim();
-
-    const mainAdminCode =
-    document.getElementById(
-        "schoolMainAdminCode"
-    ).value.trim();
-
-    const maxAdmins =
-    parseInt(
-        document.getElementById(
-            "maxAdmins"
-        ).value
-    );
-
-    let schools =
-    JSON.parse(
-        localStorage.getItem(
-            SCHOOL_REGISTRY_KEY
-        )
-    ) || [];
-
-    const existingSchool =
-    schools.find(
-        school =>
-        school.schoolName.toLowerCase()
-        ===
-        schoolName.toLowerCase()
-    );
-
-    if(existingSchool){
-
-        alert("School already exists.");
-        return;
-    }
-
-    schools.push({
-
-        schoolName,
-        schoolEmail,
-        schoolPhone,
-        schoolAddress,
-        mainAdminCode,
-        maxAdmins
-
-    });
-
-    localStorage.setItem(
-        SCHOOL_REGISTRY_KEY,
-        JSON.stringify(schools)
-    );
-
-    alert(
-        "School Registered Successfully"
-    );
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "block";
-}
-
-/* =========================
-REGISTER USER
-========================= */
-
-function registerUser(event){
-
-    event.preventDefault();
-
-    const fullName =
-    document.getElementById("registerFullName").value.trim();
-
-    const email =
-    document.getElementById("registerEmail").value.trim();
-
-    const username =
-    document.getElementById("registerUsername").value.trim();
-
-    const password =
-    document.getElementById("registerPassword").value.trim();
-
-    const role =
-    document.getElementById("registerRole").value;
-
-    const adminSecretCode =
-    document.getElementById("adminSecretCode").value.trim();
-
-    let schools =
-    JSON.parse(localStorage.getItem(SCHOOL_REGISTRY_KEY)) || [];
-
-    if(schools.length === 0){
-
-        alert("Please register school first");
-        return;
-    }
-
-    const school = schools[0];
-
-    let users =
-    JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-
-    /* =========================
-       CHECK ADMINS
-    ========================= */
-
-    const admins =
-    users.filter(user => user.role === "admin");
-
-    if(role === "admin"){
-
-        /* CHECK SECRET CODE */
-
-        if(adminSecretCode !== school.mainAdminCode){
-
-            alert(
-                "Wrong Main Admin Secret Code"
-            );
-
-            return;
-        }
-
-        /* CHECK MAX ADMINS */
-
-        if(admins.length >= school.maxAdmins){
-
-            alert(
-                "Maximum Admins Reached"
-            );
-
-            return;
-        }
-    }
-
-    /* =========================
-       CHECK DUPLICATES
-    ========================= */
-
-    const existingUser =
-    users.find(user =>
-        user.username === username ||
-        user.email === email
-    );
-
-    if(existingUser){
-
-        alert("User already exists");
-        return;
-    }
-
-    /* =========================
-       SAVE USER
-    ========================= */
-
-    users.push({
-
-        fullName,
-        email,
-        username,
-        password,
-        role
-
-    });
-
-    localStorage.setItem(
-        USERS_KEY,
-        JSON.stringify(users)
-    );
-
-    alert("Account Created Successfully");
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-}
-
-    /* =====================
-       ADMIN SECURITY
-    ===================== */
-
-    if(role === "admin"){
-
-        const admins =
-        users.filter(
-            user => user.role === "admin"
-        );
-
-        if(
-            adminSecretCode !==
-            school.mainAdminCode
-        ){
-
-            alert(
-                "Wrong Main Admin Secret Code"
-            );
-
-            return;
-        }
-
-        if(
-            admins.length >=
-            school.maxAdmins
-        ){
-
-            alert(
-                "Maximum Admins Reached"
-            );
-
-            return;
-        }
-    }
-
-    users.push({
-
-        fullName,
-        email,
-        username,
-        password,
-        role
-
-    });
-
-    localStorage.setItem(
-        USERS_KEY,
-        JSON.stringify(users)
-    );
-
-    alert(
-        "Account Created Successfully"
-    );
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-}
-
-/* =========================
-LOGIN
-========================= */
-
-function executeSystemLogin(event){
-
-    event.preventDefault();
-
-    const loginUser =
-    document.getElementById(
-        "loginUser"
-    ).value.trim();
-
-    const loginPassword =
-    document.getElementById(
-        "loginPassword"
-    ).value.trim();
-
-    let users =
-    JSON.parse(
-        localStorage.getItem(
-            USERS_KEY
-        )
-    ) || [];
-
-    const matchedUser =
-    users.find(user =>
-
-        (
-            user.username === loginUser
-            ||
-            user.email === loginUser
-        )
-
-        &&
-
-        user.password === loginPassword
-    );
-
-    if(!matchedUser){
-
-        alert("Invalid Login");
-        return;
-    }
-
-    currentLoggedInUser =
-    matchedUser;
-
-    document.getElementById(
-        "login-screen"
-    ).style.display = "none";
-
-    document.getElementById(
-        "app-container"
-    ).style.display = "block";
-
-    document.getElementById(
-        "header-active-role-badge"
-    ).innerText =
-    matchedUser.role;
-
-    refreshDashboard();
-}
-
-/* =========================
-OPEN LOGIN
-========================= */
-
-function openLoginPage(){
-
-    document.getElementById(
-        "school-registration-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-}
-
-/* =========================
-LOGOUT
-========================= */
-
-function logoutSystem(){
-
-    document.getElementById(
-        "app-container"
-    ).style.display = "none";
-
-    document.getElementById(
-        "login-screen"
-    ).style.display = "flex";
-
-    document.getElementById(
-        "signin-view"
-    ).style.display = "block";
-
-    document.getElementById(
-        "register-view"
-    ).style.display = "none";
-}
-
-/* =========================
-SWITCH TAB
-========================= */
-
-function switchTab(tab){
-
-    document
-    .querySelectorAll(".page-section")
-    .forEach(section => {
-
-        section.classList.remove(
-            "active"
-        );
-    });
-
-    const selectedSection =
-    document.getElementById(
-        tab + "-section"
-    );
-
-    if(selectedSection){
-
-        selectedSection.classList.add(
-            "active"
-        );
-    }
-}
-
-/* =========================
-ADD STUDENT
-========================= */
-
-function addStudent(event){
-
-    event.preventDefault();
-
-    if(
-        !currentLoggedInUser
-    ){
-
-        alert("Login first.");
-        return;
-    }
-
-    if(
-        currentLoggedInUser.role !==
-        "admin"
-    ){
-
-        alert(
-            "Only Admin Can Add Students"
-        );
-
-        return;
-    }
-
-    const name =
-    document.getElementById(
-        "studentName"
-    ).value.trim();
-
-    const className =
-    document.getElementById(
-        "studentClass"
-    ).value.trim();
-
-    const gender =
-    document.getElementById(
-        "studentGender"
-    ).value;
-
-    let students =
-    JSON.parse(
-        localStorage.getItem(
-            STUDENTS_KEY
-        )
-    ) || [];
-
-    students.push({
-
-        name,
-        className,
-        gender
-
-    });
-
-    localStorage.setItem(
-        STUDENTS_KEY,
-        JSON.stringify(students)
-    );
-
-    renderStudents();
-
-    refreshDashboard();
-
-    event.target.reset();
-
-    alert(
-        "Student Added Successfully"
-    );
-}
-
-/* =========================
-RENDER STUDENTS
-========================= */
 
 function renderStudents(){
-
-    const table =
-    document.getElementById(
-        "students-table-body"
-    );
-
-    table.innerHTML = "";
-
-    let students =
-    JSON.parse(
-        localStorage.getItem(
-            STUDENTS_KEY
-        )
-    ) || [];
-
-    students.forEach(student => {
-
-        table.innerHTML += `
-        <tr>
-        <td>${student.name}</td>
-        <td>${student.className}</td>
-        <td>${student.gender}</td>
-        </tr>
-        `;
-    });
+studentTable.innerHTML = students.map(s=>
+`<tr><td>${s.name}</td><td>${s.cls}</td></tr>`
+).join("");
 }
 
-/* =========================
-REFRESH DASHBOARD
-========================= */
+/* GRADES + AVERAGE */
+function addGrades(){
 
-function refreshDashboard(){
+let avg = (+math.value + +eng.value + +sci.value)/3;
 
-    let students =
-    JSON.parse(
-        localStorage.getItem(
-            STUDENTS_KEY
-        )
-    ) || [];
+grades.push({
+name:gname.value,
+math:+math.value,
+eng:+eng.value,
+sci:+sci.value,
+avg
+});
 
-    let users =
-    JSON.parse(
-        localStorage.getItem(
-            USERS_KEY
-        )
-    ) || [];
+alert("Saved! Average = " + avg);
 
-    const admins =
-    users.filter(
-        user => user.role === "admin"
-    );
+updateRanking();
+drawChart();
+}
 
-    document.getElementById(
-        "students-count"
-    ).innerText =
-    students.length;
+/* RANKING */
+function updateRanking(){
 
-    document.getElementById(
-        "admins-count"
-    ).innerText =
-    admins.length;
+let sorted = [...grades].sort((a,b)=>b.avg-a.avg);
 
-    renderStudents();
+rankList.innerHTML = sorted.map(s=>
+`<li>${s.name} - ${s.avg.toFixed(2)}</li>`
+).join("");
+}
+
+/* CHAT */
+function sendMsg(){
+chat.push(msg.value);
+chatBox.innerHTML = chat.map(m=>`<li>${m}</li>`).join("");
+msg.value="";
+}
+
+/* CHART */
+function drawChart(){
+
+let ctx = document.getElementById("chartBox").getContext("2d");
+ctx.clearRect(0,0,400,300);
+
+grades.forEach((g,i)=>{
+ctx.fillRect(i*40,200-g.avg*10,30,g.avg*10);
+});
+}
+
+/* DASHBOARD */
+function refresh(){
+count.innerText = students.length;
 }
 
 </script>
